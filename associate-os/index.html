@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Associate OS. Founder calls in, follow-through out.</title>
+<title>Associate OS</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--bg);color:var(--text);font:400 13px/1.55 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
-.app{display:grid;grid-template-rows:48px 1fr 30px;height:100vh}
+.app{display:grid;grid-template-rows:40px 48px 1fr 30px;height:100vh}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-thumb{background:#DAD8D2;border-radius:9px;border:2px solid var(--bg)}
 ::-webkit-scrollbar-track{background:transparent}
@@ -33,12 +33,17 @@ a{color:var(--text)}
 .mono{font-family:var(--mono)}
 .serif{font-family:var(--sans)}
 
+/* ---------- Signal OS nav ---------- */
+.sgnav{height:40px;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.sgnav .wm{font:700 11px/1 var(--mono);letter-spacing:.16em;color:var(--text);text-decoration:none;white-space:nowrap}
+.sgnav .nl{font:400 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text2);text-decoration:none;white-space:nowrap;padding-bottom:2px;border-bottom:1px solid transparent}
+.sgnav a.nl:hover{color:var(--text)}
+.sgnav .nl.cur{color:var(--text);border-bottom-color:var(--text)}
+.sgnav .sep{color:var(--line2)}
+
 /* ---------- top bar ---------- */
 .topbar{display:flex;align-items:center;gap:16px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-.brand{display:flex;align-items:center;gap:9px;white-space:nowrap}
-.brand .mark{width:18px;height:18px;border-radius:2px;background:var(--text);color:#fff;font:700 11px/18px var(--mono);text-align:center}
-.brand b{font-weight:600;font-size:13.5px;letter-spacing:.01em}
-.tabs{display:flex;gap:20px;margin-left:14px;align-self:stretch}
+.tabs{display:flex;gap:20px;align-self:stretch}
 .tab{display:inline-flex;align-items:center;padding:2px 1px 0;border-bottom:2px solid transparent;color:var(--text2);font:400 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase}
 .tab:hover{color:var(--text)}
 .tab.on{color:var(--text);border-bottom-color:var(--text)}
@@ -259,8 +264,6 @@ table.rt{width:100%;border-collapse:collapse}
 
 /* ---------- footer + toast ---------- */
 .footer{display:flex;align-items:center;gap:16px;padding:0 16px;border-top:1px solid var(--line);background:var(--panel);font:400 10px var(--mono);letter-spacing:.05em;color:var(--muted)}
-.footer .gov{color:var(--text2)}
-.footer .gov b{color:var(--agent);font-weight:700}
 .footer .lnk{color:var(--muted);font:inherit;letter-spacing:inherit}
 .footer .lnk:hover{color:var(--text)}
 .toasts{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:7px;align-items:center}
@@ -274,10 +277,18 @@ table.rt{width:100%;border-collapse:collapse}
 <body>
 <div class="app">
 
+  <nav class="sgnav">
+    <a class="wm" href="../">SIGNAL OS</a>
+    <a class="nl" href="../founder-radar/">FOUNDER RADAR</a>
+    <span class="sep">·</span>
+    <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
+    <span class="sep">·</span>
+    <a class="nl" href="../breakout-radar/">BREAKOUT RADAR</a>
+    <span class="sep">·</span>
+    <span class="nl cur">ASSOCIATE OS</span>
+  </nav>
+
   <div class="topbar">
-    <div class="brand">
-      <span class="mark">a</span><b>Associate OS</b>
-    </div>
     <nav class="tabs" id="tabs"></nav>
     <div class="spacer"></div>
     <div class="datechip"><span class="d" id="todayTxt"></span></div>
@@ -348,7 +359,6 @@ table.rt{width:100%;border-collapse:collapse}
   </div>
 
   <div class="footer">
-    <span class="gov">The agent drafts. <b>Isaac sends.</b></span>
     <span style="flex:1"></span>
     <button class="lnk" id="howLink">how it works</button>
     <button class="lnk" id="btnReset">Reset</button>
@@ -392,7 +402,6 @@ table.rt{width:100%;border-collapse:collapse}
 'use strict';
 /* =========================================================================
    Associate OS. Founder calls in, follow-through out.
-   Design thesis: code owns the facts, the LLM owns the language.
    ========================================================================= */
 
 // ---------- tiny utils ----------
@@ -418,7 +427,7 @@ function today(){ return addDays(REAL_TODAY, S.simDays || 0); }
 let seq = 1000;
 function uid(){ return 'x' + (seq++); }
 
-// ---------- email helpers (drafts are send-ready: review in Gmail, Isaac sends) ----------
+// ---------- email helpers (drafts open in Gmail for review) ----------
 function sampleEmail(name, company){
   const n = (name||'').toLowerCase().replace(/[^a-z\s]/g,'').trim().split(/\s+/).join('.');
   const c = (company||'team').toLowerCase().replace(/[^a-z]/g,'') || 'team';
@@ -442,7 +451,7 @@ function draftBoxHtml(d, copyId){
     '</div></div>';
 }
 
-// ---------- date phrase parser (code owns the dates) ----------
+// ---------- date phrase parser ----------
 const DOWMAP = {sunday:0, monday:1, tuesday:2, wednesday:3, thursday:4, friday:5, saturday:6};
 function nextDow(base, dow){ let t = base; for (let i = 0; i < 8; i++){ t = addDays(t, 1); if (pd(t).getDay() === dow) return t; } return t; }
 function parseDatePhrase(phrase, base){
@@ -698,7 +707,7 @@ if (!S){ S = seed(); S.seededOn = REAL_TODAY; save(); }
 const UI = {tab:'meetings', sel:null, draftTab:'followup', showTranscript:false, hlQuote:null, granolaSel:{}, granolaList:[], passTarget:null, briefBusy:false, visited:{meetings:true}};
 window.__COPY = {};
 
-// ---------- derived facts (code owns these) ----------
+// ---------- derived facts ----------
 function meetingById(id){ return S.meetings.find(m => m.id === id); }
 function personById(id){ return S.people.find(p => p.id === id); }
 function personByName(n){ const q = (n||'').toLowerCase(); return S.people.find(p => p.name.toLowerCase() === q) || S.people.find(p => p.name.toLowerCase().includes(q) || q.includes(first(p.name).toLowerCase())); }
@@ -1293,7 +1302,7 @@ function execAction(a, rawQ){
       if (!f || !tp) return 'I need two people I know. Try "draft intro Elena to Marcus".';
       logActivity('draft', 'Double opt-in drafted: ' + f.name + ' x ' + tp.name + '. Waiting on Isaac.', {type:'intro', fromId:f.id, toId:tp.id});
       save(); renderAll();
-      return 'Drafted the double opt-in for <b>' + esc(f.name) + '</b> to <b>' + esc(tp.name) + '</b>. It is in the rail, copy it when ready. You send it.';
+      return 'Drafted the double opt-in for <b>' + esc(f.name) + '</b> to <b>' + esc(tp.name) + '</b>. It is in the rail, copy it when ready.';
     }
     case 'add_commitment': {
       const who = a.who === 'theirs' ? 'theirs' : 'mine';
@@ -1302,7 +1311,7 @@ function execAction(a, rawQ){
       S.commitments.push({id: uid(), meetingId: null, who, owner, text: a.text, quote: rawQ || a.text, duePhrase: a.due || '', due, status:'open', doneOn:null, snoozeUntil:null, lastEscalation:null, intro:null});
       logActivity('action', 'Commitment added via ask: ' + a.text + ' (due ' + nice(due) + ')', null);
       save(); renderAll();
-      return 'Added. <b>' + esc(a.text) + '</b>, ' + (who === 'mine' ? 'mine' : 'waiting on ' + esc(owner)) + ', due <b>' + nice(due) + '</b> (computed by code, not the model).';
+      return 'Added. <b>' + esc(a.text) + '</b>, ' + (who === 'mine' ? 'mine' : 'waiting on ' + esc(owner)) + ', due <b>' + nice(due) + '</b>.';
     }
     default:
       return (a.text && String(a.text).trim()) ? esc(String(a.text)).replace(/\n/g,'<br>') : answerQuestion(rawQ || '');

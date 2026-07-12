@@ -71,9 +71,25 @@
   input::placeholder{color:var(--faint)}
   input:focus{outline:none;border-color:var(--ink)}
 
+  /* ------- suite nav ------- */
+  .sigosnav{
+    position:sticky;top:0;z-index:45;
+    height:40px;display:flex;align-items:center;gap:12px;
+    padding:0 20px;background:var(--bg);border-bottom:1px solid var(--line);
+    overflow-x:auto;white-space:nowrap;
+  }
+  .sigosnav .swm{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ink);text-decoration:none;margin-right:8px}
+  .sigosnav a.nl{
+    font-family:var(--mono);font-size:9.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;
+  }
+  .sigosnav a.nl:hover{color:var(--ink)}
+  .sigosnav a.nl.cur{color:var(--ink);border-bottom-color:var(--ink)}
+  .sigosnav .dot{color:var(--faint);font-size:10px}
+
   /* ------- header ------- */
   header{
-    position:sticky;top:0;z-index:40;
+    position:sticky;top:40px;z-index:40;
     display:flex;align-items:center;gap:12px;
     flex-wrap:wrap;row-gap:7px;
     min-height:54px;padding:8px 20px;
@@ -81,19 +97,6 @@
     border-bottom:1px solid var(--line);
   }
   @media (max-width:1360px){header input{width:170px}}
-  @media (max-width:900px){.wm i{display:none}}
-  .brand{display:flex;align-items:center;gap:10px;flex:none}
-  .logo{
-    width:22px;height:22px;border-radius:50%;position:relative;flex:none;
-    border:1px solid var(--ink);background:transparent;
-  }
-  .logo:after{
-    content:"";position:absolute;width:5px;height:5px;border-radius:50%;
-    background:var(--accent);top:4px;right:4px;
-  }
-  .wm{line-height:1.15;white-space:nowrap}
-  .wm b{font-size:14.5px;font-weight:600;letter-spacing:-.01em;display:block}
-  .wm i{font-style:normal;font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:.16em;text-transform:uppercase;font-weight:400}
   .spacer{flex:1}
 
   .tabs{display:inline-flex;gap:2px;flex:none}
@@ -170,7 +173,7 @@
   }
 
   /* ------- rail ------- */
-  .rail{display:flex;flex-direction:column;gap:26px;position:sticky;top:68px}
+  .rail{display:flex;flex-direction:column;gap:26px;position:sticky;top:108px}
   @media (max-width:1080px){.rail{position:static}}
   .card{background:transparent;border:0;border-radius:0}
   .card-h{display:flex;align-items:center;gap:8px;padding:0 0 9px;border-bottom:1px solid var(--line-2)}
@@ -182,9 +185,6 @@
   .brief-body ul{margin:2px 0;padding-left:16px}
   .brief-body li{margin:2.5px 0}
   .brief-body b{color:var(--ink)}
-  .brief-foot{display:flex;align-items:center;gap:8px;padding:9px 0 0;margin-top:8px;border-top:1px solid var(--line)}
-  .brief-foot .src{font-size:10px;color:var(--faint);font-family:var(--mono)}
-
   .actlist{max-height:430px;overflow:auto;padding:0}
   .act{padding:10px 0;border-bottom:1px solid var(--line);animation:rise .3s ease both}
   .act:last-child{border-bottom:0}
@@ -337,11 +337,18 @@
 </head>
 <body>
 
+<nav class="sigosnav" aria-label="Signal OS">
+  <a class="swm" href="../">SIGNAL OS</a>
+  <a class="nl" href="../founder-radar/">FOUNDER RADAR</a>
+  <span class="dot">&middot;</span>
+  <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
+  <span class="dot">&middot;</span>
+  <a class="nl cur" aria-current="page" href="../breakout-radar/">BREAKOUT RADAR</a>
+  <span class="dot">&middot;</span>
+  <a class="nl" href="../associate-os/">ASSOCIATE OS</a>
+</nav>
+
 <header>
-  <div class="brand">
-    <div class="logo"></div>
-    <div class="wm"><b>Breakout Radar</b><i>portfolio breakout watch</i></div>
-  </div>
   <nav class="tabs" id="tabs"></nav>
   <input id="search" placeholder="Filter name, sector, geo" aria-label="Filter companies"/>
   <div class="spacer"></div>
@@ -357,22 +364,15 @@
     <div class="card brief-card">
       <div class="card-h"><h2>IC brief</h2><div class="r" id="briefWhen"></div></div>
       <div class="brief-body" id="briefBody"></div>
-      <div class="brief-foot">
-        <div class="src" id="briefSrc">regenerates once per day</div>
-      </div>
     </div>
     <div class="card">
-      <div class="card-h"><h2>Agent activity</h2><div class="r">drafts only, human sends</div></div>
+      <div class="card-h"><h2>Agent activity</h2></div>
       <div class="actlist" id="actlist"></div>
     </div>
   </aside>
 </main>
 
 <footer>
-  <b>Synthetic universe.</b> All 40 companies and their numbers are fictional, generated in this file; each card carries a sample tag.
-  The only real data is the Peec AI replay, built from the public record with sources cited inline.
-  Scores come from code. The model drafts prose only.
-  <b>The agent drafts. Isaac sends.</b>
   <a href="#" id="introLink">How scoring works</a>
 </footer>
 
@@ -867,7 +867,7 @@ function skipTwoWeeks(){
     .sort((a,b)=>b.d-a.d).slice(0,3);
   pushAct('scan','Signal sweep complete: <b>'+newSigs+'</b> new signals in 2 weeks, portfolio re-ranked. '+flags.length+' compan'+(flags.length===1?'y':'ies')+' flagged for partner review.');
   for(const f of [...flags].reverse()){
-    pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> <span class="pos">+'+f.d+'</span> to '+f.idx+'. Draft ping ready below, nothing sent.',pingFor(f.c,f.idx,f.d));
+    pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> <span class="pos">+'+f.d+'</span> to '+f.idx+'. Draft ping ready below.',pingFor(f.c,f.idx,f.d));
   }
   refresh();
 }
@@ -1125,7 +1125,7 @@ function init(){
     .filter(r=>r.idx>=THRESHOLD).sort((a,b)=>b.idx-a.idx).slice(0,3);
   if(!flags.length)flags=COMPANIES.map(c=>({c,idx:scoreAt(c,w),d:deltaOf(c,w)})).sort((a,b)=>b.d-a.d).slice(0,2);
   for(const f of [...flags].reverse()){
-    pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> at '+f.idx+' (<span class="pos">'+(f.d>=0?'+':'')+f.d+'</span> in 2 wk). Draft ping ready below, nothing sent.',pingFor(f.c,f.idx,f.d));
+    pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> at '+f.idx+' (<span class="pos">'+(f.d>=0?'+':'')+f.d+'</span> in 2 wk). Draft ping ready below.',pingFor(f.c,f.idx,f.d));
   }
 
   let seen=false;

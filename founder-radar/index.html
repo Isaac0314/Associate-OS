@@ -92,6 +92,21 @@
   input::placeholder{color:var(--faint)}
   .mono{font-family:var(--mono)}
 
+  /* ---------- suite nav ---------- */
+  .sigosnav{
+    height:40px;display:flex;align-items:center;gap:12px;
+    padding:0 18px;background:var(--paper);border-bottom:1px solid var(--line);
+    overflow-x:auto;white-space:nowrap;
+  }
+  .sigosnav .wm{font:600 12px/1 var(--grotesk);letter-spacing:.06em;color:var(--ink);text-decoration:none;margin-right:8px}
+  .sigosnav a.nl{
+    font:400 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;
+  }
+  .sigosnav a.nl:hover{color:var(--ink)}
+  .sigosnav a.nl.cur{color:var(--ink);border-bottom-color:var(--ink)}
+  .sigosnav .dot{color:var(--faint);font-size:10px}
+
   /* ---------- header ---------- */
   header{
     height:56px;display:flex;align-items:center;gap:10px;
@@ -99,13 +114,6 @@
     background:var(--paper);
     position:relative;z-index:30;
   }
-  .brand{display:flex;align-items:baseline;gap:10px;flex:none;margin-right:2px}
-  .mark{
-    width:10px;height:10px;border-radius:2px;flex:none;align-self:center;
-    background:var(--ember);
-  }
-  .brand b{font:600 15px/1 var(--grotesk);letter-spacing:-.01em;color:var(--ink)}
-  .brand i{font:400 9px/1 var(--mono);font-style:normal;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
   .spacer{flex:1}
   .stamp{font:400 10px/1 var(--mono);color:var(--faint);white-space:nowrap;letter-spacing:.04em}
   .stamp.off{color:var(--muted)}
@@ -121,7 +129,7 @@
   .cleared .bar i{display:block;height:100%;background:var(--ember);transition:width .3s}
 
   /* ---------- layout ---------- */
-  .app{display:grid;grid-template-columns:308px minmax(0,1fr) 344px;height:calc(100vh - 56px)}
+  .app{display:grid;grid-template-columns:308px minmax(0,1fr) 344px;height:calc(100vh - 96px)}
   .rail{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--paper)}
   .center{min-width:0;display:flex;flex-direction:column;min-height:0}
   .side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--paper)}
@@ -309,7 +317,6 @@
     border-top:1px solid var(--line);background:var(--panel);
     padding:12px 34px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;
   }
-  .actionbar .hint{margin-left:auto;font:400 9.5px/1 var(--mono);letter-spacing:.06em;color:var(--faint)}
   .detail .placeholder{
     height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
     color:var(--muted);gap:8px;text-align:center;
@@ -367,10 +374,6 @@
     max-height:150px;overflow-y:auto;
   }
   .ev .evbtns{display:flex;gap:6px;margin-top:7px;align-items:center}
-  .ev .evbtns .lab{font:400 9px/1 var(--mono);color:var(--faint);letter-spacing:.05em;margin-left:auto}
-  .feedlabel{
-    padding:6px 16px 0;font:400 9.5px/1.6 var(--mono);color:var(--faint);letter-spacing:.05em;
-  }
 
   /* ---------- X validation ---------- */
   .xwrap{max-width:660px}
@@ -475,8 +478,18 @@
 </head>
 <body>
 
+<nav class="sigosnav" aria-label="Signal OS">
+  <a class="wm" href="../">SIGNAL OS</a>
+  <a class="nl cur" aria-current="page" href="../founder-radar/">FOUNDER RADAR</a>
+  <span class="dot">&middot;</span>
+  <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
+  <span class="dot">&middot;</span>
+  <a class="nl" href="../breakout-radar/">BREAKOUT RADAR</a>
+  <span class="dot">&middot;</span>
+  <a class="nl" href="../associate-os/">ASSOCIATE OS</a>
+</nav>
+
 <header>
-  <div class="brand"><div class="mark"></div><b>Founder Radar</b><i>day-zero sourcing agent</i></div>
   <div class="spacer"></div>
   <span class="stamp" id="hnStamp"></span>
   <button class="iconbtn" id="hnBtn" title="Refresh HN pull"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.7 8a5.7 5.7 0 1 1-1.7-4"/><path d="M13.7 1.3v3h-3"/></svg></button>
@@ -503,7 +516,6 @@
       <button id="actReach" class="primary">Outreach</button>
       <button id="actMeet" style="display:none">Advance to meeting</button>
       <button id="actBack" class="ghost" style="display:none">Back to inbox</button>
-      <span class="hint">The agent drafts. Isaac sends.</span>
     </div>
   </div>
 
@@ -513,7 +525,6 @@
       <div class="briefbody" id="brief"></div>
     </div>
     <div class="cardh" style="padding-bottom:2px"><h2>Agent activity</h2><div class="r"><span class="chip2" id="feedCount"></span></div></div>
-    <div class="feedlabel">The agent drafts. Isaac sends.</div>
     <div class="feed" id="feed"></div>
   </div>
 </div>
@@ -589,7 +600,7 @@ function mulberry32(a){ return function(){ a|=0; a = a + 0x6D2B79F5 | 0; var t =
 function pick(r, arr){ return arr[Math.floor(r()*arr.length)]; }
 function rint(r, a, b){ return a + Math.floor(r()*(b-a+1)); }
 
-/* ---------- scoring engine: code owns the facts ---------- */
+/* ---------- scoring engine (deterministic) ---------- */
 var HALF_LIFE = 21;          /* days to half weight */
 var LIKELY_MIN = 60;         /* "Likely" threshold */
 var SCORE_CAP = 99;
@@ -1195,7 +1206,7 @@ function pullHN(auto){
       hnOffline = false;
       S.hnPull = { date: todayKey(), time: nowHM() };
       if (added){
-        feedPush("PULL", "Pulled Hacker News live: <b>" + added + " Show HN builders</b> scored by the same deterministic engine.");
+        feedPush("PULL", "Pulled Hacker News live: <b>" + added + " Show HN builders</b> added to the queue.");
         if (!auto) toast(added + " live candidates in from Hacker News");
       } else if (!auto){
         toast("No new Show HN posts since the last pull");
@@ -1601,13 +1612,13 @@ function renderDetail(){
   if (d){
     var draftTxt = ai ? ai.text : d.text;
     h += '<div class="sect"><h3>Outreach draft</h3>';
-    h += '<div class="draftcard"><div class="dh"><b>Drafted by the agent</b>' +
+    h += '<div class="draftcard"><div class="dh">' +
       '<div class="actions">' + (LLM.live && !ai ? '<button class="mini" id="aiRewrite">Rewrite with AI</button>' : "") +
       '<button class="mini" id="copyDraft">Copy</button>' +
       '<a class="btnlink primary" href="' + esc(gmailUrl(c, draftTxt)) + '" target="_blank" rel="noopener">Open in Gmail</a>' +
       "</div></div>" +
       "<pre>" + esc(draftTxt) + "</pre>" +
-      '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + " (sample address)</span><span>The agent drafts. Isaac sends.</span></div>" +
+      '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + " (sample address)</span></div>" +
       "</div></div>";
   }
   h += '<div style="height:8px"></div>';
@@ -1664,7 +1675,7 @@ function renderDetail(){
     fetch(API + "/api/outreach", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), signal: ctl.signal })
       .then(function(r){ return r.json().then(function(j){ if (!r.ok || j.error) throw new Error(j.error || "http"); return j; }); })
       .then(function(j){ S.aiDrafts[c.id] = { text: j.message || d.text, day: S.demo }; save(); renderDetail(); renderFeed(); })
-      .catch(function(){ toast("LLM rewrite failed; keeping the deterministic draft", true); renderDetail(); })
+      .catch(function(){ toast("Rewrite failed; keeping the current draft", true); renderDetail(); })
       .finally(function(){ clearTimeout(tm); });
   };
 }
@@ -1703,7 +1714,7 @@ function renderFeed(){
       '<div class="msg">' + e.msg + "</div>" +
       (draft ? '<div class="draftbox">' + esc(draft) + '</div><div class="evbtns">' +
         (dc ? '<a class="btnlink primary" href="' + esc(gmailUrl(dc, draft)) + '" target="_blank" rel="noopener">Open in Gmail</a>' : "") +
-        '<button class="mini" data-copycid="' + esc(e.cid) + '">Copy</button><button class="mini ghost" data-open="' + esc(e.cid) + '">Open</button><span class="lab">The agent drafts. Isaac sends.</span></div>' : "") +
+        '<button class="mini" data-copycid="' + esc(e.cid) + '">Copy</button><button class="mini ghost" data-open="' + esc(e.cid) + '">Open</button></div>' : "") +
       "</div>";
   }).join("") || '<div class="empty">No agent activity yet.</div>';
 }
