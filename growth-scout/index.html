@@ -5,46 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Growth Scout</title>
 <link rel="icon" href="data:,">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e6f56'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='17' font-weight='bold' fill='%23fff' text-anchor='middle'%3EGS%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181B'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='bold' fill='%23FCFCFA' text-anchor='middle'%3EGS%3C/text%3E%3C/svg%3E" />
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
   :root{
-    /* Warm paper surfaces */
-    --bg:#f6f5f1;
-    --panel:#ffffff;
-    --panel-2:#fbfaf8;
+    /* Signal OS light theme (Luc language) */
+    --bg:#FCFCFA;
+    --panel:#FFFFFF;
+    --panel-2:#F6F5F1;
 
     /* Ink */
-    --ink:#151713;
-    --ink2:#3a3d38;
-    --muted:#6e716a;
-    --faint:#9b9e96;
+    --ink:#16181B;
+    --ink2:#3B4046;
+    --muted:#6B7280;
+    --faint:#9CA3AF;
 
     /* Hairlines */
-    --line:#e8e6df;
-    --line2:#f1efe9;
+    --line:#E7E5E0;
+    --line2:#EFEDE8;
+    --line-strong:#D6D3CD;
 
-    /* Brand: evergreen */
-    --accent:#0e6f56;
-    --accent-2:#0a5c47;
-    --accent-soft:#e7f2ed;
-    --accent-line:#cfe4db;
-
-    /* Warm-network signal */
-    --network:#c8402b;
-    --network-bg:#fbeae6;
-    --network-line:#f2cfc6;
+    /* Brand: Signal OS coral */
+    --accent:#E8543F;
+    --accent-2:#C94232;
+    --accent-soft:rgba(232,84,63,.07);
+    --accent-line:rgba(232,84,63,.30);
 
     /* Status */
-    --green:#0e6f56;  --green-bg:#e7f2ed;  --green-line:#cfe4db;
-    --amber:#9a6a1e;  --amber-bg:#f9f0df;  --amber-line:#eeddb8;
-    --red:#b03a2e;    --red-bg:#fbeae7;    --red-line:#f1cdc6;
-    --slate:#57604f;  --slate-bg:#eef0ea;  --slate-line:#dee2d7;
+    --green:#0E7D5E;  --green-bg:#E6F3EE;  --green-line:#BFE0D3;
+    --amber:#9A6A1E;  --amber-bg:#F9F0DF;  --amber-line:#EEDDB8;
+    --red:#B42318;    --red-bg:#FBEAE8;    --red-line:#F2CFC9;
+    --slate:#57606A;  --slate-bg:#EEF0F2;  --slate-line:#DEE2E6;
 
-    --shadow-sm:0 1px 0 rgba(21,23,19,.02), 0 1px 2px rgba(21,23,19,.05);
-    --shadow-md:0 2px 4px rgba(21,23,19,.05), 0 14px 32px rgba(21,23,19,.07);
+    --shadow-sm:none;
+    --shadow-md:0 10px 30px rgba(22,24,27,.10);
 
-    --serif:Georgia,"Times New Roman",serif;
-    --r-sm:8px; --r-md:10px; --r-lg:12px;
+    --grotesk:"Space Grotesk","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    --mono:"Space Mono","Cascadia Mono",Consolas,ui-monospace,monospace;
+    --r-sm:4px; --r-md:5px; --r-lg:6px;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
@@ -58,19 +56,18 @@
   .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
   button{
     font:inherit;cursor:pointer;
-    border:1px solid var(--line);
-    background:#fff;color:var(--ink2);
+    border:1px solid var(--line-strong);
+    background:transparent;color:var(--ink2);
     border-radius:var(--r-sm);
     padding:6px 11px;height:30px;
-    font-weight:550;font-size:12.5px;
+    font-weight:500;font-size:12.5px;
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
     transition:background .12s,border-color .12s,color .12s;
   }
-  button:hover{border-color:#d8d5cc;background:var(--panel-2);color:var(--ink)}
-  button:active{background:#f1efe9}
+  button:hover{border-color:var(--ink);background:transparent;color:var(--ink)}
+  button:active{background:var(--panel-2)}
   button.primary{
     background:var(--accent);border-color:var(--accent);color:#fff;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 1px 2px rgba(14,111,86,.28);
   }
   button.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
   button.primary:disabled{opacity:.65;cursor:default}
@@ -82,62 +79,54 @@
     padding:6px 10px;height:30px;color:var(--ink);background:#fff;
     transition:border-color .12s, box-shadow .12s;
   }
-  input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  input[type=text]:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(22,24,27,.06)}
 
   /* header */
   header{
-    background:rgba(255,255,255,.86);
-    backdrop-filter:saturate(160%) blur(10px);
+    background:var(--bg);
     border-bottom:1px solid var(--line);
     height:54px;display:flex;align-items:center;gap:12px;
     padding:0 18px;position:sticky;top:0;z-index:40;
   }
   .brand{display:flex;align-items:center;gap:10px;flex:none}
   .logo{
-    width:26px;height:26px;border-radius:7px;flex:none;
-    background:linear-gradient(140deg,#12a37c 0%,#0a5c47 90%);
+    width:26px;height:26px;border-radius:5px;flex:none;
+    background:var(--ink);
     color:#fff;display:flex;align-items:center;justify-content:center;
-    font:700 11px/1 var(--serif);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 1px 2px rgba(10,92,71,.3);
+    font:700 10px/1 var(--mono);
   }
-  .brand .nm{font:600 17px/1.1 var(--serif);letter-spacing:-.01em;white-space:nowrap}
-  .brand .sub{font-size:11px;color:var(--muted);font-weight:500;margin-top:1px;white-space:nowrap}
+  .brand .nm{font:500 16px/1.1 var(--grotesk);letter-spacing:-.01em;white-space:nowrap}
+  .brand .sub{font-size:11px;color:var(--muted);font-weight:400;margin-top:1px;white-space:nowrap}
   .spacer{flex:1}
-  .hchip{
-    display:inline-flex;align-items:center;gap:7px;height:28px;
-    background:#fff;border:1px solid var(--line);border-radius:999px;
-    padding:0 11px;font-weight:550;font-size:11.5px;color:var(--ink2);white-space:nowrap;
-  }
-  .hchip .dot{width:6px;height:6px;border-radius:50%;flex:none}
-  .hchip.live .dot{background:var(--green);box-shadow:0 0 0 3px rgba(14,111,86,.14)}
-  .hchip.sim .dot{background:var(--amber);box-shadow:0 0 0 3px rgba(154,106,30,.16)}
-  .hchip small{color:var(--faint);font-weight:650;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase}
 
   /* toolbar */
   .toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px 10px;flex-wrap:wrap}
-  .tabs{display:inline-flex;background:#efede7;border:1px solid var(--line);border-radius:9px;padding:3px}
-  .tabs button{border:0;background:transparent;color:var(--muted);height:26px;padding:2px 12px;border-radius:6px;box-shadow:none}
-  .tabs button:hover{background:rgba(255,255,255,.55);color:var(--ink)}
-  .tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04)}
-  .tabs button .n{color:var(--faint);margin-left:4px;font-size:11px}
+  .tabs{display:inline-flex;background:transparent;border:1px solid var(--line);border-radius:var(--r-sm);padding:2px;gap:2px}
+  .tabs button{border:0;background:transparent;color:var(--muted);height:24px;padding:2px 10px;border-radius:3px;
+    font:400 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em}
+  .tabs button:hover{background:var(--panel-2);color:var(--ink)}
+  .tabs button.on{background:var(--ink);color:#fff}
+  .tabs button .n{color:var(--faint);margin-left:5px;font-size:9.5px}
+  .tabs button.on .n{color:rgba(255,255,255,.55)}
   .chip{
-    font-size:11.5px;height:26px;padding:0 10px;border-radius:999px;
-    border:1px solid var(--line);background:#fff;color:var(--ink2);
-    cursor:pointer;font-weight:550;display:inline-flex;align-items:center;
+    font:400 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;
+    height:24px;padding:0 10px;border-radius:var(--r-sm);
+    border:1px solid var(--line);background:transparent;color:var(--muted);
+    cursor:pointer;display:inline-flex;align-items:center;
     transition:.12s;
   }
-  .chip:hover{border-color:#d8d5cc}
+  .chip:hover{border-color:var(--line-strong);color:var(--ink)}
   .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
-  .stamps{font-size:11px;color:var(--faint);padding:0 18px 8px;font-variant-numeric:tabular-nums}
-  .stamps b{color:var(--muted);font-weight:600}
+  .stamps{font:400 10px/1.4 var(--mono);color:var(--faint);padding:0 18px 8px;letter-spacing:.02em}
+  .stamps b{color:var(--muted);font-weight:400}
 
   /* layout */
   .layout{display:grid;grid-template-columns:minmax(0,1fr) 428px;gap:14px;padding:0 18px 54px;align-items:start}
   @media (max-width:1080px){.layout{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
-  .card-h{display:flex;align-items:center;gap:9px;padding:11px 16px;border-bottom:1px solid var(--line2)}
-  .card-h h2{margin:0;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);white-space:nowrap}
-  .card-h .r{margin-left:auto;font-size:11px;color:var(--faint);font-weight:550;font-variant-numeric:tabular-nums}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
+  .card-h{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .card-h h2{margin:0;font:700 10px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.14em;color:var(--muted);white-space:nowrap}
+  .card-h .r{margin-left:auto;font:400 10px/1.3 var(--mono);color:var(--faint)}
 
   /* list */
   .lrow{
@@ -148,24 +137,25 @@
     cursor:pointer;transition:background .1s;
   }
   .lrow:hover{background:var(--panel-2)}
-  .lrow.sel{background:var(--accent-soft)}
+  .lrow.sel{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
   .lrow:last-child{border-bottom:0}
   .lhead{
     display:grid;grid-template-columns:30px minmax(0,1.5fr) 74px minmax(0,1.05fr) minmax(0,1fr) 92px;gap:10px;
-    padding:7px 16px;border-bottom:1px solid var(--line2);
-    font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);
+    padding:8px 16px;border-bottom:1px solid var(--line2);
+    font:400 9px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
   }
-  .rk{font-variant-numeric:tabular-nums;color:var(--faint);font-weight:600;font-size:12px}
+  .rk{font:400 11px/1 var(--mono);color:var(--faint)}
   .cname{min-width:0}
-  .cname .n{font:600 13.5px/1.25 var(--serif);letter-spacing:-.005em;color:var(--ink);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cname .n{font:500 13.5px/1.25 var(--grotesk);letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .cname .m{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
   .badge{
-    font-size:9px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
-    padding:1.5px 6px;border-radius:5px;flex:none;
+    font:400 8.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    padding:1px 5px;border-radius:3px;flex:none;
+    background:transparent;color:var(--muted);border:1px solid var(--line-strong);
   }
-  .badge.network{background:var(--network-bg);color:var(--network);border:1px solid var(--network-line)}
-  .badge.watch{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
-  .stage{font-size:11.5px;color:var(--ink2);font-weight:550;white-space:nowrap}
+  .badge.network{background:transparent;color:var(--muted);border-color:var(--line-strong)}
+  .badge.watch{background:transparent;color:var(--amber);border-color:var(--amber-line)}
+  .stage{font-size:11.5px;color:var(--ink2);font-weight:400;white-space:nowrap}
   .round{min-width:0}
   .round .a{font-size:12px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
   .round .s{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -173,45 +163,51 @@
   .sigs{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
   .sig{
     display:inline-flex;align-items:center;gap:4px;
-    font-size:10.5px;font-weight:600;color:var(--ink2);
-    background:var(--panel-2);border:1px solid var(--line);
-    border-radius:6px;padding:2px 6px;white-space:nowrap;
+    font-size:10.5px;font-weight:500;color:var(--ink2);
+    background:transparent;border:1px solid var(--line);
+    border-radius:3px;padding:2px 6px;white-space:nowrap;
     font-variant-numeric:tabular-nums;
   }
-  .sig .lab{color:var(--faint);font-weight:650;font-size:9px;letter-spacing:.04em}
+  .sig .lab{color:var(--faint);font:400 8.5px/1 var(--mono);letter-spacing:.06em}
   .sig .up{color:var(--green);font-weight:700}
   .sig .dn{color:var(--red);font-weight:700}
-  .sig.fresh{border-color:var(--accent-line);background:var(--accent-soft)}
+  .sig.fresh{border-color:var(--line-strong)}
   .sig.none{color:var(--faint);font-weight:500;font-style:italic;border-style:dashed}
   .scorec{display:flex;align-items:center;gap:8px;justify-content:flex-end}
-  .scoren{font:650 16px/1 var(--serif);font-variant-numeric:lining-nums tabular-nums;width:26px;text-align:right}
+  .scoren{font:500 16px/1 var(--grotesk);font-variant-numeric:lining-nums tabular-nums;width:26px;text-align:right}
   .s-hi{color:var(--green)} .s-mid{color:var(--amber)} .s-lo{color:var(--faint)}
   .sbar{width:44px;height:4px;border-radius:99px;background:var(--line2);overflow:hidden;flex:none}
   .sbar i{display:block;height:100%;border-radius:99px}
   .s-hi + .sbar i, .sbar i.hi{background:var(--green)}
-  .sbar i.mid{background:var(--amber)} .sbar i.lo{background:#c2c5bc}
+  .sbar i.mid{background:var(--amber)} .sbar i.lo{background:#C6CAD1}
 
   /* detail pane */
   .det{position:sticky;top:68px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 84px);overflow:auto;padding-bottom:2px}
   @media (max-width:1080px){.det{position:static;max-height:none}}
-  .dhead{padding:16px 18px 13px;border-bottom:1px solid var(--line2);position:relative;overflow:hidden}
-  .dhead:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,#12a37c,#0a5c47)}
+  .dhead{padding:16px 18px 14px;border-bottom:1px solid var(--line)}
   .dhead .t{display:flex;align-items:flex-start;gap:10px}
-  .dhead h3{margin:0;font:600 19px/1.15 var(--serif);letter-spacing:-.01em}
+  .dhead h3{margin:0;font:500 20px/1.15 var(--grotesk);letter-spacing:-.02em}
   .dhead .meta{font-size:11.5px;color:var(--muted);margin-top:3px}
   .dhead .big{margin-left:auto;text-align:right;flex:none}
-  .dhead .big .v{font:650 30px/1 var(--serif);font-variant-numeric:lining-nums tabular-nums}
-  .dhead .big .l{font-size:9px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:2px}
-  .whynow{
-    margin:10px 0 0;padding:8px 11px;border-radius:8px;
-    background:var(--accent-soft);border:1px solid var(--accent-line);
-    color:#0b4636;font-size:12px;line-height:1.45;
+  .dhead .big .v{font:500 30px/1 var(--grotesk);font-variant-numeric:lining-nums tabular-nums;cursor:pointer;border-bottom:1px dashed transparent}
+  .dhead .big .v:hover{border-bottom-color:var(--faint)}
+  .dhead .big .l{font:400 9px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+  .fdrs{margin-top:7px;font-size:12px;color:var(--ink2);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .fdrs .flab{font:400 8.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);flex:none}
+  .fdrs b{font-weight:600;color:var(--ink)}
+  .fdrs .fn{white-space:nowrap}
+  .star{
+    background:none;border:0;padding:0;height:auto;width:auto;flex:none;
+    color:var(--faint);font-size:14px;line-height:1;cursor:pointer;
   }
-  .whynow b{font-weight:700}
-  .dsec{padding:12px 18px}
-  .dsec + .dsec{border-top:1px solid var(--line2)}
-  .dsec h4{margin:0 0 8px;font-size:10px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
-  .dsec h4 .r{margin-left:auto;font-weight:550;letter-spacing:0;text-transform:none;color:var(--faint);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .star:hover{color:var(--ink);background:none;border:0}
+  .star.on{color:var(--accent)}
+  .star.on:hover{color:var(--accent-2)}
+  .star.big{font-size:18px;vertical-align:1px;margin-right:2px}
+  .dsec{padding:13px 18px}
+  .dsec + .dsec{border-top:1px solid var(--line)}
+  .dsec h4{margin:0 0 8px;font:700 9.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .dsec h4 .r{margin-left:auto;font:400 9.5px/1.4 var(--mono);letter-spacing:0;text-transform:none;color:var(--faint)}
   .srcrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line2);font-size:12px}
   .srcrow:last-child{border-bottom:0}
   .srcrow .k{width:96px;flex:none;color:var(--muted);font-weight:600;font-size:11px}
@@ -219,126 +215,143 @@
   .srcrow .v small{color:var(--faint);font-weight:500}
   .srcrow .d{font-weight:700}
   .srcrow .d.up{color:var(--green)} .srcrow .d.dn{color:var(--red)}
-  .srcrow .stamp{margin-left:auto;font-size:10px;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .srcrow .na{color:var(--faint);font-style:italic;font-weight:500}
+  .srcrow .stamp{margin-left:auto;font:400 9.5px/1.4 var(--mono);color:var(--faint);white-space:nowrap}
+  .srcrow .na{color:var(--faint);font-style:italic;font-weight:400}
   table.brk{width:100%;border-collapse:collapse;font-size:11.5px}
   table.brk th{
-    text-align:left;font-size:9.5px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+    text-align:left;font:400 9px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;
     color:var(--faint);padding:3px 6px 5px;border-bottom:1px solid var(--line2);
   }
   table.brk td{padding:5px 6px;border-bottom:1px dashed var(--line2);vertical-align:top}
   table.brk tr:last-child td{border-bottom:0}
-  table.brk td.n{font-variant-numeric:tabular-nums;text-align:right;font-weight:650;white-space:nowrap}
+  table.brk td.n{font-variant-numeric:tabular-nums;text-align:right;font-weight:600;white-space:nowrap}
   table.brk td.inp{color:var(--muted);font-size:11px;line-height:1.4}
   table.brk tr.tot td{border-top:1px solid var(--line);font-weight:700;border-bottom:0}
   .ev{display:flex;gap:9px;padding:6px 0;border-bottom:1px dashed var(--line2)}
   .ev:last-child{border-bottom:0}
-  .ev .dt{width:62px;flex:none;font-size:10.5px;color:var(--faint);font-weight:600;font-variant-numeric:tabular-nums;padding-top:1px}
+  .ev .dt{width:62px;flex:none;font:400 9.5px/1.5 var(--mono);color:var(--faint);padding-top:1px}
   .ev .tx{font-size:12px;line-height:1.45;color:var(--ink2);min-width:0}
   .ev .src{display:inline-block;margin-left:6px;font-size:10px;color:var(--faint);font-weight:600;white-space:nowrap}
-  .ev .src:before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent-line);margin-right:4px;vertical-align:1px}
+  .ev .src:before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--line-strong);margin-right:4px;vertical-align:1px}
+  .ev .src a{color:var(--muted);text-decoration:underline;text-decoration-color:var(--line-strong)}
+  .ev .src a:hover{color:var(--ink)}
+  .factcard .s a{color:var(--muted);text-decoration:underline;text-decoration-color:var(--line-strong)}
+  .factcard .s a:hover{color:var(--ink)}
   .ev.kreported .tx:before, .ev.krisk .tx:before{
-    content:attr(data-k);font-size:8.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;
-    padding:1px 5px;border-radius:4px;margin-right:6px;vertical-align:1px;
+    content:attr(data-k);font:400 8px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    padding:1px 5px;border-radius:3px;margin-right:6px;vertical-align:1px;
   }
-  .ev.kreported .tx:before{background:var(--amber-bg);color:var(--amber)}
-  .ev.krisk .tx:before{background:var(--red-bg);color:var(--red)}
-  .factcard{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:12px}
-  .factcard .a{font-weight:650;font-variant-numeric:tabular-nums}
+  .ev.kreported .tx:before{border:1px solid var(--amber-line);color:var(--amber)}
+  .ev.krisk .tx:before{border:1px solid var(--red-bg);color:var(--red)}
+  .factcard{font-size:12px}
+  .factcard .a{font-weight:600;font-variant-numeric:tabular-nums}
   .factcard .s{color:var(--faint);font-size:10.5px;margin-top:2px}
 
   /* founder cadence note */
   .xnote{
-    margin-top:6px;padding:7px 10px;border:1px solid var(--amber-line);
-    background:var(--amber-bg);color:var(--amber);border-radius:8px;
+    margin-top:6px;padding:2px 0 2px 10px;
+    border-left:2px solid var(--amber-line);color:var(--amber);
     font-size:11px;line-height:1.5;
   }
 
   /* discovery feed */
   .disc-item{padding:9px 0;border-bottom:1px dashed var(--line2)}
   .disc-item:last-child{border-bottom:0}
-  .disc-item .dn{font:600 13px/1.3 var(--serif);color:var(--ink);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .disc-item .dn{font:500 13px/1.3 var(--grotesk);color:var(--ink);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
   .disc-item .dstage{
-    font-size:9px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
-    padding:1.5px 6px;border-radius:5px;background:var(--slate-bg);color:var(--slate);border:1px solid var(--slate-line);
+    font:400 8.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    padding:1px 5px;border-radius:3px;background:transparent;color:var(--slate);border:1px solid var(--slate-line);
   }
-  .disc-item .dh2{display:block;font-size:12px;line-height:1.4;color:var(--ink2);text-decoration:none;font-weight:550;margin-top:2px}
-  .disc-item .dh2:hover{color:var(--accent);text-decoration:underline}
+  .disc-item .dh2{display:block;font-size:12px;line-height:1.4;color:var(--ink2);text-decoration:none;font-weight:500;margin-top:2px}
+  .disc-item .dh2:hover{color:var(--ink);text-decoration:underline}
   .disc-item .dm{font-size:10.5px;color:var(--faint);margin-top:2px}
   .disc-item .da{margin-top:6px}
-  .dadded{font-size:11px;font-weight:650;color:var(--green)}
-  .badge.disc{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+  .dadded{font-size:11px;font-weight:600;color:var(--green)}
+  .badge.disc{background:transparent;color:var(--slate);border-color:var(--slate-line)}
 
   /* press wire */
   .wire-item{padding:7px 0;border-bottom:1px dashed var(--line2);font-size:12px;line-height:1.4}
   .wire-item:last-child{border-bottom:0}
-  .wire-item a{color:var(--ink2);text-decoration:none;font-weight:550}
-  .wire-item a:hover{color:var(--accent);text-decoration:underline}
+  .wire-item a{color:var(--ink2);text-decoration:none;font-weight:500}
+  .wire-item a:hover{color:var(--ink);text-decoration:underline}
   .wire-item .m{font-size:10.5px;color:var(--faint);margin-top:1px}
-  .wire-item .hit{color:var(--accent);font-weight:700}
+  .wire-item .hit{color:var(--ink2);font-weight:700}
 
   /* modals */
   .mback{
-    position:fixed;inset:0;background:rgba(21,23,19,.4);z-index:60;
+    position:fixed;inset:0;background:rgba(22,24,27,.38);z-index:60;
     display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;
-    backdrop-filter:blur(2px);
   }
   .mback.open{display:flex}
   .modal{
-    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
     box-shadow:var(--shadow-md);width:min(760px,100%);max-height:86vh;
     display:flex;flex-direction:column;overflow:hidden;
     animation:mpop .16s ease-out;
   }
   @keyframes mpop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
-  .modal .mh{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line2)}
-  .modal .mh h3{margin:0;font:600 16px/1.2 var(--serif)}
+  .modal .mh{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line)}
+  .modal .mh h3{margin:0;font:500 15px/1.2 var(--grotesk);letter-spacing:-.01em}
   .modal .mh .x{margin-left:auto}
   .modal .mb{padding:16px 18px;overflow:auto}
   pre.brief{
     margin:0;white-space:pre-wrap;word-wrap:break-word;
-    font:12px/1.62 ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
+    font:11.5px/1.62 var(--mono);
     color:var(--ink2);background:var(--panel-2);
-    border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;
   }
-  .mfoot{display:flex;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line2)}
+  .mfoot{display:flex;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line)}
   .mfoot .note{font-size:11px;color:var(--faint);margin-left:auto}
 
   /* agent modal tree */
-  .tree{font:12px/1.9 ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;color:var(--ink2)}
+  .tree{font:12px/1.9 var(--mono);color:var(--ink2)}
   .tree .dir{font-weight:700;color:var(--ink)}
-  .tree .c{color:var(--faint);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11.5px}
-  .agent-thesis{
-    margin-top:14px;padding:11px 14px;border-radius:10px;
-    background:var(--accent-soft);border:1px solid var(--accent-line);
-    font:italic 500 13px/1.6 var(--serif);color:#0b4636;
-  }
-  .agent-thesis b{font-style:normal}
-
+  .tree .c{color:var(--faint);font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px}
   /* toasts */
   #toasts{position:fixed;right:16px;bottom:16px;z-index:80;display:flex;flex-direction:column;gap:8px;max-width:360px}
   .toast{
-    background:var(--ink);color:#f2f2ee;border-radius:10px;
+    background:var(--ink);color:#F5F4F0;border-radius:var(--r-sm);
     padding:9px 13px;font-size:12px;line-height:1.45;
     box-shadow:var(--shadow-md);
     animation:tin .18s ease-out;
   }
   .toast.err{background:#7c2d24}
-  .toast.ok{background:var(--accent-2)}
+  .toast.ok{background:var(--ink)}
   @keyframes tin{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
 
-  footer{
-    padding:10px 18px 26px;font-size:11px;color:var(--faint);line-height:1.55;
-    max-width:980px;
+  /* X control (detail pane, next to the founder name): icon + handle + cadence + re-pull */
+  .xctl{display:inline-flex;align-items:center;gap:5px;margin-left:6px;vertical-align:-2px}
+  .xctl .xicon{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border:1px solid var(--line-strong);border-radius:var(--r-sm);
+    color:var(--ink);text-decoration:none;font:700 12px/1 var(--grotesk);
+    background:transparent;transition:border-color .12s,color .12s;
   }
-  kbd{
-    font:600 10px/1 ui-monospace,Consolas,monospace;
-    background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;
-    border-radius:4px;padding:2px 4px;color:var(--muted);
-  }
-  .kbdhint{font-size:10.5px;color:var(--faint);margin-left:auto;white-space:nowrap}
+  .xctl .xicon:hover{border-color:var(--ink);color:var(--ink)}
+  .xctl .xh{font:400 10px/1.4 var(--mono);color:var(--muted)}
+  .xctl a.xh{text-decoration:none}
+  .xctl a.xh:hover{color:var(--ink);text-decoration:underline}
+  .xctl .xre{height:20px;width:20px;padding:0;justify-content:center;font-size:11.5px;border-radius:3px}
+
+  /* sortable list headers */
+  .lhead .sh{cursor:pointer;user-select:none;color:inherit}
+  .lhead .sh:hover{color:var(--ink)}
+  .lhead .arw{color:var(--ink2);font-size:7.5px;margin-left:3px;vertical-align:1px}
+  .lhead .shsep{color:var(--line-strong)}
+
+  /* add-company row */
+  .addrow{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--panel-2)}
+
+  .offnote{font-size:11px;color:var(--faint);font-style:italic}
+
+  /* intro modal */
+  .ipanel{padding:11px 0}
+  .ipanel:first-child{padding-top:0}
+  .ipanel + .ipanel{border-top:1px solid var(--line)}
+  .ipanel h5{margin:0 0 5px;font:700 9.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .ipanel p{margin:0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
   ::-webkit-scrollbar{width:9px;height:9px}
-  ::-webkit-scrollbar-thumb{background:#d7d4ca;border-radius:99px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;border:2px solid var(--bg)}
 </style>
 </head>
 <body>
@@ -352,20 +365,15 @@
     </div>
   </div>
   <div class="spacer"></div>
-  <div class="hchip tnum" id="clockChip"><small>Local</small><span id="clock">--:--:--</span></div>
-  <div class="hchip sim" id="serverChip" title="Checking the server-side X connector"><span class="dot"></span><small>X API</small><span id="serverState">CHECKING</span></div>
-  <button id="btnBrief">Monday brief</button>
-  <button id="btnRefresh" class="primary">Refresh live signals</button>
+  <button id="btnHow" title="How scoring works" aria-label="How scoring works" style="width:30px;padding:0;justify-content:center">?</button>
+  <button id="btnBrief">Daily brief</button>
+  <button id="btnRefresh" class="primary">Refresh signals</button>
 </header>
 
 <div class="toolbar">
   <div class="tabs" id="tabs"></div>
   <span id="sectorChips" style="display:flex;gap:5px;flex-wrap:wrap"></span>
   <input type="text" id="q" placeholder="Search company, city, sector" style="width:220px" />
-  <button class="mini" id="btnJobs" title="Pull open-role counts from Greenhouse, Lever and Ashby boards">Pull jobs</button>
-  <button class="mini" id="btnHN" title="Pull 90-day Hacker News story mentions via Algolia">Pull HN</button>
-  <button class="mini" id="btnGH" title="Pull GitHub repo stars for open-source companies">Pull GitHub</button>
-  <button class="mini primary" id="btnX" title="Pull founder posts through the server-side X connector">Pull X</button>
 </div>
 <div class="stamps" id="stamps">No live pull yet.</div>
 
@@ -374,10 +382,16 @@
     <div class="card-h">
       <h2>Ranked watchlist</h2>
       <span class="r" id="countLbl"></span>
+      <button class="mini" id="btnAddCo">Add company</button>
     </div>
-    <div class="lhead">
-      <span>#</span><span>Company</span><span>Stage</span><span>Last disclosed round</span><span>Live signals</span><span style="text-align:right">Momentum</span>
+    <div class="addrow" id="addRow" style="display:none">
+      <input type="text" id="addName" placeholder="Company name" style="width:170px" />
+      <input type="text" id="addX" placeholder="@x-handle (optional)" style="width:150px" />
+      <input type="text" id="addSlug" placeholder="Careers slug (optional)" style="width:170px" title="Greenhouse, Lever or Ashby board slug; the board type is probed automatically" />
+      <button class="mini primary" id="btnAddGo">Add</button>
+      <span class="offnote">New rows start unclassified; only real pulls fill the signals.</span>
     </div>
+    <div class="lhead" id="lhead"></div>
     <div id="list"></div>
   </div>
 
@@ -403,16 +417,11 @@
   </div>
 </div>
 
-<footer>
-  Public sources and pull times are preserved. Scores are deterministic.
-</footer>
-
-<!-- Monday brief modal -->
+<!-- Daily pipeline brief modal -->
 <div class="mback" id="briefBack">
   <div class="modal">
     <div class="mh">
-      <h3>Monday pipeline brief</h3>
-      <span class="hchip sim" id="polishChip" style="height:24px"><span class="dot"></span><small>Polish</small><span id="polishState">SIM</span></span>
+      <h3 id="briefTitle">Pipeline brief</h3>
       <button class="ghost x mini" data-close>Close</button>
     </div>
     <div class="mb">
@@ -420,8 +429,34 @@
     </div>
     <div class="mfoot">
       <button class="primary" id="btnCopyBrief">Copy markdown</button>
-      <button id="btnPolish">Polish language (LLM)</button>
-      <button class="ghost" id="btnRevert" style="display:none">Back to deterministic draft</button>
+      <span class="note">Regenerates once per day.</span>
+    </div>
+  </div>
+</div>
+
+<!-- first-open intro modal -->
+<div class="mback" id="introBack">
+  <div class="modal" style="width:min(540px,100%)">
+    <div class="mh">
+      <h3>How Growth Scout works</h3>
+      <button class="ghost x mini" data-close>Close</button>
+    </div>
+    <div class="mb">
+      <div class="ipanel">
+        <h5>What this is</h5>
+        <p>Growth Scout watches European growth-stage companies and ranks them by live sourcing signals, so the names worth a look this week rise to the top.</p>
+      </div>
+      <div class="ipanel">
+        <h5>How a score is built</h5>
+        <p>Recent, strong signals add more points. Older signals fade out over weeks (that fading is the "decay"). Different signal types carry different point values (the "weights"): a fresh funding round counts for more than a press mention. Click any score to see its receipt.</p>
+      </div>
+      <div class="ipanel">
+        <h5>Who writes what</h5>
+        <p>Nothing here is written by the model. Every number comes from code and carries its source and pull time. The model only drafts prose, and you send everything yourself.</p>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="primary" id="btnIntroOk">Got it</button>
     </div>
   </div>
 </div>
@@ -444,42 +479,47 @@ const COMPANIES=[
  {id:'legora',name:'Legora',hq:'Stockholm / London',sector:'ai',tags:['Legal AI','B2B SaaS'],stage:'Series D',
   line:'Collaborative AI workspace for law firms; 40 to 400 employees in about a year.',
   round:{label:'$550M Series D at $5.55B',lead:'Accel',date:'2026-03-10',src:'TechCrunch, 10 Mar 2026',amt:550},
+  sourceUrl:'https://techcrunch.com/2026/03/10/legora-reaches-5-55-billion-valuation-as-ai-legaltech-boom-endures/',
   ats:{k:'ashby',slug:'legora'},gh:null,hn:'"Legora"',
   events:[
-    ev('2026-03-10','funding','$550M Series D at a $5.55B valuation led by Accel, with Benchmark, Bessemer, General Catalyst, ICONIQ, Redpoint.','TechCrunch, 10 Mar 2026'),
-    ev('2026-04-30','funding','$50M extension adding NVIDIA\'s NVentures at $5.6B.','TechCrunch, 30 Apr 2026'),
+    ev('2026-03-10','funding','$550M Series D at a $5.55B valuation led by Accel, with Benchmark, Bessemer, General Catalyst, ICONIQ, Redpoint.','TechCrunch, 10 Mar 2026','https://techcrunch.com/2026/03/10/legora-reaches-5-55-billion-valuation-as-ai-legaltech-boom-endures/'),
+    ev('2026-04-30','funding','$50M extension adding NVIDIA\'s NVentures at $5.6B.','TechCrunch, 30 Apr 2026','https://techcrunch.com/2026/04/30/legal-ai-startup-legora-hits-5-6-valuation-and-its-battle-with-harvey-just-got-hotter/'),
   ]},
  {id:'lawhive',name:'Lawhive',hq:'London',sector:'ai',tags:['Legal AI','Consumer'],stage:'Series B',
   line:'Consumer legal platform pairing regulated lawyers with AI case handling.',
   round:{label:'$60M Series B',lead:'Mitch Rales',date:'2026-02-05',src:'Fortune, 5 Feb 2026',amt:60},
+  sourceUrl:'https://fortune.com/2026/02/05/lawhive-ai-law-firm-startup-series-b-venture-funding/',
   ats:{k:'ashby',slug:'lawhive'},gh:null,hn:'"Lawhive"',
   events:[
-    ev('2026-02-05','funding','$60M Series B led by Mitch Rales with TQ Ventures, GV, Balderton, Jigsaw; total raised past $100M. Targeting the ~$200B US consumer legal market.','Fortune, 5 Feb 2026'),
+    ev('2026-02-05','funding','$60M Series B led by Mitch Rales with TQ Ventures, GV, Balderton, Jigsaw; total raised past $100M. Targeting the ~$200B US consumer legal market.','Fortune, 5 Feb 2026','https://fortune.com/2026/02/05/lawhive-ai-law-firm-startup-series-b-venture-funding/'),
   ]},
  {id:'parloa',name:'Parloa',hq:'Berlin',sector:'ai',tags:['Agentic AI','Customer ops'],stage:'Series C',
   line:'Agentic AI for enterprise customer service and contact-center automation.',
   round:{label:'$120M Series C at $1B',lead:'Durable, Altimeter, General Catalyst',date:'2025-05',src:'Parloa announcement, May 2025',amt:120},
+  sourceUrl:'https://www.parloa.com/parloa-in-the-press/parloa-raises-120m-series-c-to-reinvent-customer-service-with-agentic-ai/',
   ats:{k:'greenhouse',slug:'parloa'},gh:null,hn:'"Parloa"',
   events:[
-    ev('2025-05','funding','$120M Series C at a $1B valuation (Durable, Altimeter, General Catalyst).','Parloa announcement, May 2025'),
-    ev(null,'reported','Reported $350M raise tripling valuation to about $3B; date and lead not confirmed.','Vestbee (reported)'),
+    ev('2025-05','funding','$120M Series C at a $1B valuation (Durable, Altimeter, General Catalyst).','Parloa announcement, May 2025','https://www.parloa.com/parloa-in-the-press/parloa-raises-120m-series-c-to-reinvent-customer-service-with-agentic-ai/'),
+    ev(null,'reported','Reported $350M raise tripling valuation to about $3B; date and lead not confirmed.','Vestbee (reported)','https://www.vestbee.com/insights/articles/parloa-raises-350-m'),
   ]},
  {id:'peec',name:'Peec AI',hq:'Berlin',sector:'ai',tags:['AI search analytics','GEO'],stage:'Series A',network:true,
   line:'Shows brands how they appear inside ChatGPT and other AI answers.',
   round:{label:'$21M Series A at >$100M',lead:'Singular',date:'2025-11-17',src:'TechCrunch, 17 Nov 2025',amt:21},
+  sourceUrl:'https://techcrunch.com/2025/11/17/as-consumers-ditch-google-for-chatgpt-peec-ai-raises-21m-to-help-brands-adapt/',
   ats:{k:'ashby',slug:'peec'},gh:null,hn:'"Peec"',
   events:[
-    ev('2025-07','funding','€7M seed led by 20VC, reportedly closed in 24 hours, the fastest seed in 20VC history. Founders met in the Antler Berlin Winter 2024 cohort.','Tech Funding News, Jul 2025'),
-    ev('2025-11-17','funding','$21M Series A led by Singular, with Antler, Combination VC, identity.vc; valuation tripled to over $100M.','TechCrunch, 17 Nov 2025'),
-    ev('2026-05-23','traction','ARR passed $10M sixteen months after launch, more than doubling in about six months. Customers include Axel Springer, Chanel, ElevenLabs, n8n, TUI.','TechCrunch, 23 May 2026'),
-    ev('2026-06-26','reported','Reportedly negotiating a new round at about $200M pre-money, roughly double the Series A valuation in seven months.','Sifted, 26 Jun 2026'),
+    ev('2025-07','funding','€7M seed led by 20VC, reportedly closed in 24 hours, the fastest seed in 20VC history. Founders met in the Antler Berlin Winter 2024 cohort.','Tech Funding News, Jul 2025','https://techfundingnews.com/peec-ai-200m-valuation-10m-arr-geo-marketing/'),
+    ev('2025-11-17','funding','$21M Series A led by Singular, with Antler, Combination VC, identity.vc; valuation tripled to over $100M.','TechCrunch, 17 Nov 2025','https://techcrunch.com/2025/11/17/as-consumers-ditch-google-for-chatgpt-peec-ai-raises-21m-to-help-brands-adapt/'),
+    ev('2026-05-23','traction','ARR passed $10M sixteen months after launch, more than doubling in about six months. Customers include Axel Springer, Chanel, ElevenLabs, n8n, TUI.','TechCrunch, 23 May 2026','https://techcrunch.com/2026/05/23/peec-one-of-berlins-rising-startups-more-than-doubled-annualized-revenue-in-months-to-10m-sources-say/'),
+    ev('2026-06-26','reported','Reportedly negotiating a new round at about $200M pre-money, roughly double the Series A valuation in seven months.','Sifted, 26 Jun 2026','https://sifted.eu/articles/peec-ai-fundraise-new-valuation'),
   ]},
  {id:'elevenlabs',name:'ElevenLabs',hq:'London / New York',sector:'ai',tags:['Voice AI'],stage:'Series D',
   line:'AI voice synthesis and audio platform.',
   round:{label:'$500M Series D at $11B',lead:'Sequoia',date:'2026-02-04',src:'CNBC, 4 Feb 2026',amt:500},
+  sourceUrl:'https://www.cnbc.com/2026/02/04/nvidia-backed-ai-startup-elevenlabs-11-billion-valuation.html',
   ats:{k:'ashby',slug:'elevenlabs'},gh:'elevenlabs/elevenlabs-python',hn:'"ElevenLabs"',
   events:[
-    ev('2026-02-04','funding','$500M Series D at an $11B valuation led by Sequoia; a16z quadrupled and ICONIQ tripled their positions. Company signalling an IPO path.','CNBC, 4 Feb 2026'),
+    ev('2026-02-04','funding','$500M Series D at an $11B valuation led by Sequoia; a16z quadrupled and ICONIQ tripled their positions. Company signalling an IPO path.','CNBC, 4 Feb 2026','https://www.cnbc.com/2026/02/04/nvidia-backed-ai-startup-elevenlabs-11-billion-valuation.html'),
   ]},
  {id:'synthesia',name:'Synthesia',hq:'London',sector:'ai',tags:['AI video','Enterprise'],stage:'Series D',
   line:'AI video generation for enterprise communications and training.',
@@ -488,10 +528,11 @@ const COMPANIES=[
  {id:'lovable',name:'Lovable',hq:'Stockholm',sector:'ai',tags:['AI app building','DevTools'],stage:'Series B',
   line:'Prompt-to-app software building; one of Europe\'s fastest-growing products.',
   round:{label:'$330M Series B at $6.6B',lead:'CapitalG, Menlo Ventures',date:'2025-12-18',src:'TechCrunch, 18 Dec 2025',amt:330},
+  sourceUrl:'https://techcrunch.com/2025/12/18/vibe-coding-startup-lovable-raises-330m-at-a-6-6b-valuation/',
   ats:{k:'greenhouse',slug:'lovable'},gh:null,hn:'"Lovable"',
   events:[
-    ev('2025-07-17','funding','$200M Series A at $1.8B led by Accel, eight months after launch.','TechCrunch, 17 Jul 2025'),
-    ev('2025-12-18','funding','$330M Series B at a $6.6B valuation led by CapitalG and Menlo Ventures.','TechCrunch, 18 Dec 2025'),
+    ev('2025-07-17','funding','$200M Series A at $1.8B led by Accel, eight months after launch.','TechCrunch, 17 Jul 2025','https://techcrunch.com/2025/07/17/lovable-becomes-a-unicorn-with-200m-series-a-just-8-months-after-launch/'),
+    ev('2025-12-18','funding','$330M Series B at a $6.6B valuation led by CapitalG and Menlo Ventures.','TechCrunch, 18 Dec 2025','https://techcrunch.com/2025/12/18/vibe-coding-startup-lovable-raises-330m-at-a-6-6b-valuation/'),
   ]},
  {id:'n8n',name:'n8n',hq:'Berlin',sector:'saas',tags:['Workflow automation','AI orchestration'],stage:'Series C',
   line:'Source-available workflow automation and AI orchestration platform.',
@@ -591,28 +632,31 @@ const COMPANIES=[
  {id:'isomorphic',name:'Isomorphic Labs',hq:'London',sector:'health',tags:['AI drug design'],stage:'Growth',
   line:'AI-first drug design; Alphabet spin-out built on the AlphaFold lineage.',
   round:{label:'$600M first external round',lead:'Thrive Capital',date:'2025-03-31',src:'PR Newswire, 31 Mar 2025',amt:600},
+  sourceUrl:'https://www.prnewswire.com/news-releases/isomorphic-labs-announces-600-million-funding-to-further-develop-its-next-generation-ai-drug-design-engine-and-advance-therapeutic-programs-into-the-clinic-302415534.html',
   ats:{k:'greenhouse',slug:'isomorphiclabs'},gh:null,hn:'"Isomorphic Labs"',
   events:[
-    ev('2025-03-31','funding','$600M first external round led by Thrive Capital, with GV and follow-on from Alphabet.','PR Newswire, 31 Mar 2025'),
+    ev('2025-03-31','funding','$600M first external round led by Thrive Capital, with GV and follow-on from Alphabet.','PR Newswire, 31 Mar 2025','https://www.prnewswire.com/news-releases/isomorphic-labs-announces-600-million-funding-to-further-develop-its-next-generation-ai-drug-design-engine-and-advance-therapeutic-programs-into-the-clinic-302415534.html'),
     ev(null,'reported','Reported $2.1B Series B led by Thrive with Alphabet, GV, MGX, Temasek, CapitalG; closing terms not fully confirmed.','Tech Funding News, Jun 2026 (reported)'),
   ]},
  {id:'proxima',name:'Proxima Fusion',hq:'Munich',sector:'climate',tags:['Fusion','Stellarator'],stage:'Growth',
   line:'QI stellarator fusion; Max Planck IPP spin-out, Europe\'s best-funded fusion company.',
   round:{label:'€411M at €2.4B',lead:'XTX Ventures, East X Ventures',date:'2026-07-07',src:'CNBC, 7 Jul 2026',amt:411},
+  sourceUrl:'https://www.cnbc.com/2026/07/07/google-proxima-fusion-funding.html',
   ats:{k:'ashby',slug:'proxima-fusion'},gh:null,hn:'"Proxima Fusion"',
   events:[
-    ev('2026-07-07','funding','€411M ($468M) at a €2.4B valuation, the largest European fusion round on record, led by XTX Ventures and East X Ventures with Google and RWE as strategic investors; total raised past €650M.','CNBC, 7 Jul 2026'),
-    ev('2025-06','funding','€130M Series A led by Balderton and Cherry Ventures.','Proxima Fusion announcement, Jun 2025'),
-    ev(null,'partnership','Agreement with RWE, Bavaria and Max Planck IPP to site the first commercial plant at the former Gundremmingen nuclear site.','Proxima Fusion announcement'),
+    ev('2026-07-07','funding','€411M ($468M) at a €2.4B valuation, the largest European fusion round on record, led by XTX Ventures and East X Ventures with Google and RWE as strategic investors; total raised past €650M.','CNBC, 7 Jul 2026','https://www.cnbc.com/2026/07/07/google-proxima-fusion-funding.html'),
+    ev('2025-06','funding','€130M Series A led by Balderton and Cherry Ventures.','Proxima Fusion announcement, Jun 2025','https://www.proximafusion.com/press-news/proxima-fusion-raises-eu130m-series-a-to-build-worlds-first-stellarator-based-fusion-power-plant-in-the-2030s'),
+    ev(null,'partnership','Agreement with RWE, Bavaria and Max Planck IPP to site the first commercial plant at the former Gundremmingen nuclear site.','Proxima Fusion announcement','https://www.proximafusion.com/press-news/proxima-fusion-rwe-the-free-state-of-bavaria-and-max-planck-institute-for-plasma-physics-sign-agreement-to-build-the-worlds-first-commercial-fusion-power-plant-in-europe'),
     ev('2025-02','milestone','Stellaris: first peer-reviewed integrated commercial stellarator plant concept, published in Fusion Engineering and Design.','Fusion Engineering and Design, Feb 2025'),
   ]},
  {id:'marvel',name:'Marvel Fusion',hq:'Munich',sector:'climate',tags:['Fusion','Laser inertial'],stage:'Series B',
   line:'Ultra-short-pulse laser inertial fusion with a near-term laser capability line.',
   round:{label:'€113M Series B (extended)',lead:'EQT Ventures, Siemens Energy, EIC Fund',date:'2025-03-28',src:'World Nuclear News, 28 Mar 2025',amt:113},
+  sourceUrl:'https://www.world-nuclear-news.org/articles/germanys-marvel-fusion-raises-further-eur113-million',
   ats:{k:'greenhouse',slug:'marvelfusion'},gh:null,hn:'"Marvel Fusion"',
   events:[
-    ev('2025-03-28','funding','Series B extended by €50M to €113M total; EQT Ventures, Siemens Energy and the EIC Fund joined. About €170M private raised, €385M including public support.','World Nuclear News, 28 Mar 2025'),
-    ev(null,'milestone','ATLAS multi-petawatt laser facility at Colorado State University on track for substantial completion in Dec 2026; ~7 PW combined at 10 Hz.','Colorado State University, 2026'),
+    ev('2025-03-28','funding','Series B extended by €50M to €113M total; EQT Ventures, Siemens Energy and the EIC Fund joined. About €170M private raised, €385M including public support.','World Nuclear News, 28 Mar 2025','https://www.world-nuclear-news.org/articles/germanys-marvel-fusion-raises-further-eur113-million'),
+    ev(null,'milestone','ATLAS multi-petawatt laser facility at Colorado State University on track for substantial completion in Dec 2026; ~7 PW combined at 10 Hz.','Colorado State University, 2026','https://source.colostate.edu/csu-tops-out-one-of-worlds-most-advanced-laser-research-facilities-on-track-for-2026-completion/'),
   ]},
  {id:'tokamak',name:'Tokamak Energy',hq:'Oxford',sector:'climate',tags:['Fusion','HTS magnets'],stage:'Growth',
   line:'Spherical tokamak fusion plus HTS magnet sales, a real near-term revenue line.',
@@ -620,14 +664,15 @@ const COMPANIES=[
   ats:null,gh:null,hn:'"Tokamak Energy"',
   events:[
     ev('2024-11','funding','$125M round with Future Planet Capital and In-Q-Tel; about $336M raised in total.','TechCrunch, Nov 2024'),
-    ev('2026-06-19','note','Supplies HTS magnets to the UK STEP programme, giving it revenue before net energy.','TechCrunch fusion roundup, 19 Jun 2026'),
+    ev('2026-06-19','note','Supplies HTS magnets to the UK STEP programme, giving it revenue before net energy.','TechCrunch fusion roundup, 19 Jun 2026','https://techcrunch.com/2026/06/19/every-fusion-startup-that-has-raised-over-100m/'),
   ]},
  {id:'focused',name:'Focused Energy',hq:'Darmstadt / Austin',sector:'climate',tags:['Fusion','Laser inertial'],stage:'Series A',
   line:'Laser inertial fusion; NIF-diaspora team across Darmstadt and Austin.',
   round:{label:'$240M oversubscribed Series A',lead:'SPRIND, RWE backing',date:'2026-06',src:'TechCrunch, Jun 2026',amt:240},
+  sourceUrl:'https://techcrunch.com/2026/06/19/every-fusion-startup-that-has-raised-over-100m/',
   ats:null,gh:null,hn:'"Focused Energy"',
   events:[
-    ev('2026-06','funding','$240M oversubscribed Series A; roughly $400M private plus $200M in grants raised in total, backed by SPRIND and RWE. Hired NIF target-design leadership.','TechCrunch, Jun 2026'),
+    ev('2026-06','funding','$240M oversubscribed Series A; roughly $400M private plus $200M in grants raised in total, backed by SPRIND and RWE. Hired NIF target-design leadership.','TechCrunch, Jun 2026','https://techcrunch.com/2026/06/19/every-fusion-startup-that-has-raised-over-100m/'),
   ]},
  {id:'firstlight',name:'First Light Fusion',hq:'Oxford',sector:'climate',tags:['Pulsed power'],stage:'Series C',watch:true,
   line:'Pivoted from building a power plant to selling pulsed-power capability.',
@@ -681,14 +726,55 @@ const TABS=[
   {id:'watch',label:'Watch'},
 ];
 const STORE_KEY='growthScout.signals.v1';
+const STAR_KEY='growthScout.starred.v1';     // array of company ids on the Watch tab
+const CUSTOM_KEY='growthScout.custom.v1';    // manually added companies
 const DAY=86400000;
 const EV_W={funding:45,traction:35,partnership:30,milestone:25,note:15,reported:20,risk:0};
 const WEIGHTS={fit:.30,hiring:.25,community:.20,capital:.25};
 
+/* ---------- daily localStorage caches (live by default, one pull per day) ---------- */
+const DAILY_KEY='growthScout.dailyPull.v1';   // {jobs:'YYYY-MM-DD',hn:...,gh:...}
+const X_DAILY_KEY='growthScout.xDaily.v1';    // {handle:'YYYY-MM-DD'} paid API, one pull/handle/day
+const SCAN_KEY='growthScout.scan.v1';         // {date, disc}
+const WIRE_KEY='growthScout.wire.v1';         // {date, at, which, items}
+const BRIEF_KEY='growthScout.brief.v1';       // {date, text}
+function todayKey(){
+  const d=new Date();const z=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+}
+function loadJSON(k,fb){
+  try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?fb:v;}catch(e){return fb;}
+}
+function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+let DAILY=loadJSON(DAILY_KEY,{});
+let X_DAILY=loadJSON(X_DAILY_KEY,{});
+let WIRE=loadJSON(WIRE_KEY,null);
+
 /* ---------- state ---------- */
 let SIG=loadSig();               // {jobs:{id:{count,at,prev}}, hn:{...}, gh:{...}}
-let ui={tab:'all',sector:null,q:'',sel:null,serverLive:false,provider:'sim',xConfigured:false,xProvider:null,briefIsPolished:false,detBrief:''};
-let lastStamp={jobs:null,hn:null,gh:null,x:null};
+let ui={tab:'all',sector:null,q:'',sel:null,showBrk:false,serverLive:false,provider:'sim',xConfigured:false,xProvider:null,
+        sort:{key:'momentum',dir:-1}};
+let STARRED=new Set(loadJSON(STAR_KEY,[]));
+function saveStars(){saveJSON(STAR_KEY,[...STARRED]);}
+function toggleStar(id){
+  if(STARRED.has(id))STARRED.delete(id);else STARRED.add(id);
+  saveStars();render();
+}
+function starBtn(id,big){
+  const on=STARRED.has(id);
+  return '<button class="star'+(on?' on':'')+(big?' big':'')+'" data-star="'+esc(id)+'" title="'+(on?'Remove from':'Add to')+' the Watch tab">'+(on?'&#9733;':'&#9734;')+'</button>';
+}
+function stampFromSig(bucket,liveOnly){
+  let m=null;
+  for(const k in (bucket||{})){
+    const v=bucket[k];
+    if(!v||!v.at)continue;
+    if(liveOnly&&v.state!=='live')continue;
+    if(m==null||v.at>m)m=v.at;
+  }
+  return m;
+}
+let lastStamp={jobs:stampFromSig(SIG.jobs),hn:stampFromSig(SIG.hn),gh:stampFromSig(SIG.gh),x:stampFromSig(SIG.x,true)};
 
 function loadSig(){
   try{
@@ -731,6 +817,11 @@ function hhmmss(t){
   const d=new Date(t);
   const z=n=>String(n).padStart(2,'0');
   return z(d.getHours())+':'+z(d.getMinutes())+':'+z(d.getSeconds());
+}
+function hhmm(t){
+  const d=new Date(t);
+  const z=n=>String(n).padStart(2,'0');
+  return z(d.getHours())+':'+z(d.getMinutes());
 }
 function ago(t){
   const s=Math.floor((Date.now()-t)/1000);
@@ -874,20 +965,46 @@ function whyNow(c,p){
   return bits.slice(0,3).join('; ')+'.';
 }
 
-/* ---------- suggested next action (deterministic) ---------- */
-function nextAction(c,sc){
-  if(c.discovered)return 'Fresh from the press scan: verify the round in the linked article, classify sector and HQ, then keep or drop.';
-  if(c.watch)return 'Hold on watch; log the status change, no partner time yet.';
-  if(c.network)return 'Warm path: request context from the portfolio network before any outreach.';
+/* ---------- suggested next action (deterministic) ----------
+   Returns {text, mail}. mail is set only for outreach-shaped actions and
+   feeds the "Open in Gmail" button. Contacts without a public email get a
+   clearly-sample example.com address; Isaac reviews and sends everything. */
+function slugMail(name){
+  return String(name).toLowerCase().replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')||'contact';
+}
+function nextAction(c,sc,why){
+  const whyLine=why?('Why now: '+why+'\n\n'):'';
+  if(c.discovered)return {text:'Fresh from the press scan: verify the round in the linked article, classify sector and HQ, then keep or drop.',mail:null};
+  if(c.watch)return {text:'Hold on watch; log the status change, no partner time yet.',mail:null};
+  if(c.network)return {text:'Warm path: request context from the portfolio network before any outreach.',
+    mail:{to:slugMail(c.name)+'.network@example.com',
+      su:'Context request: '+c.name,
+      body:'Hi,\n\nWe track '+c.name+' ('+c.hq+' · '+c.stage+') on the Growth Scout watchlist and it sits close to the portfolio network. Before any outreach, could you share quick context on the team and how things are going there?\n\n'+whyLine+'Thanks,\nIsaac\n\n(Draft prepared by Growth Scout. Sample address: swap in the real network contact before sending.)'}};
   const js=SIG.jobs[c.id];
-  if(js&&js.prev&&(js.count-js.prev.count)>=5)return 'Track the careers page weekly; hiring acceleration is the live trigger.';
+  if(js&&js.prev&&(js.count-js.prev.count)>=5)return {text:'Track the careers page weekly; hiring acceleration is the live trigger.',mail:null};
   if(c.round&&c.round.date){
     const m=monthsSince(c.round.date);
-    if(m<4&&(c.round.amt||0)>=100)return 'Recently capitalized; monitor exec hires and expansion signals, revisit next quarter.';
-    if(m>=15&&m<27)return 'Flag to partner: entering the typical re-raise window; open a coverage file.';
+    if(m<4&&(c.round.amt||0)>=100)return {text:'Recently capitalized; monitor exec hires and expansion signals, revisit next quarter.',mail:null};
+    if(m>=15&&m<27)return {text:'Flag to partner: entering the typical re-raise window; open a coverage file.',
+      mail:{to:'partner@example.com',
+        su:'Coverage flag: '+c.name+' entering the re-raise window',
+        body:'Hi,\n\n'+c.name+' ('+c.hq+' · '+c.stage+') is about '+Math.round(m)+' months past its '+c.round.label+' ('+c.round.src+'), inside the typical 18 to 26 month re-raise window. Suggest we open a coverage file.\n\n'+whyLine+'Isaac\n\n(Draft prepared by Growth Scout. Sample address: swap in the real partner before sending.)'}};
   }
-  if(sc>=75)return 'Prepare a one-pager for the Monday meeting; signals justify partner visibility.';
-  return 'Keep on the tracking sheet; re-check signals on the next Monday run.';
+  if(sc>=75)return {text:'Prepare a one-pager for the Monday meeting; signals justify partner visibility.',mail:null};
+  return {text:'Keep on the tracking sheet; re-check signals on the next daily run.',mail:null};
+}
+/* strip markdown / markup artifacts from press-feed text before display */
+function cleanCopy(s){
+  return String(s||'')
+    .replace(/<[^>]*>/g,'')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g,'$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g,'$1')
+    .replace(/\*\*([^*]+)\*\*/g,'$1')
+    .replace(/__([^_]+)__/g,'$1')
+    .replace(/`([^`]+)`/g,'$1')
+    .replace(/^#+\s*/,'')
+    .replace(/\s+/g,' ')
+    .trim();
 }
 
 /* =====================================================================
@@ -940,7 +1057,7 @@ async function fetchGH(c){
    Unconfigured server answers {configured:false}; that state is stored and
    shown honestly. No numbers about real people are ever invented. */
 async function fetchX(c){
-  const fdr=(c.founders||[]).find(f=>f.x);
+  const fdr=(c.founders||[]).find(f=>f.x)||(c.x?{x:c.x}:null);
   if(!fdr)return null;
   const r=await fetch('/api/x/tweets?handle='+encodeURIComponent(fdr.x)+'&count=10');
   const j=await r.json();
@@ -958,6 +1075,8 @@ async function fetchX(c){
     ppw=Math.round((times.length-1)/Math.max(span,0.2)*7*10)/10;
   }else if(times.length===1)ppw=0.5;
   SIG.x[c.id]={state:'live',at:Date.now(),handle:fdr.x,provider:j.provider||ui.xProvider,ppw:ppw,last:times[0]||null,n:tweets.length};
+  X_DAILY[fdr.x.toLowerCase()]=todayKey();   /* paid API: one pull per handle per day */
+  saveJSON(X_DAILY_KEY,X_DAILY);
   saveSig();
   return tweets.length;
 }
@@ -979,77 +1098,102 @@ async function pool(tasks,width,onTick){
   return {done:done,fail:fail,errs:errs};
 }
 
-async function pullFamily(family){
-  const tasks=[];
+/* X tasks are collected only for companies with a verified real founder
+   handle, and only when that handle has not already been pulled today
+   (per-handle daily cache; paid API). Manual re-pull in the detail pane
+   bypasses the daily gate. */
+function xTasksDue(){
+  if(!serverReachable||!ui.xConfigured)return [];
+  const t=todayKey(),tasks=[];
   for(const c of COMPANIES){
-    if(family==='jobs'&&c.ats)tasks.push({family:'jobs',fn:()=>fetchJobs(c)});
-    if(family==='hn'&&c.hn)tasks.push({family:'hn',fn:()=>fetchHN(c)});
-    if(family==='gh'&&c.gh)tasks.push({family:'gh',fn:()=>fetchGH(c)});
-    if(family==='x'&&(c.founders||[]).some(f=>f.x))tasks.push({family:'x',fn:()=>fetchX(c)});
+    const fdr=(c.founders||[]).find(f=>f.x)||(c.x?{x:c.x}:null);
+    if(fdr&&X_DAILY[fdr.x.toLowerCase()]!==t)tasks.push({family:'x',fn:()=>fetchX(c)});
   }
-  const label=family==='jobs'?'job boards':family==='hn'?'Hacker News':family==='x'?'X founder cadence':'GitHub';
-  return runPulls(tasks,label,[family]);
+  return tasks;
 }
 
-async function pullAll(){
+/* auto-pull the free sources on load, one pull per source per day */
+async function autoPullFree(){
+  const t=todayKey();
+  const fams=['jobs','hn','gh'].filter(f=>DAILY[f]!==t);
+  if(!fams.length)return;
+  const tasks=[];
+  for(const c of COMPANIES){
+    if(fams.includes('jobs')&&c.ats)tasks.push({family:'jobs',fn:()=>fetchJobs(c)});
+    if(fams.includes('hn')&&c.hn)tasks.push({family:'hn',fn:()=>fetchHN(c)});
+    if(fams.includes('gh')&&c.gh)tasks.push({family:'gh',fn:()=>fetchGH(c)});
+  }
+  const res=await runPulls(tasks,'live signals',fams);
+  if(res){
+    fams.forEach(f=>{
+      const total=tasks.filter(x=>x.family===f).length;
+      if(total>0&&(res.errs[f]||0)<total)DAILY[f]=t;
+    });
+    saveJSON(DAILY_KEY,DAILY);
+  }
+}
+
+async function autoPullX(){
+  const tasks=xTasksDue();
+  if(tasks.length)await runPulls(tasks,'X founder cadence',['x']);
+}
+
+/* manual refresh: free sources always; X still respects the per-handle daily cap */
+async function refreshAll(){
+  if(pulling)return;
+  const t=todayKey();
   const tasks=[];
   for(const c of COMPANIES){
     if(c.ats)tasks.push({family:'jobs',fn:()=>fetchJobs(c)});
     if(c.hn)tasks.push({family:'hn',fn:()=>fetchHN(c)});
     if(c.gh)tasks.push({family:'gh',fn:()=>fetchGH(c)});
-    if(serverReachable&&(c.founders||[]).some(f=>f.x))tasks.push({family:'x',fn:()=>fetchX(c)});
   }
-  return runPulls(tasks,'live signals',serverReachable?['jobs','hn','gh','x']:['jobs','hn','gh']);
-}
-
-async function pullSelectedX(){
-  const c=COMPANIES.find(x=>x.id===ui.sel);
-  const btn=document.getElementById('btnX');
-  if(!c||(c.founders||[]).every(f=>!f.x)){
-    toast('Select a company with a verified founder handle.','err');
-    return;
-  }
-  btn.disabled=true;btn.textContent='Pulling X…';
-  try{
-    await fetchX(c);
-    const x=SIG.x[c.id];
-    lastStamp.x=x&&x.state==='live'?x.at:null;
-    saveSig();render();
-    if(x&&x.state==='live')toast('X LIVE · '+(x.provider||ui.xProvider||'twitterapi')+' · @'+x.handle+' · '+x.n+' posts · '+hhmmss(x.at),'ok');
-    else toast('X not configured.','err');
-  }catch(e){
-    toast('X pull failed · '+e.message,'err');
-  }finally{
-    btn.disabled=false;btn.textContent='Pull X';
+  const xt=xTasksDue();
+  xt.forEach(x=>tasks.push(x));
+  const fams=xt.length?['jobs','hn','gh','x']:['jobs','hn','gh'];
+  const res=await runPulls(tasks,'live signals',fams);
+  if(res){
+    ['jobs','hn','gh'].forEach(f=>{
+      const total=tasks.filter(x=>x.family===f).length;
+      if(total>0&&(res.errs[f]||0)<total)DAILY[f]=t;
+    });
+    saveJSON(DAILY_KEY,DAILY);
   }
 }
 
 let pulling=false;
-async function runPulls(tasks,label,families){
-  if(pulling)return;
-  pulling=true;
-  const btn=document.getElementById('btnRefresh');
-  const orig=btn.textContent;
-  btn.disabled=true;
-  const res=await pool(tasks,6,(d,t)=>{btn.textContent='Pulling '+d+'/'+t;});
-  const now=Date.now();
-  for(const f of families){
-    if(f==='x'){
-      const pulled=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live').sort((a,b)=>b.at-a.at)[0];
-      lastStamp.x=pulled?pulled.at:null;
-    }else lastStamp[f]=now;
-  }
-  saveSig();
-  btn.disabled=false;btn.textContent=orig;
-  pulling=false;
-  render();
-  if(res.fail===0&&families.length===1&&families[0]==='x'){
-    const fresh=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live'&&(now-x.at)<120000);
-    const observations=fresh.reduce((n,x)=>n+(x.n||0),0);
-    toast('X LIVE · '+(ui.xProvider||'twitterapi')+' · '+observations+' posts · '+hhmmss(lastStamp.x||now),'ok');
-  }
-  else if(res.fail===0)toast(tasks.length+' '+label+' pulls · '+hhmmss(now),'ok');
-  else toast(res.fail+' of '+tasks.length+' '+label+' pulls failed ('+Object.keys(res.errs).join(', ')+'). Cached and curated data still shown.','err');
+let pullChain=Promise.resolve();
+function runPulls(tasks,label,families){
+  const run=async()=>{
+    if(!tasks.length)return null;
+    pulling=true;
+    const btn=document.getElementById('btnRefresh');
+    const orig=btn.textContent;
+    btn.disabled=true;
+    const res=await pool(tasks,6,(d,t)=>{btn.textContent='Pulling '+d+'/'+t;});
+    const now=Date.now();
+    for(const f of families){
+      if(f==='x'){
+        const pulled=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live').sort((a,b)=>b.at-a.at)[0];
+        lastStamp.x=pulled?pulled.at:null;
+      }else lastStamp[f]=now;
+    }
+    saveSig();
+    btn.disabled=false;btn.textContent=orig;
+    pulling=false;
+    render();
+    if(res.fail===0&&families.length===1&&families[0]==='x'){
+      const fresh=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live'&&(now-x.at)<120000);
+      const observations=fresh.reduce((n,x)=>n+(x.n||0),0);
+      toast('X LIVE · '+(ui.xProvider||'twitterapi')+' · '+observations+' posts · '+hhmmss(lastStamp.x||now),'ok');
+    }
+    else if(res.fail===0)toast(tasks.length+' '+label+' pulls · '+hhmmss(now),'ok');
+    else toast(res.fail+' of '+tasks.length+' '+label+' pulls failed ('+Object.keys(res.errs).join(', ')+'). Cached and curated data still shown.','err');
+    return res;
+  };
+  const p=pullChain.then(run);
+  pullChain=p.then(()=>{},()=>{});
+  return p;
 }
 
 /* =====================================================================
@@ -1064,7 +1208,7 @@ function visible(rows){
   return rows.filter(({c,s})=>{
     if(ui.tab==='high'&&s.total<70)return false;
     if(ui.tab==='network'&&!c.network)return false;
-    if(ui.tab==='watch'&&!c.watch)return false;
+    if(ui.tab==='watch'&&!STARRED.has(c.id))return false;
     if(ui.sector&&c.sector!==ui.sector)return false;
     if(ui.q){
       const hay=(c.name+' '+c.hq+' '+c.tags.join(' ')+' '+(SECTORS[c.sector]||'unclassified')).toLowerCase();
@@ -1075,16 +1219,50 @@ function visible(rows){
 }
 function band(s){return s>=70?'hi':s>=55?'mid':'lo';}
 
+/* column sorting: the visible list re-sorts and renumbers from 1 */
+const STAGE_ORDER={'Seed':0,'Series A':1,'Series B':2,'Series C':3,'Series D':4,'Growth':5};
+function sortRows(vis){
+  const k=ui.sort.key,d=ui.sort.dir;
+  const roundT=c=>c.round&&c.round.date?parseD(c.round.date).getTime():null;
+  const cmp={
+    momentum:(a,b)=>a.s.total-b.s.total,
+    name:(a,b)=>a.c.name.localeCompare(b.c.name),
+    hq:(a,b)=>a.c.hq.localeCompare(b.c.hq),
+    stage:(a,b)=>(STAGE_ORDER[a.c.stage]!=null?STAGE_ORDER[a.c.stage]:9)-(STAGE_ORDER[b.c.stage]!=null?STAGE_ORDER[b.c.stage]:9),
+    round:(a,b)=>{
+      const x=roundT(a.c),y=roundT(b.c);
+      if(x==null&&y==null)return 0;
+      if(x==null)return d;      /* undated last in either direction */
+      if(y==null)return -d;
+      return x-y;
+    }
+  }[k]||((a,b)=>a.s.total-b.s.total);
+  return vis.slice().sort((a,b)=>{
+    const r=cmp(a,b);
+    return r?d*r:(b.s.total-a.s.total||a.c.name.localeCompare(b.c.name));
+  });
+}
+function renderHead(){
+  const arw=k=>ui.sort.key===k?'<span class="arw">'+(ui.sort.dir>0?'&#9650;':'&#9660;')+'</span>':'';
+  document.getElementById('lhead').innerHTML=
+    '<span>#</span>'+
+    '<span><span class="sh" data-sort="name">Company'+arw('name')+'</span> <span class="shsep">/</span> <span class="sh" data-sort="hq">Location'+arw('hq')+'</span></span>'+
+    '<span class="sh" data-sort="stage">Stage'+arw('stage')+'</span>'+
+    '<span class="sh" data-sort="round">Last round'+arw('round')+'</span>'+
+    '<span>Live signals</span>'+
+    '<span class="sh" data-sort="momentum" style="text-align:right">Momentum'+arw('momentum')+'</span>';
+}
+
 function render(){
   const rows=ranked();
-  const vis=visible(rows);
+  const vis=sortRows(visible(rows));
   if(!ui.sel||!vis.some(r=>r.c.id===ui.sel))ui.sel=vis.length?vis[0].c.id:(rows[0]&&rows[0].c.id);
-  renderTabs(rows);renderChips();renderList(rows,vis);renderStamps();renderXChip();renderDetail(rows);
+  renderTabs(rows);renderChips();renderHead();renderList(rows,vis);renderStamps();renderDetail(rows);
 }
 
 function renderTabs(rows){
   const counts={all:rows.length,high:rows.filter(r=>r.s.total>=70).length,
-                network:rows.filter(r=>r.c.network).length,watch:rows.filter(r=>r.c.watch).length};
+                network:rows.filter(r=>r.c.network).length,watch:rows.filter(r=>STARRED.has(r.c.id)).length};
   document.getElementById('tabs').innerHTML=TABS.map(t=>
     '<button data-tab="'+t.id+'" class="'+(ui.tab===t.id?'on':'')+'">'+t.label+'<span class="n">'+counts[t.id]+'</span></button>'
   ).join('');
@@ -1097,29 +1275,11 @@ function renderChips(){
 function renderStamps(){
   const el=document.getElementById('stamps');
   const parts=[];
-  if(lastStamp.jobs)parts.push('<b>Jobs</b> pulled '+hhmmss(lastStamp.jobs));
-  if(lastStamp.hn)parts.push('<b>HN</b> pulled '+hhmmss(lastStamp.hn));
-  if(lastStamp.gh)parts.push('<b>GitHub</b> pulled '+hhmmss(lastStamp.gh));
-  if(lastStamp.x)parts.push('<b>X</b> pulled '+hhmmss(lastStamp.x));
-  if(!parts.length){
-    const any=Object.values(SIG.jobs)[0];
-    el.innerHTML=any?'Cached data · last jobs pull '+ago(any.at):'No live pull yet.';
-  }else el.innerHTML=parts.join(' &nbsp;·&nbsp; ');
-}
-
-function renderXChip(){
-  const chip=document.getElementById('serverChip');
-  const state=document.getElementById('serverState');
-  const provider=ui.xProvider||'twitterapi';
-  if(!serverReachable){
-    chip.className='hchip sim';state.textContent='OFFLINE';chip.title='Local X connector is not running';return;
-  }
-  if(!ui.xConfigured){
-    chip.className='hchip sim';state.textContent='NOT CONFIGURED';chip.title='X API key is not configured';return;
-  }
-  chip.className='hchip live';
-  state.textContent=lastStamp.x?'LIVE · '+provider+' · '+hhmmss(lastStamp.x):'READY · '+provider;
-  chip.title=lastStamp.x?'Successful live X pull at '+hhmmss(lastStamp.x):'X connector ready; key remains server-side';
+  if(lastStamp.jobs)parts.push('<b>Jobs</b> '+hhmm(lastStamp.jobs));
+  if(lastStamp.hn)parts.push('<b>HN</b> '+hhmm(lastStamp.hn));
+  if(lastStamp.gh)parts.push('<b>GitHub</b> '+hhmm(lastStamp.gh));
+  if(lastStamp.x)parts.push('<b>X</b> '+hhmm(lastStamp.x));
+  el.innerHTML=parts.length?parts.join(' &nbsp;·&nbsp; '):'No live pull yet.';
 }
 
 function sigPills(c){
@@ -1145,18 +1305,17 @@ function sigPills(c){
 }
 
 function renderList(rows,vis){
-  document.getElementById('countLbl').textContent=vis.length+' of '+rows.length+' companies · sorted by Mandate Momentum';
-  const rankOf={};rows.forEach((r,i)=>rankOf[r.c.id]=i+1);
-  document.getElementById('list').innerHTML=vis.map(({c,s})=>{
+  document.getElementById('countLbl').textContent=vis.length+' of '+rows.length+' companies';
+  document.getElementById('list').innerHTML=vis.map(({c,s},i)=>{
     const b=band(s.total);
     const round=c.round
       ?'<div class="a">'+esc(c.round.label)+'</div><div class="s">'+esc(c.round.lead)+' · '+esc(c.round.src)+'</div>'
       :'<div class="u">undisclosed / not tracked</div>';
     return '<div class="lrow'+(ui.sel===c.id?' sel':'')+'" data-id="'+c.id+'">'+
-      '<span class="rk tnum">'+rankOf[c.id]+'</span>'+
-      '<div class="cname"><div class="n">'+esc(c.name)+
+      '<span class="rk tnum">'+(i+1)+'</span>'+
+      '<div class="cname"><div class="n">'+starBtn(c.id)+esc(c.name)+
         (c.network?'<span class="badge network">Network</span>':'')+
-        (c.watch?'<span class="badge watch">Watch</span>':'')+
+        (c.watch?'<span class="badge watch">Hold</span>':'')+
         (c.discovered?'<span class="badge disc">Discovered</span>':'')+
       '</div><div class="m">'+esc(c.hq)+' · '+c.tags.map(esc).join(', ')+'</div></div>'+
       '<span class="stage">'+esc(c.stage)+'</span>'+
@@ -1169,7 +1328,7 @@ function renderList(rows,vis){
 
 function srcRow(label,valueHtml,stampT,pullFn){
   return '<div class="srcrow"><span class="k">'+label+'</span><span class="v">'+valueHtml+'</span>'+
-    '<span class="stamp">'+(stampT?'pulled '+hhmmss(stampT):'')+'</span>'+
+    '<span class="stamp">'+(stampT?hhmm(stampT):'')+'</span>'+
     (pullFn?'<button class="mini ghost" data-pull="'+pullFn+'" title="Pull this source now">&#8635;</button>':'')+
   '</div>';
 }
@@ -1198,7 +1357,7 @@ function renderDetail(rows){
   const h=SIG.hn[c.id];
   if(c.hn){
     let v=h?('<b>'+h.stories+'</b> stories, <b>'+h.points+'</b> points <small>(90 days)</small>'+
-      (h.top?' · <a href="'+esc(h.top.url)+'" target="_blank" rel="noopener" style="color:var(--accent)">top story</a>':''))
+      (h.top?' · <a href="'+esc(h.top.url)+'" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline">top story</a>':''))
       :'<span class="na">not pulled yet</span>';
     live+=srcRow('Hacker News',v,h?h.at:null,'hn');
   }else{
@@ -1210,8 +1369,10 @@ function renderDetail(rows){
     if(g&&g.prev){const d=g.count-g.prev.count;if(d!==0)v+=' <span class="d '+(d>=0?'up':'dn')+'">'+(d>=0?'+':'')+d+'</span>';}
     live+=srcRow('GitHub',v,g?g.at:null,'gh');
   }
-  /* founder cadence via the server-side X connector */
-  const fdr=(c.founders||[]).find(f=>f.x);
+  /* founder / company cadence via the server-side X connector */
+  const fdrOwn=(c.founders||[]).find(f=>f.x);
+  const fdr=fdrOwn||(c.x?{x:c.x}:null);
+  const cadLabel=fdrOwn?'Founder cadence':'X cadence';
   const xs=SIG.x?SIG.x[c.id]:null;
   if(fdr){
     let v;
@@ -1222,11 +1383,12 @@ function renderDetail(rows){
     }else if(xs&&xs.state==='unconfigured'){
       v='<span class="na">X connector not configured</span> <small>(@'+esc(fdr.x)+')</small>';
     }else if(!serverReachable){
-      v='<span class="na">X API offline</span> <small>(@'+esc(fdr.x)+')</small>';
+      v='<span class="na">offline, showing cached</span> <small>(@'+esc(fdr.x)+')</small>';
     }else{
       v='<span class="na">not pulled yet</span> <small>(@'+esc(fdr.x)+')</small>';
     }
-    live+=srcRow('Founder cadence',v,xs&&xs.at?xs.at:null,serverReachable?'x':null);
+    if(xs&&xs.state==='live'&&!serverReachable)v+=' <small class="offnote">offline, showing cached</small>';
+    live+=srcRow(cadLabel,v,xs&&xs.at?xs.at:null,serverReachable?'x':null);
     if(xs&&xs.state==='unconfigured'){
       live+='<div class="xnote">X not configured.</div>';
     }
@@ -1236,18 +1398,17 @@ function renderDetail(rows){
     live+=srcRow('Founder cadence','<span class="na">founder not tracked yet</span>',null,null);
   }
 
-  /* breakdown table */
+  /* score receipt: hidden by default, expands on a score click.
+     Plain-word columns; the weight and decay math lives in the intro. */
   const brk=s.parts.map(p=>{
     const w=WEIGHTS[p.key];
     return '<tr>'+
-      '<td style="font-weight:650;white-space:nowrap">'+p.label+'</td>'+
+      '<td style="font-weight:600;white-space:nowrap">'+p.label+'</td>'+
       '<td class="inp">'+esc(p.inputs)+'</td>'+
-      '<td class="n">'+(w!=null?Math.round(w*100)+'%':'info')+'</td>'+
-      '<td class="n">'+(p.pts!=null?p.pts:'-')+'</td>'+
       '<td class="n">'+(w!=null&&p.pts!=null?(w*p.pts).toFixed(1):'-')+'</td>'+
     '</tr>';
   }).join('')+
-  '<tr class="tot"><td>Mandate Momentum</td><td class="inp">weighted sum, clamped 5-99</td><td class="n"></td><td class="n"></td><td class="n">'+s.total+'</td></tr>';
+  '<tr class="tot"><td>Mandate Momentum</td><td class="inp">all signals combined, capped 5 to 99</td><td class="n">'+s.total+'</td></tr>';
 
   /* events */
   const evs=c.events.length?c.events.map(e=>{
@@ -1263,89 +1424,102 @@ function renderDetail(rows){
     ?'<div class="factcard"><div class="a">'+esc(c.round.label)+' · led by '+esc(c.round.lead)+'</div><div class="s">Source: '+(roundSource?'<a href="'+esc(roundSource)+'" target="_blank" rel="noopener noreferrer">'+esc(c.round.src)+'</a>':esc(c.round.src))+'</div></div>'
     :'<div class="factcard"><div class="a" style="color:var(--faint);font-style:italic;font-weight:500">No disclosed round in the curated fact base.</div><div class="s">Only sourced facts are shown; nothing is inferred.</div></div>';
 
+  const scoreBig='<div class="big"><div class="v s-'+b+' tnum" data-brk="1" title="Click to see how this score is built">'+s.total+'</div><div class="l">Momentum</div></div>';
+  const receipt=ui.showBrk?'<div class="dsec"><h4>Score receipt <span class="r">click the score to hide</span></h4>'+
+      '<table class="brk"><tr><th>Signal</th><th>What we saw</th><th>Points</th></tr>'+brk+'</table></div>':'';
+
+  /* discovered rows get a clean minimal detail: the press headline as the
+     title, the source and date as a link to the original article, live
+     signals and the star. No canned prose. */
+  if(c.discovered){
+    const ev0=c.events&&c.events[0];
+    const headline=cleanCopy(ev0?ev0.t:c.name);
+    const dHref=safeHttpUrl(c.sourceUrl)||(ev0?safeHttpUrl(ev0.l):null);
+    const dSrc=ev0?ev0.s:(c.round?c.round.src:'');
+    document.getElementById('detail').innerHTML=
+      '<div class="dhead"><div class="t"><div style="min-width:0">'+
+        '<div class="meta" style="display:flex;align-items:center;gap:7px;margin-bottom:7px">'+starBtn(c.id)+'<b style="color:var(--ink)">'+esc(c.name)+'</b><span class="badge disc">Discovered</span><span>'+esc(c.stage)+' · sector unclassified</span></div>'+
+        '<h3 style="font-size:16px;line-height:1.35">'+esc(headline)+'</h3>'+
+        '<div class="meta" style="margin-top:7px">'+(dSrc?(dHref?'<a href="'+esc(dHref)+'" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline">'+esc(dSrc)+'</a>':esc(dSrc)):'')+'</div>'+
+      '</div>'+scoreBig+'</div></div>'+
+      '<div class="dsec"><h4>Live signals</h4>'+live+'</div>'+
+      receipt;
+    return;
+  }
+
   document.getElementById('detail').innerHTML=
     '<div class="dhead"><div class="t"><div>'+
-      '<h3>'+esc(c.name)+(c.network?' <span class="badge network" style="vertical-align:3px">Network</span>':'')+(c.watch?' <span class="badge watch" style="vertical-align:3px">Watch</span>':'')+(c.discovered?' <span class="badge disc" style="vertical-align:3px">Discovered</span>':'')+'</h3>'+
+      '<h3>'+starBtn(c.id,true)+esc(c.name)+(c.network?' <span class="badge network" style="vertical-align:3px">Network</span>':'')+(c.watch?' <span class="badge watch" style="vertical-align:3px">Hold</span>':'')+'</h3>'+
       '<div class="meta">'+esc(c.hq)+' · '+esc(c.stage)+' · '+c.tags.map(esc).join(', ')+'</div>'+
-      (c.founders&&c.founders.length?'<div class="meta" style="margin-top:3px">Founders: '+c.founders.map(f=>esc(f.name)+(f.x?' <span style="color:var(--accent);font-weight:600">@'+esc(f.x)+'</span>':'')).join(', ')+'</div>':'')+
-      '<div class="meta" style="margin-top:5px;color:var(--ink2)">'+esc(c.line)+'</div>'+
-    '</div>'+
-    '<div class="big"><div class="v s-'+b+' tnum">'+s.total+'</div><div class="l">Momentum</div></div></div>'+
-    '<div class="whynow"><b>Why now:</b> '+esc(s.whyNow)+'</div>'+
-    '<div class="whynow" style="background:var(--panel-2);border-color:var(--line);color:var(--ink2)"><b>Suggested next action:</b> '+esc(nextAction(c,s.total))+'</div>'+
+      (c.line?'<div class="meta" style="margin-top:5px;color:var(--ink2)">'+esc(c.line)+'</div>':'')+
+      (c.founders&&c.founders.length
+        ?'<div class="fdrs"><span class="flab">Founders</span><span>'+
+           c.founders.map(f=>'<span class="fn"><b>'+esc(f.name)+'</b>'+(f.x?xCtrl(f.x,c.id):'')+'</span>').join(', ')+
+         '</span></div>'
+        :(c.x?'<div class="fdrs"><span class="flab">X</span><span class="fn">'+xCtrl(c.x,c.id)+'</span></div>':''))+
+    '</div>'+scoreBig+'</div>'+
     '</div>'+
     '<div class="dsec"><h4>Live signals</h4>'+live+'</div>'+
-    '<div class="dsec"><h4>Score</h4>'+
-      '<table class="brk"><tr><th>Component</th><th>Inputs</th><th>Weight</th><th>Points</th><th>Contrib</th></tr>'+brk+'</table></div>'+
+    receipt+
     '<div class="dsec"><h4>Last disclosed round</h4>'+roundCard+'</div>'+
     '<div class="dsec"><h4>Events</h4>'+evs+'</div>';
 }
 
-/* =====================================================================
-   Monday pipeline brief (deterministic; optional LLM polish)
-   ===================================================================== */
-function nextMonday(){
-  const d=new Date();
-  const add=(8-d.getDay())%7||7;
-  d.setDate(d.getDate()+add);
-  return d;
+function xCtrl(handle,cid){
+  const xs=SIG.x?SIG.x[cid]:null;
+  const cad=(xs&&xs.state==='live'&&xs.ppw!=null&&xs.handle&&xs.handle.toLowerCase()===String(handle).toLowerCase())
+    ?'<span class="xh tnum">'+xs.ppw+'/wk</span>':'';
+  return ' <span class="xctl">'+
+    '<a class="xicon" href="https://x.com/'+esc(handle)+'" target="_blank" rel="noopener noreferrer" title="Open @'+esc(handle)+' on X">&#120143;</a>'+
+    '<a class="xh" href="https://x.com/'+esc(handle)+'" target="_blank" rel="noopener noreferrer">@'+esc(handle)+'</a>'+
+    cad+
+    (serverReachable?'<button class="mini ghost xre" data-xrefresh="'+esc(handle)+'" title="Re-pull the live X cadence">&#8635;</button>':'')+
+  '</span>';
 }
+
+/* =====================================================================
+   Daily pipeline brief. Deterministic; regenerates at most once per
+   calendar day, keyed by date in localStorage. The header shows its date
+   honestly even when it is a day or two old.
+   ===================================================================== */
 function buildBrief(){
   const rows=ranked().filter(r=>!r.c.watch).slice(0,5);
-  const m=nextMonday();
-  const dateStr=m.getDate()+' '+MONTHS[m.getMonth()]+' '+m.getFullYear();
-  let out='# Monday pipeline brief - '+dateStr+'\n';
+  const d=new Date();
+  const dateStr=d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();
+  let out='# Pipeline brief - '+dateStr+'\n';
   out+='Prepared by Growth Scout. Ranked by Mandate Momentum (deterministic). Signals for discussion, not recommendations.\n\n';
   rows.forEach((r,i)=>{
     const c=r.c;
     out+=(i+1)+'. **'+c.name+'** ('+c.hq+' · '+c.stage+' · '+(SECTORS[c.sector]||'Unclassified')+') - momentum '+r.s.total+'\n';
     out+='   Why now: '+r.s.whyNow+'\n';
     if(c.round)out+='   Last round: '+c.round.label+', led by '+c.round.lead+' ('+c.round.src+')\n';
-    out+='   Next action: '+nextAction(c,r.s.total)+'\n\n';
+    out+='   Next action: '+nextAction(c,r.s.total).text+'\n\n';
   });
   const w=ranked().filter(r=>r.c.watch);
   if(w.length){
     out+='Watch list: '+w.map(r=>r.c.name+' ('+r.s.whyNow.replace(/\.$/,'')+')').join('; ')+'.\n\n';
   }
   const pulled=lastStamp.jobs||lastStamp.hn||lastStamp.gh||lastStamp.x;
-  out+='Signal freshness: '+(pulled?'live pulls at '+hhmmss(pulled)+' local':'cached / curated signals only, no live pull this session')+'. ';
+  out+='Signal freshness: '+(pulled?'live pulls at '+hhmmss(pulled)+' local':'cached / curated signals only, no live pull today')+'. ';
   out+='Sources: Greenhouse, Lever and Ashby boards; Hacker News (Algolia); GitHub; X founder cadence through the local sidecar; curated press facts each carry their source and date.\n';
   return out;
 }
 
-function openBrief(){
-  ui.detBrief=buildBrief();
-  ui.briefIsPolished=false;
-  document.getElementById('briefText').textContent=ui.detBrief;
-  document.getElementById('btnRevert').style.display='none';
-  document.getElementById('briefBack').classList.add('open');
+const DAYS_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function fmtBriefDate(iso){
+  const d=parseD(iso);
+  return d?DAYS_SHORT[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()]:iso;
 }
-
-async function polishBrief(){
-  const btn=document.getElementById('btnPolish');
-  if(!ui.serverLive){
-    toast('Local connector unavailable.','err');
-    return;
+function openBrief(){
+  const t=todayKey();
+  let stored=loadJSON(BRIEF_KEY,null);
+  if(!stored||stored.date!==t||!stored.text){
+    stored={date:t,text:buildBrief()};
+    saveJSON(BRIEF_KEY,stored);
   }
-  btn.disabled=true;btn.textContent='Polishing...';
-  try{
-    const r=await fetch('/api/brief',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({brief:ui.detBrief})});
-    const j=await r.json();
-    if(j.answer){
-      document.getElementById('briefText').textContent=j.answer;
-      ui.briefIsPolished=true;
-      document.getElementById('btnRevert').style.display='';
-      toast('Language polished by '+(ui.provider==='anthropic'?'Claude':'Kimi')+'. Facts and ranks unchanged by contract.','ok');
-    }else if(j.sim){
-      toast('Local connector unavailable.','err');
-    }else{
-      toast('Polish failed: '+(j.error||'unknown error')+'. Deterministic draft kept.','err');
-    }
-  }catch(e){
-    toast('Polish request failed ('+e.message+'). Deterministic draft kept.','err');
-  }
-  btn.disabled=false;btn.textContent='Polish language (LLM)';
+  document.getElementById('briefTitle').textContent='Brief for '+fmtBriefDate(stored.date);
+  document.getElementById('briefText').textContent=stored.text;
+  document.getElementById('briefBack').classList.add('open');
 }
 
 function copyBrief(){
@@ -1376,23 +1550,31 @@ async function checkServer(){
     ui.xConfigured=!!j.x_configured;
     ui.xProvider=j.x_provider||null;
   }catch(e){serverReachable=false;ui.serverLive=false;ui.provider='sim';ui.xConfigured=false;ui.xProvider=null;}
-  const pchip=document.getElementById('polishChip');
-  const label=ui.serverLive?('LIVE · '+ui.provider):'SIM';
-  pchip.className='hchip '+(ui.serverLive?'live':'sim');
-  document.getElementById('polishState').textContent=label;
-  renderXChip();
-  document.getElementById('wireCard').style.display=(location.protocol!=='file:'&&serverReachable)?'':'none';
   if(!scanning)renderDiscovery();
+  renderWire();
+  if(serverReachable)autoServerPulls();
 }
 let serverReachable=false;
 async function probeServer(){
   await checkServer();
 }
 
+/* the server-dependent daily pulls (RSS + X) start once the server answers */
+let serverPullsStarted=false;
+function autoServerPulls(){
+  if(serverPullsStarted)return;
+  serverPullsStarted=true;
+  scanFeeds(false);
+  pullWire((WIRE&&WIRE.which)||'tc',false);
+  autoPullX();
+}
+
 const FEEDS={tc:{name:'TechCrunch',url:'https://techcrunch.com/feed/'},sifted:{name:'Sifted',url:'https://sifted.eu/feed'}};
 const GENERIC=new Set(['two','moss','pigment','dust','granola','nelly']);
-async function pullWire(which){
-  const f=FEEDS[which];
+async function pullWire(which,force){
+  const f=FEEDS[which]||FEEDS.tc;
+  const t=todayKey();
+  if(!force&&WIRE&&WIRE.date===t){renderWire();return;}
   const body=document.getElementById('wireBody');
   body.innerHTML='<span style="color:var(--faint);font-size:12px">Fetching '+f.name+' via server proxy...</span>';
   try{
@@ -1405,24 +1587,39 @@ async function pullWire(which){
       link:(it.querySelector('link')||{}).textContent||'',
       date:(it.querySelector('pubDate')||{}).textContent||'',
     }));
-    const names=COMPANIES.filter(c=>!GENERIC.has(c.name.toLowerCase())).map(c=>c.name);
-    const hits=[],rest=[];
-    for(const it of items){
-      const hit=names.find(n=>it.title.toLowerCase().includes(n.toLowerCase()));
-      if(hit)hits.push({it:it,hit:hit});else rest.push(it);
-    }
-    document.getElementById('wireStamp').textContent=f.name+' · pulled '+hhmmss(Date.now());
-    let html='';
-    if(hits.length){
-      html+=hits.map(({it,hit})=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m"><span class="hit">watchlist: '+esc(hit)+'</span> · '+esc(it.date.slice(0,16))+'</div></div>').join('');
-    }else{
-      html+='<div style="color:var(--faint);font-size:11.5px;margin-bottom:6px">No watchlist mentions in the latest '+items.length+' items. Most recent headlines:</div>';
-      html+=rest.slice(0,5).map(it=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m">'+esc(it.date.slice(0,16))+'</div></div>').join('');
-    }
-    body.innerHTML=html;
+    WIRE={date:t,at:Date.now(),which:which in FEEDS?which:'tc',items:items};
+    saveJSON(WIRE_KEY,WIRE);
+    renderWire();
   }catch(e){
-    body.innerHTML='<span style="color:var(--red);font-size:12px">Press API offline ('+esc(e.message)+').</span>';
+    if(WIRE)renderWire();
+    else body.innerHTML='<span class="offnote">offline, showing cached</span>';
   }
+}
+function renderWire(){
+  const card=document.getElementById('wireCard');
+  const body=document.getElementById('wireBody');
+  const stamp=document.getElementById('wireStamp');
+  if(!WIRE&&!serverReachable){card.style.display='none';return;}
+  card.style.display='';
+  if(!WIRE){body.innerHTML='<span style="color:var(--faint);font-size:12px">Choose a feed.</span>';stamp.textContent='';return;}
+  const f=FEEDS[WIRE.which]||FEEDS.tc;
+  const items=WIRE.items||[];
+  const names=COMPANIES.filter(c=>!GENERIC.has(c.name.toLowerCase())).map(c=>c.name);
+  const hits=[],rest=[];
+  for(const it of items){
+    const hit=names.find(n=>it.title.toLowerCase().includes(n.toLowerCase()));
+    if(hit)hits.push({it:it,hit:hit});else rest.push(it);
+  }
+  stamp.textContent=f.name+' '+hhmm(WIRE.at);
+  let html='';
+  if(!serverReachable)html+='<div class="offnote" style="margin-bottom:6px">offline, showing cached</div>';
+  if(hits.length){
+    html+=hits.map(({it,hit})=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m"><span class="hit">watchlist: '+esc(hit)+'</span> · '+esc(it.date.slice(0,16))+'</div></div>').join('');
+  }else{
+    html+='<div style="color:var(--faint);font-size:11.5px;margin-bottom:6px">No watchlist mentions in the latest '+items.length+' items. Most recent headlines:</div>';
+    html+=rest.slice(0,5).map(it=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m">'+esc(it.date.slice(0,16))+'</div></div>').join('');
+  }
+  body.innerHTML=html;
 }
 
 /* =====================================================================
@@ -1507,8 +1704,13 @@ function saveDiscovered(){
   try{localStorage.setItem(DISC_KEY,JSON.stringify(COMPANIES.filter(c=>c.discovered)));}catch(e){}
 }
 
-async function scanFeeds(){
+async function scanFeeds(force){
   if(scanning)return;
+  const t=todayKey();
+  if(!force){
+    const cached=loadJSON(SCAN_KEY,null);
+    if(cached&&cached.date===t&&cached.disc){DISC=cached.disc;renderDiscovery();return;}
+  }
   const btn=document.getElementById('btnScan');
   scanning=true;btn.disabled=true;
   const orig='Scan press feeds';
@@ -1526,6 +1728,7 @@ async function scanFeeds(){
   const skipped={watch:0,dupe:0};
   const cutoff=Date.now()-7*DAY;
   for(const it of all){
+    it.title=cleanCopy(it.title);
     if(!it.title||!isFundingHeadline(it.title))continue;
     const published=Date.parse(it.date||'');
     if(isNaN(published)||published<cutoff)continue;
@@ -1539,6 +1742,7 @@ async function scanFeeds(){
                 stage:stageFromHeadline(it.title),money:amtFromHeadline(it.title)});
   }
   DISC={items:found,at:Date.now(),fails:fails,scanned:all.length,skipped:skipped};
+  if(fails.length<SCAN_FEEDS.length)saveJSON(SCAN_KEY,{date:t,disc:DISC});
   scanning=false;btn.disabled=false;btn.textContent=orig;
   renderDiscovery();
   if(fails.length===SCAN_FEEDS.length)toast('All three press feeds failed ('+fails.join('; ')+'). Cached and curated data are still available.','err');
@@ -1554,20 +1758,22 @@ function addDiscovered(i){
   const comp={
     id:'disc-'+normName(d.name).slice(0,24)+'-'+Date.now().toString(36),
     name:d.name,hq:'not extracted',sector:'unclassified',tags:['Discovered via press scan'],
-    stage:d.stage,discovered:true,
-    line:'Surfaced by the press scan; verify the round in the linked article and classify on first review.',
+    stage:d.stage,discovered:true,line:'',
     sourceUrl:safeHttpUrl(d.link),
     round:d.money?{label:d.money.label+(d.stage!=='Unclassified'?' '+d.stage:' round')+' (from headline)',
                    lead:'lead not extracted',date:iso,src:srcLabel,amt:d.money.amt}:null,
-    ats:null,gh:null,hn:null,founders:[],
-    events:[ev(iso,'funding',d.title,srcLabel,safeHttpUrl(d.link))]
+    ats:null,gh:null,hn:'"'+String(d.name).replace(/"/g,'')+'"',founders:[],
+    events:[ev(iso,'funding',cleanCopy(d.title),srcLabel,safeHttpUrl(d.link))]
   };
   COMPANIES.push(comp);
   d.added=true;
+  STARRED.add(comp.id);saveStars();
   saveDiscovered();
+  saveJSON(SCAN_KEY,{date:todayKey(),disc:DISC});
   ui.sel=comp.id;ui.tab='all';ui.sector=null;
   render();renderDiscovery();
-  toast(d.name+' added to the watchlist. Momentum is computed from the headline facts only; everything unknown scores a labeled neutral prior.','ok');
+  fetchHN(comp).then(()=>{lastStamp.hn=Date.now();saveSig();render();}).catch(()=>{});
+  toast(d.name+' added to the watchlist and starred. HN mentions pulled live; everything unknown scores a labeled neutral prior.','ok');
 }
 
 function renderDiscovery(){
@@ -1577,9 +1783,10 @@ function renderDiscovery(){
   const canScan=location.protocol!=='file:'&&serverReachable;
   btn.disabled=!canScan||scanning;
   const added=COMPANIES.filter(c=>c.discovered).length;
-  stamp.textContent=DISC.at?('scanned '+hhmmss(DISC.at)):(added?added+' added earlier':'');
+  stamp.textContent=DISC.at?('scanned '+hhmm(DISC.at)):(added?added+' added earlier':'');
   if(!canScan){
-    body.innerHTML='<span style="color:var(--faint);font-size:12px">Press API offline.</span>';
+    body.innerHTML='<span class="offnote">offline, showing cached</span>'+
+      (added?'<div style="margin-top:6px;font-size:11.5px;color:var(--faint)">'+added+' earlier candidate'+(added===1?'':'s')+' kept on the watchlist.</div>':'');
     return;
   }
   if(!DISC.at){
@@ -1592,7 +1799,8 @@ function renderDiscovery(){
   }
   body.innerHTML=DISC.items.map((d,i)=>{
     const href=safeHttpUrl(d.link);
-    const title=href?'<a class="dh2" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(d.title)+'</a>':'<div class="dh2">'+esc(d.title)+'</div>';
+    const dt=cleanCopy(d.title);
+    const title=href?'<a class="dh2" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(dt)+'</a>':'<div class="dh2">'+esc(dt)+'</div>';
     return '<div class="disc-item">'+
       '<div class="dn">'+esc(d.name)+(d.stage!=='Unclassified'?'<span class="dstage">'+esc(d.stage)+'</span>':'')+'</div>'+title+
       '<div class="dm">'+esc(d.source)+' · '+esc((d.date||'').slice(0,16)||'undated')+'</div>'+
@@ -1603,6 +1811,64 @@ function renderDiscovery(){
   }).join('')+(DISC.skipped.watch
     ?'<div style="margin-top:8px;font-size:10.5px;color:var(--faint)">'+DISC.skipped.watch+' funding headline'+(DISC.skipped.watch===1?'':'s')+' matched existing watchlist names and '+(DISC.skipped.watch===1?'was':'were')+' skipped.</div>'
     :'');
+}
+
+/* =====================================================================
+   Manual add-company. Honest by design: new rows carry only the name and
+   the optional handles Isaac typed. Stage and sector start unclassified,
+   HN mentions are pulled live on add, the careers board type is probed
+   against the real Greenhouse / Lever / Ashby APIs, and nothing else is
+   fabricated. Rows persist in localStorage and start starred.
+   ===================================================================== */
+function loadCustomList(){
+  try{
+    const raw=localStorage.getItem(CUSTOM_KEY);
+    if(raw){const arr=JSON.parse(raw);if(Array.isArray(arr))return arr;}
+  }catch(e){}
+  return [];
+}
+function saveCustom(){
+  try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(COMPANIES.filter(c=>c.custom)));}catch(e){}
+}
+async function probeAts(c,slug){
+  for(const k of ['ashby','greenhouse','lever']){
+    try{
+      c.ats={k:k,slug:slug};
+      await fetchJobs(c);
+      lastStamp.jobs=Date.now();
+      saveCustom();saveSig();render();
+      toast(c.name+': careers board found ('+k+':'+slug+').');
+      return k;
+    }catch(e){/* try the next ATS */}
+  }
+  c.ats=null;
+  saveCustom();render();
+  toast(c.name+': no public board answered for slug "'+slug+'"; hiring stays a neutral prior.','err');
+  return null;
+}
+function addCustom(){
+  const name=document.getElementById('addName').value.trim();
+  const xh=document.getElementById('addX').value.trim().replace(/^@/,'');
+  const slug=document.getElementById('addSlug').value.trim().toLowerCase();
+  if(!name){toast('Company name is required.','err');return;}
+  if(COMPANIES.some(c=>normName(c.name)===normName(name))){toast(name+' is already on the list.','err');return;}
+  if(xh&&!/^[A-Za-z0-9_]{1,15}$/.test(xh)){toast('That does not look like an X handle.','err');return;}
+  const comp={
+    id:'add-'+normName(name).slice(0,24)+'-'+Date.now().toString(36),
+    name:name,hq:'not specified',sector:'unclassified',tags:['Added manually'],
+    stage:'Unclassified',custom:true,line:'',
+    ats:null,gh:null,hn:'"'+name.replace(/"/g,'')+'"',founders:[],x:xh||null,
+    events:[]
+  };
+  COMPANIES.push(comp);
+  STARRED.add(comp.id);saveStars();
+  saveCustom();
+  ['addName','addX','addSlug'].forEach(id=>{document.getElementById(id).value='';});
+  ui.sel=comp.id;
+  render();
+  fetchHN(comp).then(()=>{lastStamp.hn=Date.now();saveSig();render();}).catch(()=>{});
+  if(slug)probeAts(comp,slug);
+  toast(name+' added and starred. Stage and sector stay unclassified until first review; only real pulls fill the signals.');
 }
 
 /* =====================================================================
@@ -1617,12 +1883,38 @@ function toast(msg,kind){
 }
 
 document.addEventListener('click',e=>{
+  const st=e.target.closest('[data-star]');
+  if(st){toggleStar(st.dataset.star);return;}
+  const sh=e.target.closest('[data-sort]');
+  if(sh){
+    const k=sh.dataset.sort;
+    if(ui.sort.key===k)ui.sort.dir=-ui.sort.dir;
+    else ui.sort={key:k,dir:(k==='momentum'||k==='round')?-1:1};
+    render();return;
+  }
   const row=e.target.closest('.lrow');
   if(row){ui.sel=row.dataset.id;render();return;}
   const tab=e.target.closest('[data-tab]');
   if(tab){ui.tab=tab.dataset.tab;render();return;}
   const chip=e.target.closest('[data-sector]');
   if(chip){ui.sector=ui.sector===chip.dataset.sector?null:chip.dataset.sector;render();return;}
+  const brkT=e.target.closest('[data-brk]');
+  if(brkT){ui.showBrk=!ui.showBrk;render();return;}
+  const xv=e.target.closest('[data-xrefresh]');
+  if(xv){
+    const c=COMPANIES.find(x=>x.id===ui.sel);
+    if(!c)return;
+    if(!serverReachable){toast('X connector offline; cached numbers kept.','err');return;}
+    xv.disabled=true;
+    fetchX(c).then(()=>{
+      const x=SIG.x[c.id];
+      if(x&&x.state==='live')lastStamp.x=x.at;
+      saveSig();render();
+      if(x&&x.state==='live')toast('X live · '+(x.provider||ui.xProvider||'twitterapi')+' · @'+x.handle+' · '+x.n+' posts · '+hhmmss(x.at));
+      else toast('X not configured.','err');
+    }).catch(err=>{toast('X pull failed ('+err.message+'). Cached numbers kept.','err');render();});
+    return;
+  }
   const pull=e.target.closest('[data-pull]');
   if(pull){
     const c=COMPANIES.find(x=>x.id===ui.sel);
@@ -1644,26 +1936,35 @@ document.addEventListener('click',e=>{
   const disc=e.target.closest('[data-disc]');
   if(disc){addDiscovered(+disc.dataset.disc);return;}
   if(e.target.closest('[data-close]')||e.target.classList.contains('mback')){
+    const intro=document.getElementById('introBack');
+    if(intro.classList.contains('open')){try{localStorage.setItem('intro_seen','1');}catch(err){}}
     document.querySelectorAll('.mback').forEach(m=>m.classList.remove('open'));
   }
 });
 
-document.getElementById('btnRefresh').addEventListener('click',pullAll);
-document.getElementById('btnJobs').addEventListener('click',()=>pullFamily('jobs'));
-document.getElementById('btnHN').addEventListener('click',()=>pullFamily('hn'));
-document.getElementById('btnGH').addEventListener('click',()=>pullFamily('gh'));
-document.getElementById('btnX').addEventListener('click',pullSelectedX);
+document.getElementById('btnRefresh').addEventListener('click',refreshAll);
 document.getElementById('btnBrief').addEventListener('click',openBrief);
 document.getElementById('btnCopyBrief').addEventListener('click',copyBrief);
-document.getElementById('btnPolish').addEventListener('click',polishBrief);
-document.getElementById('btnRevert').addEventListener('click',()=>{
-  document.getElementById('briefText').textContent=ui.detBrief;
-  ui.briefIsPolished=false;
-  document.getElementById('btnRevert').style.display='none';
+document.getElementById('btnTC').addEventListener('click',()=>pullWire('tc',true));
+document.getElementById('btnSifted').addEventListener('click',()=>pullWire('sifted',true));
+document.getElementById('btnScan').addEventListener('click',()=>scanFeeds(true));
+document.getElementById('btnIntroOk').addEventListener('click',()=>{
+  try{localStorage.setItem('intro_seen','1');}catch(e){}
+  document.getElementById('introBack').classList.remove('open');
 });
-document.getElementById('btnTC').addEventListener('click',()=>pullWire('tc'));
-document.getElementById('btnSifted').addEventListener('click',()=>pullWire('sifted'));
-document.getElementById('btnScan').addEventListener('click',scanFeeds);
+document.getElementById('btnHow').addEventListener('click',()=>{
+  document.getElementById('introBack').classList.add('open');
+});
+document.getElementById('btnAddCo').addEventListener('click',()=>{
+  const r=document.getElementById('addRow');
+  const open=r.style.display!=='none';
+  r.style.display=open?'none':'flex';
+  if(!open)document.getElementById('addName').focus();
+});
+document.getElementById('btnAddGo').addEventListener('click',addCustom);
+['addName','addX','addSlug'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')addCustom();});
+});
 document.getElementById('q').addEventListener('input',e=>{ui.q=e.target.value.trim().toLowerCase();render();});
 
 document.addEventListener('keydown',e=>{
@@ -1674,11 +1975,11 @@ document.addEventListener('keydown',e=>{
     return;
   }
   if(typing)return; /* shortcuts disabled while typing */
-  const vis=visible(ranked());
+  const vis=sortRows(visible(ranked()));
   const idx=vis.findIndex(r=>r.c.id===ui.sel);
   if(e.key==='j'||e.key==='ArrowDown'){if(idx<vis.length-1){ui.sel=vis[idx+1].c.id;render();scrollSel();}e.preventDefault();}
   else if(e.key==='k'||e.key==='ArrowUp'){if(idx>0){ui.sel=vis[idx-1].c.id;render();scrollSel();}e.preventDefault();}
-  else if(e.key==='r'){pullAll();}
+  else if(e.key==='r'){refreshAll();}
   else if(e.key==='b'){openBrief();}
   else if(e.key==='/'){document.getElementById('q').focus();e.preventDefault();}
   else if(e.key>='1'&&e.key<='4'){ui.tab=TABS[+e.key-1].id;render();}
@@ -1688,11 +1989,9 @@ function scrollSel(){
   if(el)el.scrollIntoView({block:'nearest'});
 }
 
-/* clock */
-setInterval(()=>{document.getElementById('clock').textContent=hhmmss(Date.now());},1000);
-document.getElementById('clock').textContent=hhmmss(Date.now());
-
-/* boot */
+/* boot: render the cached picture instantly, then go live by default.
+   Free sources auto-pull once per day; server-backed sources (RSS, X)
+   start as soon as the local server answers the health probe. */
 loadDiscovered().forEach(c=>{
   if(c&&c.id&&c.name&&!COMPANIES.some(x=>x.id===c.id)){
     c.discovered=true;
@@ -1700,10 +1999,31 @@ loadDiscovered().forEach(c=>{
     COMPANIES.push(c);
   }
 });
-probeServer();
-setInterval(checkServer,60000);
+loadCustomList().forEach(c=>{
+  if(c&&c.id&&c.name&&!COMPANIES.some(x=>x.id===c.id)){
+    c.custom=true;
+    if(!c.founders)c.founders=[];
+    COMPANIES.push(c);
+  }
+});
+/* discovered / added rows always track HN mentions by name */
+COMPANIES.forEach(c=>{
+  if((c.discovered||c.custom)&&!c.hn)c.hn='"'+String(c.name).replace(/"/g,'')+'"';
+});
 render();
 renderDiscovery();
+renderWire();
+/* rows added on an earlier day may not have an HN snapshot yet: pull the
+   missing ones once (free API), regardless of the daily family cache */
+COMPANIES.filter(c=>(c.discovered||c.custom)&&c.hn&&!SIG.hn[c.id]).forEach(c=>{
+  fetchHN(c).then(()=>{saveSig();render();}).catch(()=>{});
+});
+if(!localStorage.getItem('intro_seen')){
+  document.getElementById('introBack').classList.add('open');
+}
+autoPullFree();
+probeServer();
+setInterval(checkServer,60000);
 </script>
 </body>
 </html>
