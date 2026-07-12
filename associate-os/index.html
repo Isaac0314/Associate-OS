@@ -301,6 +301,7 @@ table.rt{width:100%;border-collapse:collapse}
     <a href="../growth-scout/">GROWTH SCOUT</a>
     <a href="../breakout-radar/">BREAKOUT RADAR</a>
     <span aria-current="page">ASSOCIATE OS</span>
+    <a href="../brief/">BRIEF</a>
   </div>
 </nav>
 
@@ -976,8 +977,7 @@ function purgeFuture(){
 const TABS = [
   {id:'meetings', label:'Meetings', n: () => S.meetings.length},
   {id:'relationships', label:'Relationships', n: () => S.people.length},
-  {id:'pipeline', label:'Pipeline', n: () => S.pipeline.filter(p => p.stage !== 'Passed').length},
-  {id:'brief', label:'Monday brief', n: () => null}
+  {id:'pipeline', label:'Pipeline', n: () => S.pipeline.filter(p => p.stage !== 'Passed').length}
 ];
 function renderTabs(){
   // Land quietly: only tabs the user has visited this session show their counts.
@@ -1282,6 +1282,20 @@ async function aiBrief(){
     S.briefCache = {sig, text: r.answer, model: window.AOS_MODEL || 'llm'}; save();
   }catch(e){ toast('Rewrite unavailable.', 'warn'); }
   UI.briefBusy = false; renderBrief();
+}
+
+// ---------- daily snapshot for the unified /brief/ page ----------
+function writeDailySnapshot(){
+  try{
+    const f = briefFacts();
+    localStorage.setItem('aos.dailySnapshot.v1', JSON.stringify({
+      date: today(),
+      meetingsThisWeek: f.held.length,
+      openCommitments: f.open.length,
+      overdueCommitments: f.overdue.length,
+      coldRelationships: f.cooling.filter(x => x.w.k === 'cold').map(x => x.p.name)
+    }));
+  }catch(e){}
 }
 
 // ---------- rendering: feed ----------
@@ -1680,12 +1694,13 @@ document.addEventListener('keydown', e => {
   if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable)) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === 'Escape'){ closeModals(); return; }
-  if (e.key >= '1' && e.key <= '4'){ UI.tab = TABS[+e.key - 1].id; renderAll(); return; }
+  if (e.key >= '1' && e.key <= '4'){ const tb = TABS[+e.key - 1]; if (tb){ UI.tab = tb.id; renderAll(); } return; }
 });
 
 // ---------- boot ----------
 UI.sel = sortedMeetings()[0] ? sortedMeetings()[0].id : null;
 renderAll();
+writeDailySnapshot();
 healthCheck();
 setInterval(healthCheck, 60000);
 if (!localStorage.getItem('aos_intro_seen')){

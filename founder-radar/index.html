@@ -252,13 +252,13 @@
   .found .f:before{content:"";width:5px;height:5px;border-radius:1px;background:var(--ember);opacity:.7;flex:none}
   .sigs{display:flex;flex-direction:column;max-width:720px}
   .sig{
-    display:grid;grid-template-columns:58px 118px 1fr 62px;gap:12px;align-items:baseline;
+    display:grid;grid-template-columns:58px 150px 1fr 62px;gap:12px;align-items:baseline;
     padding:8px 2px;border-bottom:1px solid var(--line2);
   }
   .sig:last-child{border-bottom:0}
   .sig .dt{font:400 10.5px/1.5 var(--mono);color:var(--muted);white-space:nowrap}
   .sig .dt.future{color:var(--ember);font-weight:700}
-  .sig .ty{font:400 9.5px/1.5 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .sig .ty{font:400 9.5px/1.5 var(--mono);letter-spacing:.04em;color:var(--ink2);display:flex;align-items:baseline;gap:6px}
   .sig .ty:before{content:"";width:6px;height:6px;border-radius:1px;background:var(--tyc,var(--faint));flex:none}
   .sig .tx{font-size:12.5px;color:var(--ink3);line-height:1.5}
   .sig .pt{font:700 11px/1.5 var(--mono);text-align:right;white-space:nowrap}
@@ -300,10 +300,9 @@
     font:12.5px/1.6 -apple-system,"Segoe UI",sans-serif;color:var(--ink3);
   }
   .mini{height:24px;padding:2px 9px;font-size:11px;border-radius:var(--r-md)}
-  .actionbar{
-    border-top:1px solid var(--line);background:var(--panel);
-    padding:12px 34px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;
-  }
+  .stagebar{display:flex;align-items:center;gap:16px;margin:18px 0 0;flex-wrap:wrap}
+  .stagebar .pipe{margin:0}
+  .dact{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .detail .placeholder{
     height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
     color:var(--muted);gap:8px;text-align:center;
@@ -311,7 +310,6 @@
   .placeholder b{font:500 17px/1.3 var(--grotesk);letter-spacing:-.01em;color:var(--ink2)}
 
   /* ---------- right rail ---------- */
-  .side .card{border-bottom:1px solid var(--line)}
   .cardh{display:flex;align-items:center;gap:8px;padding:14px 16px 9px}
   .cardh h2{
     margin:0;font:400 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
@@ -322,20 +320,6 @@
     color:var(--muted);border:1px solid var(--line);
   }
   .chip2.live{color:var(--positive);border-color:var(--positive-line)}
-  .briefbody{padding:2px 16px 14px;font-size:12px;line-height:1.55;color:var(--ink3);max-height:295px;overflow-y:auto}
-  .briefbody::-webkit-scrollbar{width:8px}
-  .briefbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
-  .briefbody .bl{
-    font:700 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ember-ink);
-    margin:12px 0 5px;
-  }
-  .briefbody .bl:first-child{margin-top:4px}
-  .briefbody ul{margin:0;padding-left:16px}
-  .briefbody li{margin:3px 0}
-  .briefbody p{margin:4px 0}
-  .briefbody b{color:var(--ink);font-weight:600}
-  .briefbody .up{color:var(--positive);font-weight:700;font-family:var(--mono);font-size:10.5px}
-  .briefbody .thinking{color:var(--faint);font-style:italic;padding:8px 0}
   .feed{flex:1;overflow-y:auto;min-height:0;padding:2px 16px 12px}
   .feed::-webkit-scrollbar{width:9px}
   .feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--paper)}
@@ -369,10 +353,6 @@
     border-radius:var(--r-sm);padding:8px 11px;font:400 11px/1.5 var(--mono);margin-bottom:10px;
   }
   .xbanner.live{border-color:var(--positive-line);color:var(--positive)}
-  .smpltag{
-    display:inline-block;font:400 9.5px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--line);border-radius:2px;padding:3px 7px;margin-bottom:10px;
-  }
   .xgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:12px}
   .xcell{border-top:1px solid var(--line);padding:9px 2px 0;min-width:0}
   .xcell .k{font:400 8.5px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
@@ -388,9 +368,32 @@
     border:1px dashed var(--line-strong);border-radius:var(--r-sm);padding:8px 11px;
   }
   .xnote{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px}
-  .xtry{display:flex;gap:7px;margin-top:10px;align-items:center;max-width:420px}
-  .xtry input{height:28px;font-size:12px}
+  a.xicon{
+    width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);background:var(--panel);border-radius:var(--r-md);color:var(--ink2);
+    transition:border-color .12s,color .12s;
+  }
+  a.xicon:hover{border-color:var(--ink);color:var(--ink)}
+  .xctl a.xh{text-decoration:none}
+  .xctl a.xh:hover{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+  .xctl .xh.dim{color:var(--faint)}
   @media(max-width:1180px){.xgrid{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- watched-accounts popover ---------- */
+  .pop{
+    position:fixed;top:98px;right:14px;z-index:75;width:296px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
+    box-shadow:var(--shadow-md);padding:13px 15px;
+  }
+  .pop .pt{font:700 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .pop .wrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line2)}
+  .pop .wh{font:700 11px/1.4 var(--mono);color:var(--ink)}
+  .pop .wmeta{font:400 9.5px/1.4 var(--mono);color:var(--faint);margin-left:auto;text-align:right}
+  .pop .wdel{border:0;background:transparent;color:var(--muted);height:20px;width:20px;padding:0;justify-content:center;font-size:14px;border-radius:2px}
+  .pop .wdel:hover{color:var(--negative)}
+  .pop .pa{display:flex;gap:6px;margin-top:10px}
+  .pop .pa input{height:26px;font-size:11.5px;font-family:var(--mono)}
+  .pop .pn{font:400 9.5px/1.6 var(--mono);color:var(--faint);margin-top:9px}
 
   /* ---------- toasts ---------- */
   .toasts{position:fixed;bottom:18px;right:18px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
@@ -441,6 +444,8 @@
   .wtable td{padding:5px 8px;border-bottom:1px solid var(--line2);color:var(--ink3)}
   .wtable td.w{font:700 11px/1 var(--mono);text-align:right;color:var(--ink);width:52px}
   .wtable td.note{color:var(--faint);font-size:11px}
+  .wtable td.stat{font:700 8px/1.5 var(--mono);letter-spacing:.08em;color:var(--positive);white-space:nowrap;text-align:right}
+  .wtable td.stat.smp{color:var(--faint)}
   .modal .phil{
     margin-top:18px;padding:12px 15px;border-left:2px solid var(--ember);
     background:var(--ember-soft);border-radius:0 var(--r-sm) var(--r-sm) 0;
@@ -452,7 +457,6 @@
   @media(max-width:1180px){
     .app{grid-template-columns:300px minmax(0,1fr) 300px}
     .detail{padding:20px 22px}
-    .actionbar{padding:11px 22px}
   }
   @media(max-width:940px){
     body{overflow:auto}
@@ -471,6 +475,7 @@
     <a href="../growth-scout/">GROWTH SCOUT</a>
     <a href="../breakout-radar/">BREAKOUT RADAR</a>
     <a href="../associate-os/">ASSOCIATE OS</a>
+    <a href="../brief/">BRIEF</a>
   </div>
 </nav>
 
@@ -480,43 +485,42 @@
     <span class="vh-scope">people about to start companies, ranked from public signals</span>
   </div>
   <div class="spacer"></div>
+  <span class="stamp" id="xStamp"></span>
   <span class="stamp" id="hnStamp"></span>
   <button class="iconbtn" id="hnBtn" title="Refresh HN pull"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.7 8a5.7 5.7 0 1 1-1.7-4"/><path d="M13.7 1.3v3h-3"/></svg></button>
+  <button class="iconbtn" id="watchBtn" title="Watched X accounts"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.6v2M8 12.4v2M1.6 8h2M12.4 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M12.5 3.5l-1.4 1.4M4.9 11.1l-1.4 1.4"/></svg></button>
   <button class="iconbtn" id="introBtn" title="How this works">?</button>
 </header>
 
 <div class="app">
   <div class="rail">
     <div class="railhead"><div class="tabs" id="tabs"></div></div>
-    <div class="askwrap"><input id="askInput" placeholder='Ask the radar, e.g. "who left a fintech job?"' autocomplete="off"/></div>
+    <div class="askwrap"><input id="askInput" placeholder="search people" autocomplete="off"/></div>
     <div id="askAns" style="display:none" class="askans"></div>
     <div class="list" id="list"></div>
     <div class="railfoot">
       <span class="ig" id="howLink">how scoring works</span>
       <span id="clearedTxt">0 of 0 cleared</span>
+      <span id="xFoot"></span>
       <span class="ig right" id="igLink" style="display:none"></span>
     </div>
   </div>
 
   <div class="center">
     <div class="detail" id="detail"></div>
-    <div class="actionbar" id="actionbar" style="display:none">
-      <button id="actIgnore">Ignore</button>
-      <button id="actWatch">Watchlist</button>
-      <button id="actReach" class="primary">Outreach</button>
-      <button id="actMeet" style="display:none">Advance to meeting</button>
-      <button id="actBack" class="ghost" style="display:none">Back to inbox</button>
-    </div>
   </div>
 
   <div class="side">
-    <div class="card">
-      <div class="cardh"><h2 id="briefTitle">Sourcing brief</h2></div>
-      <div class="briefbody" id="brief"></div>
-    </div>
     <div class="cardh" style="padding-bottom:2px"><h2>Agent activity</h2><div class="r"><span class="chip2" id="feedCount"></span></div></div>
     <div class="feed" id="feed"></div>
   </div>
+</div>
+
+<div class="pop" id="watchPop" style="display:none">
+  <div class="pt">Watched X accounts</div>
+  <div id="watchList"></div>
+  <div class="pa"><input id="watchInput" placeholder="add a handle, e.g. jasonlk" autocomplete="off"/><button class="mini" id="watchAdd">Add</button></div>
+  <div class="pn">People these accounts recently followed land in the queue as real candidates, pulled once a day.</div>
 </div>
 
 <div class="toasts" id="toasts"></div>
@@ -528,19 +532,16 @@
   <p class="sub">A 30-second tour.</p>
   <div class="ipanels">
     <div class="ipanel"><b>1 &middot; What this is</b>
-      <p>Founder Radar watches public signals (job changes, new repos, preprints, Show HN posts) and ranks people who look like they are about to start a company.</p>
+      <p>Founder Radar watches public signals (job changes, new repos, research papers, Show HN posts, follows from trusted scout accounts) and ranks people who look like they are about to start a company.</p>
     </div>
     <div class="ipanel"><b>2 &middot; How a score is built</b>
       <p>Recent, strong signals add more points. Older signals fade out over weeks; that fading is the "decay". Different signal types carry different point values; those are the "weights". Click any score to see its receipt.</p>
-    </div>
-    <div class="ipanel"><b>3 &middot; Who writes what</b>
-      <p>Nothing here is written by the model. Numbers come from code, the model only drafts prose, and you send everything yourself.</p>
     </div>
   </div>
   <details class="mathmore">
     <summary>The full math, if you want it</summary>
     <div class="formula" style="margin-top:10px">score = min(99, round( &Sigma; <b>weight</b> &times; 0.5^(<b>age_days</b> / 21) &times; <b>quality_prior</b> + <b>x_check</b> ))</div>
-    <h4>Signal weights</h4>
+    <h4>Signals: weight, how each is tracked, and what is wired</h4>
     <table class="wtable" id="wTable"></table>
     <h4>Recency decay</h4>
     <p style="font-size:12.5px;color:var(--ink3);margin:4px 0 0;line-height:1.6">
@@ -549,12 +550,12 @@
     </p>
     <h4>Founder-quality prior (multiplier)</h4>
     <table class="wtable" id="pTable"></table>
-    <h4>X check (optional adjustment)</h4>
+    <h4>X check (optional adjustment) <span style="font:700 8px/1 var(--mono);letter-spacing:.08em;color:var(--positive)">WIRED</span></h4>
     <p style="font-size:12.5px;color:var(--ink3);margin:4px 0 0;line-height:1.6">
-      Runs from the X button next to a candidate's name: cadence min(4, posts/week) + audience min(4, log10(followers)) + engagement (2 if median likes &ge; 10, 1 if &ge; 3), cap <b>+10</b>.
-      Sample numbers exist only for the fictional candidates and are labeled as such.
+      Runs from the posts check in the X numbers panel of a real candidate, against the live X API: cadence min(4, posts/week) + audience min(4, log10(followers)) + engagement (2 if median likes &ge; 10, 1 if &ge; 3), cap <b>+10</b>.
+      Only real profiles get X numbers; sample candidates have none.
     </p>
-    <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">Scores cap at 99. "Likely" means 60 or above. Live Hacker News candidates run through the identical engine.</p>
+    <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">Scores cap at 99. "Likely" means 60 or above. Live Hacker News and watched-follow candidates run through the identical engine.</p>
   </details>
   <div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="primary" id="gotIt">Got it</button></div>
 </div>
@@ -563,9 +564,11 @@
 "use strict";
 /* =====================================================================
    Founder Radar - single-file app.
-   Synthetic candidates carry a per-card "sample" tag; the Hacker News
-   pull is live (auto on load, cached per day). Scores are deterministic;
-   see the intro modal.
+   Two live inflows: Show HN (HN Algolia, free) and watched follows
+   (recent follows of the watch accounts via the local X connector,
+   cached per day per account). Real candidates score only from real
+   observables; synthetic candidates carry a per-card "sample" tag.
+   Scores are deterministic; see the intro modal.
    ===================================================================== */
 
 /* ---------- utils ---------- */
@@ -628,38 +631,59 @@ var SCORE_CAP = 99;
 var WEIGHTS = {
   left_job: 32,
   cofounder_search: 30,
-  show_hn: 26,
   preprint: 24,
   github_spike: 22,
-  demo_day_post: 20,
   bio_change: 18,
+  show_hn: 16,             /* later-stage: the product already shipped */
   domain_registered: 14,
+  x_bio_builder: 14,
   watched_follow: 12,
-  hn_traction: 12          /* dynamic: points/15, capped at 12 */
+  hn_traction: 12,         /* dynamic: points/15, capped at 12 */
+  demo_day_post: 10,       /* later-stage: already inside a program */
+  x_account_new: 10,
+  x_audience: 6
 };
 var SIG_LABEL = {
-  left_job:"Left job", cofounder_search:"Cofounder search", show_hn:"Show HN",
-  preprint:"Preprint", github_spike:"GitHub spike", demo_day_post:"Demo day",
-  bio_change:"Bio change", domain_registered:"Domain reg", watched_follow:"Watched follow",
-  hn_traction:"HN traction"
+  left_job:"left their job",
+  cofounder_search:"started a cofounder search",
+  show_hn:"posted Show HN (later-stage)",
+  preprint:"posted a research paper (arXiv)",
+  github_spike:"GitHub stars jumped",
+  demo_day_post:"demo day appearance (later-stage)",
+  bio_change:"changed their X bio",
+  domain_registered:"registered a new domain",
+  watched_follow:"followed by a trusted account",
+  hn_traction:"Show HN traction",
+  x_bio_builder:"builder words in X bio",
+  x_account_new:"new X account",
+  x_audience:"audience on X"
 };
-var SIG_NOTE = {
-  left_job:"the strongest single tell: they walked away from the salary",
-  cofounder_search:"actively assembling a team",
-  show_hn:"shipped something publicly",
-  preprint:"fresh research with startup surface area",
-  github_spike:"building in the open, gathering attention",
-  demo_day_post:"already inside a founder program",
-  bio_change:"self-declared intent",
-  domain_registered:"bought the name before telling anyone",
-  watched_follow:"a trusted scout account noticed them",
-  hn_traction:"dynamic bonus: points / 15, capped at 12"
+/* how each signal is tracked, one honest line for the scoring modal */
+var SIG_HOW = {
+  left_job:"LinkedIn headline diff watch",
+  cofounder_search:"YC cofounder-matching scan",
+  show_hn:"live pull from the HN Algolia API; launches count less, the product already shipped",
+  preprint:"arXiv new-author watch",
+  github_spike:"GitHub star-velocity watch",
+  demo_day_post:"accelerator and demo day lists; later-stage, so it counts less",
+  bio_change:"X bio diff watch",
+  domain_registered:"new domain registration feeds",
+  watched_follow:"recent follows of your watch accounts, pulled daily from the X API",
+  hn_traction:"points from the same HN pull: points / 15, capped at 12",
+  x_bio_builder:"bio text from the X API",
+  x_account_new:"account created date from the X API",
+  x_audience:"follower count from the X API"
+};
+var SIG_WIRED = {
+  show_hn:true, hn_traction:true, watched_follow:true,
+  x_bio_builder:true, x_account_new:true, x_audience:true
 };
 /* restrained ink-and-coral palette: coral marks the two strongest tells */
 var SIG_COLOR = {
   left_job:"#E8543F", cofounder_search:"#E8543F", show_hn:"#16181B", preprint:"#16181B",
   github_spike:"#16181B", demo_day_post:"#16181B", bio_change:"#6B7280",
-  domain_registered:"#6B7280", watched_follow:"#6B7280", hn_traction:"#16181B"
+  domain_registered:"#6B7280", watched_follow:"#6B7280", hn_traction:"#16181B",
+  x_bio_builder:"#6B7280", x_account_new:"#6B7280", x_audience:"#6B7280"
 };
 var PRIORS = {
   exited_founder: { mult:1.35, label:"Second-time founder, prior exit" },
@@ -691,8 +715,8 @@ function breakdown(c, T){
            score: Math.min(SCORE_CAP, Math.round(raw)) };
 }
 function scoreAt(c, T){ return breakdown(c, T).score; }
-function firstSeenDay(c){ var m = Infinity; c.signals.forEach(function(s){ if (s.d < m) m = s.d; }); return m; }
-function newestVisibleDay(c, T){ var m = -Infinity; c.signals.forEach(function(s){ if (s.d <= T && s.d > m) m = s.d; }); return m; }
+function firstSeenDay(c){ var m = Infinity; c.signals.forEach(function(s){ if (s.d < m) m = s.d; }); return m === Infinity ? 0 : m; }
+function newestVisibleDay(c, T){ var m = -Infinity; c.signals.forEach(function(s){ if (s.d <= T && s.d > m) m = s.d; }); return m === -Infinity ? 0 : m; }
 function isVisible(c, T){ return firstSeenDay(c) <= T; }
 function heat(sc){ return sc >= 70 ? "hot" : sc >= 45 ? "warmt" : "coolt"; }
 
@@ -938,13 +962,31 @@ var CANDS = HEROES.concat(genCandidates());
 
 /* ---------- state ---------- */
 var LS = "founder_radar_v2";
+var WF_DEFAULTS = ["deLeyritzluc", "HarryStebbings", "shl"];
 var S = load();
+function daysSinceKey(key){
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || "");
+  if (!m) return 0;
+  var d = new Date(+m[1], +m[2] - 1, +m[3], 12, 0, 0);
+  return Math.max(0, Math.round((BASE.getTime() - d.getTime()) / 864e5));
+}
 function load(){
   try{
     var raw = JSON.parse(localStorage.getItem(LS));
     if (raw && raw.statuses){
       if (!raw.xval) raw.xval = {};
+      /* sample X profiles are gone; HN usernames are not confirmed X handles */
+      Object.keys(raw.xval).forEach(function(k){
+        if (!raw.xval[k] || raw.xval[k].sample || k.indexOf("hn-") === 0) delete raw.xval[k];
+      });
       if (!raw.hn) raw.hn = [];
+      if (!Array.isArray(raw.xf)) raw.xf = [];
+      if (!Array.isArray(raw.watch)) raw.watch = WF_DEFAULTS.slice();
+      if (!raw.wfPulls) raw.wfPulls = {};
+      /* real signals carry their calendar date; re-age them on every load */
+      raw.xf.forEach(function(c){
+        (c.signals || []).forEach(function(s){ if (s.abs) s.d = -daysSinceKey(s.abs); });
+      });
       raw.demo = 0; /* the clock-simulation UI is gone; always render today */
       return raw;
     }
@@ -952,10 +994,11 @@ function load(){
   return fresh();
 }
 function fresh(){
-  var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xval:{}, tab:"all", sel:null, hnPull:null, brief:null };
+  var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xf:[], xval:{},
+             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"all", sel:null, hnPull:null };
   var likely = CANDS.filter(function(c){ return isVisible(c,0) && scoreAt(c,0) >= LIKELY_MIN; }).length;
   var visible = CANDS.filter(function(c){ return isVisible(c,0); }).length;
-  st.feed.push({ tag:"SCAN", day:0, msg:"Ingested 6 watch sources: X follows, GitHub org watch, Show HN, arXiv, domain registrations, demo day lists." });
+  st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered. Live: Show HN and watched X follows. Sample connectors: GitHub, arXiv, domains, job changes, demo day lists." });
   st.feed.push({ tag:"SCORE", day:0, msg:"Scored <b>" + visible + " profiles</b>; " + likely + " are likely (60+). Ranked inbox rebuilt." });
   var top = CANDS.filter(function(c){ return isVisible(c,0); }).sort(function(a,b){ return scoreAt(b,0)-scoreAt(a,0); })[0];
   if (top){
@@ -966,9 +1009,10 @@ function fresh(){
 }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
 
-function allCands(){ return CANDS.concat(S.hn); }
+function allCands(){ return CANDS.concat(S.hn).concat(S.xf); }
 function byId(id){ var a = allCands(); for (var i=0;i<a.length;i++) if (a[i].id === id) return a[i]; return null; }
 function st(c){ return S.statuses[c.id] || "inbox"; }
+function isReal(c){ return !!(c.live || c.src); }
 
 /* ---------- outreach drafts (deterministic) ---------- */
 function draftOutreachFor(c, T){
@@ -997,8 +1041,6 @@ function gmailUrl(c, body){
 /* ---------- LLM plumbing (optional; deterministic fallback always) ---------- */
 var API = (location.protocol === "file:") ? "http://127.0.0.1:8756" : "";
 var LLM = { live:false, provider:"sim", model:"", xConfigured:false, xProvider:"" };
-var briefAI = null, briefPending = false, briefTimer = null;
-function briefSig(){ return S.demo + "|" + S.hn.length + "|" + JSON.stringify(S.statuses); }
 
 fetch(API + "/api/health").then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
   if (j){ LLM = { live: !!j.live, provider: j.provider, model: j.model,
@@ -1006,93 +1048,6 @@ fetch(API + "/api/health").then(function(r){ return r.ok ? r.json() : null; }).t
 }).catch(function(){}).finally(function(){
   renderHeader(); renderDetail();
 });
-
-function briefData(){
-  var T = S.demo, vis = allCands().filter(function(c){ return isVisible(c, T); });
-  var active = vis.filter(function(c){ return st(c) !== "ignored"; });
-  var likely = active.filter(function(c){ return st(c) === "inbox" && scoreAt(c, T) >= LIKELY_MIN; });
-  var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
-  var risers = [], freshOnes = [];
-  vis.forEach(function(c){
-    var now = scoreAt(c, T), f = firstSeenDay(c);
-    if (f > T - 7 && f <= T) freshOnes.push({ c:c, now:now });
-    else { var before = scoreAt(c, T - 7); if (now - before >= 6) risers.push({ c:c, now:now, delta: now - before }); }
-  });
-  risers.sort(function(a,b){ return b.delta - a.delta; });
-  freshOnes.sort(function(a,b){ return b.now - a.now; });
-  var suggested = active.filter(function(c){ return st(c) === "inbox"; })
-    .sort(function(a,b){ return scoreAt(b,T) - scoreAt(a,T); }).slice(0,3);
-  return { T:T, total: vis.length, likely: likely.length, cleared: cleared,
-           risers: risers.slice(0,3), fresh: freshOnes.slice(0,4), suggested: suggested };
-}
-function newestSignal(c, T){
-  var best = null; c.signals.forEach(function(s){ if (s.d <= T && (!best || s.d > best.d)) best = s; });
-  return best;
-}
-function briefDetHtml(){
-  var d = briefData(), h = "";
-  h += '<div class="bl">Queue</div><p><b>' + d.total + '</b> in queue &middot; <b>' + d.likely + '</b> likely &middot; ' + d.cleared + ' cleared</p>';
-  h += '<div class="bl">Top risers</div>';
-  h += d.risers.length ? "<ul>" + d.risers.map(function(r){
-    var ns = newestSignal(r.c, d.T);
-    return "<li><b>" + esc(r.c.name) + "</b> " + r.now + ' <span class="up">+' + r.delta + "</span>: " + esc(ns ? ns.detail : "recent signal") + "</li>";
-  }).join("") + "</ul>" : "<p>No meaningful risers this week.</p>";
-  h += '<div class="bl">New this week</div>';
-  h += d.fresh.length ? "<ul>" + d.fresh.map(function(f){
-    return "<li><b>" + esc(f.c.name) + "</b> (" + f.now + ") via " + esc((f.c.found && f.c.found[0]) || "watch source") + "</li>";
-  }).join("") + "</ul>" : "<p>Nobody new surfaced this week.</p>";
-  h += '<div class="bl">Do next</div>';
-  h += d.suggested.length ? "<ul>" + d.suggested.map(function(c){
-    var ns = newestSignal(c, d.T);
-    return "<li>Queue outreach for <b>" + esc(c.name) + "</b> (" + scoreAt(c, d.T) + "): " + esc(ns ? ns.detail : "") + "</li>";
-  }).join("") + "</ul>" : "<p>Queue is clear. Pull a new source.</p>";
-  return h;
-}
-function mdToHtml(md){
-  var lines = esc(md).split(/\r?\n/), out = "", ul = false;
-  function inline(s){ return s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>"); }
-  for (var i=0;i<lines.length;i++){
-    var t = lines[i].trim();
-    if (!t){ if (ul){ out += "</ul>"; ul = false; } continue; }
-    var m = t.match(/^[-*]\s+(.*)/);
-    if (m){ if (!ul){ out += "<ul>"; ul = true; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
-    if (ul){ out += "</ul>"; ul = false; }
-    var head = t.match(/^\*\*([^*]+)\*\*:?\s*$/) || t.match(/^#{1,3}\s+(.*)/);
-    if (head){ out += '<div class="bl">' + inline(head[1]) + "</div>"; continue; }
-    out += "<p>" + inline(t) + "</p>";
-  }
-  if (ul) out += "</ul>";
-  return out;
-}
-function maybeAIBrief(){
-  if (!LLM.live) return;
-  if (briefAI && briefAI.sig === briefSig()) return;
-  clearTimeout(briefTimer);
-  briefTimer = setTimeout(generateAIBrief, 500);
-}
-function generateAIBrief(){
-  if (!LLM.live || briefPending) return;
-  var sig = briefSig();
-  if (briefAI && briefAI.sig === sig) return;
-  briefPending = true; renderBrief();
-  var d = briefData();
-  var payload = {
-    today: fmtLong(S.demo),
-    data: {
-      queue: { total: d.total, likely: d.likely, cleared: d.cleared },
-      top_risers: d.risers.map(function(r){ var ns = newestSignal(r.c, d.T); return { name: r.c.name, score: r.now, delta: r.delta, newest_signal: ns ? ns.detail : "" }; }),
-      new_this_week: d.fresh.map(function(f){ return { name: f.c.name, score: f.now, source: (f.c.found && f.c.found[0]) || "" }; }),
-      suggested: d.suggested.map(function(c){ var ns = newestSignal(c, d.T); return { name: c.name, score: scoreAt(c, d.T), newest_signal: ns ? ns.detail : "" }; })
-    }
-  };
-  var ctl = new AbortController();
-  var t = setTimeout(function(){ ctl.abort(); }, 25000);
-  fetch(API + "/api/brief", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), signal: ctl.signal })
-    .then(function(r){ return r.json().then(function(j){ if (!r.ok || j.error) throw new Error(j.error || "http " + r.status); return j; }); })
-    .then(function(j){ briefAI = { sig: sig, html: mdToHtml(j.brief || "") }; })
-    .catch(function(){ briefAI = null; })
-    .finally(function(){ clearTimeout(t); briefPending = false; renderBrief(); });
-}
 
 /* ---------- feed ---------- */
 function feedPush(tag, msg, cid){
@@ -1148,50 +1103,6 @@ function setStatus(c, status, opts){
   save(); renderAll();
 }
 
-/* ---------- skip a week ---------- */
-function skipWeek(){
-  if (S.demo >= 28){ toast("Simulation capped at +28 days"); return; }
-  var before = {};
-  allCands().forEach(function(c){ if (isVisible(c, S.demo)) before[c.id] = scoreAt(c, S.demo); });
-  S.demo += 7;
-  var T = S.demo;
-  var risers = [], fresh = [], newSignals = 0;
-  allCands().forEach(function(c){
-    if (!isVisible(c, T)) return;
-    c.signals.forEach(function(s){ if (s.d > T - 7 && s.d <= T) newSignals++; });
-    var now = scoreAt(c, T);
-    if (before[c.id] == null){ fresh.push({ c:c, now:now }); }
-    else if (now - before[c.id] >= 6){ risers.push({ c:c, was: before[c.id], now: now, delta: now - before[c.id] }); }
-  });
-  risers.sort(function(a,b){ return b.delta - a.delta; });
-  fresh.sort(function(a,b){ return b.now - a.now; });
-  feedPush("SIM", "Clock advanced to <b>" + fmtLong(T) + "</b> (+7d). " + newSignals + " new signals landed; scores re-decayed and the queue re-ranked.");
-  fresh.slice(0,3).forEach(function(f){
-    feedPush("SCAN", "New in queue: <b>" + esc(f.c.name) + "</b> (" + f.now + ") via " + esc((f.c.found && f.c.found[0]) || "watch source") + ".");
-  });
-  var drafted = 0;
-  risers.forEach(function(r){
-    if (drafted >= 3) return;
-    if (st(r.c) !== "inbox") return;
-    var ns = newestSignal(r.c, T);
-    S.drafts[r.c.id] = { text: draftOutreachFor(r.c, T), day: T };
-    feedPush("DRAFT", "<b>" + esc(r.c.name) + "</b> jumped " + r.was + " &rarr; <b>" + r.now + "</b> (" + esc(ns ? ns.detail : "new signal") + "). Outreach drafted.", r.c.id);
-    drafted++;
-  });
-  briefAI = null;
-  save(); renderAll(); maybeAIBrief();
-  toast("+7 days: " + risers.length + " risers, " + fresh.length + " new, " + drafted + " drafts fired");
-}
-function resetToday(){
-  S.demo = 0;
-  S.feed = S.feed.filter(function(e){ return e.day <= 0; });
-  Object.keys(S.drafts).forEach(function(id){ if (S.drafts[id].day > 0) delete S.drafts[id]; });
-  Object.keys(S.aiDrafts).forEach(function(id){ if (S.aiDrafts[id].day > 0) delete S.aiDrafts[id]; });
-  briefAI = null;
-  save(); renderAll(); maybeAIBrief();
-  toast("Back to today");
-}
-
 /* ---------- live pull: Hacker News (auto on load, cached per day) ---------- */
 var hnOffline = false;
 function pullHN(auto){
@@ -1217,7 +1128,7 @@ function pullHN(auto){
           signals.push(sig("hn_traction", d0, "HN traction: " + points + " points (bonus weight " + bw.toFixed(1) + ")", "the HN traction", bw));
         }
         S.hn.push({
-          id: "hn-" + hit.objectID, hnId: hit.objectID, live: true,
+          id: "hn-" + hit.objectID, hnId: hit.objectID, live: true, src: "hn",
           name: hit.author, handle: "@" + hit.author + " (HN)", city: "Hacker News",
           archetype: "Indie builder", prior: points >= 80 ? "builder" : "none",
           oneliner: clean,
@@ -1244,19 +1155,226 @@ function pullHN(auto){
     })
     .finally(function(){
       if (btn){ btn.disabled = false; btn.classList.remove("busy"); }
-      ensureBrief(); renderHeader();
+      renderHeader();
     });
 }
 
-/* ---------- X founder-validation layer ----------
+/* ---------- watched follows: real people via the local X connector ----------
+   For each watch account, pull who they followed recently (/api/x/followings,
+   cached per day per account) and turn every followed profile into a real
+   candidate: real name, real handle, real bio, real follower count, real
+   account age. Scoring uses ONLY those observables, through the same engine
+   and the same receipt. No server or no key: a quiet rail-footer line. */
+var WF_HANDLE_RE = /^[A-Za-z0-9_]{1,15}$/;
+var xfState = "";   /* "" | "offline" | "error" */
+
+function trunc(s, n){ s = String(s || ""); return s.length > n ? s.slice(0, n - 3).replace(/\s+\S*$/, "") + "..." : s; }
+function bioLine(bio){
+  var t = String(bio || "").replace(/\s+/g, " ").trim();
+  return t ? trunc(t, 120) : "";
+}
+function findRealByHandle(h){
+  var hl = String(h || "").replace(/^@/, "").toLowerCase();
+  if (!hl) return null;
+  var a = allCands();
+  for (var i = 0; i < a.length; i++){
+    if (a[i].xhandle && a[i].xhandle.toLowerCase() === hl) return a[i];
+  }
+  return null;
+}
+var BUILDER_RE = /(build|founder|co-?founder|stealth|day zero|something new|pre-?launch|prototype|working on|starting|new company|new startup|0 ?to ?1|launching)/i;
+function realSig(t, detail, short){
+  var s = sig(t, 0, detail, short);
+  s.abs = todayKey();
+  return s;
+}
+function xAgeDays(created){
+  if (!created) return null;
+  var t = Date.parse(created);
+  return isNaN(t) ? null : Math.max(0, Math.round((Date.now() - t) / 864e5));
+}
+function deriveRealSignals(u){
+  var out = [];
+  var bio = String(u.bio || "");
+  if (BUILDER_RE.test(bio)){
+    out.push(realSig("x_bio_builder", 'X bio says "' + trunc(bio, 90) + '"', "the builder words in your bio"));
+  }
+  var age = xAgeDays(u.created_at || u.created);
+  if (age != null && age < 365){
+    out.push(realSig("x_account_new", "X account created " + (age < 45 ? age + " days" : Math.round(age / 30) + " months") + " ago", "the fresh X account"));
+  }
+  if ((u.followers || 0) >= 500){
+    out.push(realSig("x_audience", fmtNum(u.followers) + " followers on X", "the audience you built"));
+  }
+  return out;
+}
+function xprofFrom(u){
+  return {
+    followers: u.followers || 0,
+    following: (u.following == null ? null : u.following),
+    created_at: u.created_at || u.created || null,
+    verified: !!u.verified, tweets: (u.tweets == null ? null : u.tweets),
+    date: todayKey(), time: nowHM()
+  };
+}
+function makeRealCandidate(u, via, from){
+  var handle = String(u.handle || "").replace(/^@/, "");
+  var sigs = [];
+  if (via) sigs.push(realSig("watched_follow", "Followed by @" + via + " (watched account)", "a follow from @" + via));
+  sigs = sigs.concat(deriveRealSignals(u));
+  return {
+    id: (via ? "xf-" : "dl-") + handle.toLowerCase(),
+    src: "x", live: true, xhandle: handle,
+    name: u.name || "@" + handle,
+    handle: "@" + handle,
+    city: "X",
+    archetype: via ? "Watched follow" : "Deep link",
+    prior: "none",
+    oneliner: bioLine(u.bio) || "No public bio on X yet.",
+    bio: String(u.bio || "").trim() || "No public bio on X.",
+    found: [via ? "watched follow: @" + via : "deep link" + (from ? " from " + from : "")],
+    pull: { date: todayKey(), time: nowHM() },
+    xprof: xprofFrom(u),
+    signals: sigs
+  };
+}
+function pullFollowings(acc){
+  var key = acc.toLowerCase();
+  var rec = S.wfPulls[key];
+  if (rec && rec.date === todayKey()) return Promise.resolve(-1);   /* daily cache */
+  return fetch(API + "/api/x/followings?handle=" + encodeURIComponent(acc) + "&count=20")
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if (j && j.configured === false){ xfState = "offline"; return -1; }
+      if (!j || j.ok === false){ xfState = "error"; return -1; }
+      xfState = "";
+      var added = 0;
+      (j.followings || []).forEach(function(u){
+        if (added >= 6 || !u || !u.handle || !WF_HANDLE_RE.test(u.handle)) return;
+        var ex = findRealByHandle(u.handle);
+        if (ex){
+          var line = "watched follow: @" + acc;
+          if (ex.src === "x" && ex.found.indexOf(line) < 0){
+            ex.found.push(line);
+            ex.signals.push(realSig("watched_follow", "Followed by @" + acc + " (watched account)", "a follow from @" + acc));
+          }
+          return;
+        }
+        S.xf.push(makeRealCandidate(u, acc));
+        added++;
+      });
+      S.wfPulls[key] = { date: todayKey(), time: nowHM(), added: added };
+      if (added) feedPush("PULL", "Watched follows via <b>@" + esc(acc) + "</b>: " + added + " real profiles joined the queue.");
+      save();
+      return added;
+    })
+    .catch(function(){
+      xfState = "offline";
+      return -1;
+    });
+}
+function pullAllFollowings(){
+  var chain = Promise.resolve(0);
+  S.watch.forEach(function(acc){
+    chain = chain.then(function(n){
+      return pullFollowings(acc).then(function(m){ return n + Math.max(0, m); });
+    });
+  });
+  return chain.then(function(total){ renderAll(); return total; });
+}
+function enrichFromX(c){
+  if (!c.xhandle) return;
+  if (c.xprof && c.xprof.date === todayKey() && !c.needsEnrich) return;   /* daily cache */
+  XP = { cid: c.id, busy: true };
+  renderDetail();
+  fetch(API + "/api/x/user?handle=" + encodeURIComponent(c.xhandle))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      XP = { cid: null, busy: false };
+      if (j && j.configured === false){ xfState = "offline"; renderAll(); return; }
+      if (!j || j.ok === false || !j.user){
+        if (j && j.error === "not_found") XP = { cid: c.id, mode: "notfound" };
+        renderAll(); return;
+      }
+      var u = j.user;
+      c.name = u.name || c.name;
+      c.bio = String(u.bio || "").trim() || c.bio;
+      c.oneliner = bioLine(u.bio) || c.oneliner;
+      c.xprof = xprofFrom(u);
+      c.needsEnrich = false;
+      var keep = c.signals.filter(function(s){ return s.t === "watched_follow"; });
+      c.signals = keep.concat(deriveRealSignals(u));
+      feedPush("PULL", "X enrich for <b>" + esc(c.name) + "</b> (@" + esc(c.xhandle) + "): " + fmtNum(u.followers || 0) + " followers, live profile confirmed.");
+      save(); renderAll();
+    })
+    .catch(function(){ XP = { cid: null, busy: false }; xfState = "offline"; renderAll(); });
+}
+/* deep link: ?person=<name>&handle=<xhandle>&from=<view> */
+function deepLinkBoot(){
+  var q;
+  try{ q = new URLSearchParams(location.search); }catch(e){ return; }
+  var person = (q.get("person") || "").trim();
+  var handle = (q.get("handle") || "").trim().replace(/^@/, "");
+  var from = (q.get("from") || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+  if (handle && WF_HANDLE_RE.test(handle)){
+    var c = findRealByHandle(handle);
+    if (!c){
+      c = makeRealCandidate({ handle: handle, name: person || "@" + handle }, null, from);
+      c.needsEnrich = true;
+      S.xf.push(c);
+      feedPush("SCAN", "Deep link: <b>" + esc(c.name) + "</b> (@" + esc(handle) + ")" + (from ? " via " + esc(from) : "") + " added to the queue.");
+    }
+    S.tab = "all"; S.sel = c.id;
+    save();
+    enrichFromX(c);
+  } else if (person){
+    var t = allCands().filter(function(x){ return String(x.name).toLowerCase() === person.toLowerCase(); })[0];
+    if (t){ S.tab = "all"; S.sel = t.id; save(); }
+  }
+}
+/* settings popover: the editable watch list */
+function renderWatchPop(){
+  var el = document.getElementById("watchList");
+  if (!el) return;
+  el.innerHTML = S.watch.length ? S.watch.map(function(a){
+    var rec = S.wfPulls[a.toLowerCase()];
+    var meta = rec
+      ? (rec.date === todayKey() ? "pulled " + rec.time + " &middot; " + rec.added + " in" : "last " + keyLabel(rec.date))
+      : (xfState === "offline" ? "X connector offline" : "not pulled yet");
+    return '<div class="wrow"><span class="wh">@' + esc(a) + '</span><span class="wmeta">' + meta + '</span>' +
+      '<button class="wdel" data-rmw="' + esc(a) + '" title="Stop watching @' + esc(a) + '">&times;</button></div>';
+  }).join("") : '<div class="wrow"><span class="wmeta">no watch accounts yet</span></div>';
+}
+function toggleWatchPop(force){
+  var p = document.getElementById("watchPop");
+  var show = force != null ? force : p.style.display === "none";
+  p.style.display = show ? "" : "none";
+  if (show) renderWatchPop();
+}
+function addWatchAccount(){
+  var inp = document.getElementById("watchInput");
+  var v = (inp.value || "").trim().replace(/^@/, "");
+  if (!WF_HANDLE_RE.test(v)){ toast("Handles are 1-15 letters, digits or underscores", true); return; }
+  if (S.watch.some(function(a){ return a.toLowerCase() === v.toLowerCase(); })){ toast("Already watching @" + v); return; }
+  S.watch.push(v);
+  inp.value = "";
+  save(); renderWatchPop();
+  pullFollowings(v).then(function(n){
+    renderAll(); renderWatchPop();
+    if (n > 0) toast(n + " real profiles in from @" + v);
+    else if (n === 0) toast("Watching @" + v + "; nothing new from them today");
+    else toast(xfState ? "Watching @" + v + " (X connector offline)" : "Watching @" + v);
+  });
+}
+
+/* ---------- X check: live numbers for real candidates only ----------
    Deterministic adjustment, always shown with its arithmetic:
      cadence  = min(4, posts_per_week)            1 pt per post/week
      audience = min(4, log10(followers))          1 pt per order of magnitude
      engagement = 2 if median likes >= 10, 1 if >= 3, else 0
-   Max +10 on the trigger-score receipt. Sample numbers exist ONLY for the
-   fictional synthetic candidates; live HN accounts never get invented data. */
-var XP = { cid:null, busy:false, mode:null, handle:null };
-function hashStr(s){ var h = 2166136261; for (var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h>>>0; }
+   Max +10 on the trigger-score receipt. Only candidates with a confirmed
+   real X handle have an X panel; nothing here is ever invented. */
+var XP = { cid:null, busy:false, mode:null };
 function xAdjFrom(m){
   var ppw = Number.isFinite(m.ppw) ? m.ppw : 0;
   var engMed = Number.isFinite(m.engMed) ? m.engMed : 0;
@@ -1264,47 +1382,6 @@ function xAdjFrom(m){
   var aud = Math.min(4, Math.round(Math.log10(Math.max(1, m.followers)) * 10) / 10);
   var eng = engMed >= 10 ? 2 : engMed >= 3 ? 1 : 0;
   return { cad:cad, aud:aud, eng:eng, total: Math.round((cad + aud + eng) * 10) / 10 };
-}
-var XHL = {
-  left_job:"Yesterday was my last day. Time to build.",
-  cofounder_search:"Looking for a cofounder. Serious people only, DMs open.",
-  show_hn:"The Show HN went better than expected. Thank you, internet.",
-  preprint:"Preprint is out. DMs open to anyone building in this space.",
-  github_spike:"The repo just crossed another star milestone. Momentum is real.",
-  demo_day_post:"Demo day done. Now the real work starts.",
-  bio_change:"New bio, new chapter.",
-  domain_registered:"Bought the domain. No turning back now.",
-  watched_follow:"Grateful for the signal boost this week.",
-  hn_traction:"Front page. Wild."
-};
-function sampleXFor(c){
-  var r = mulberry32(hashStr(c.handle || c.id));
-  var followers = rint(r, 320, 12800);
-  var following = rint(r, 140, 940);
-  var ppw = Math.round((0.6 + r() * 7.5) * 10) / 10;
-  var engMed = rint(r, 2, 44);
-  var ns = newestSignal(c, S.demo);
-  return {
-    sample:true, handle:(c.handle || "").replace(/^@/, ""),
-    followers:followers, following:following,
-    ratio: Math.round(followers / Math.max(1, following) * 10) / 10,
-    ageDays: rint(r, 420, 3300), ppw:ppw, lastDays: rint(r, 0, 4), engMed:engMed,
-    highlight:{ text: XHL[(ns && ns.t) || "bio_change"] || XHL.bio_change, likes: rint(r, engMed, engMed * 6) },
-    adj: xAdjFrom({ ppw:ppw, followers:followers, engMed:engMed }),
-    day: S.demo
-  };
-}
-function applySampleX(c){
-  if (c.live){
-    /* live HN pull = a real person's account: no fabricated numbers, ever */
-    XP = { cid:c.id, mode:"nolive" };
-    renderDetail();
-    return;
-  }
-  S.xval[c.id] = sampleXFor(c);
-  XP = { cid:c.id, mode:"sample" };
-  feedPush("XVAL", "X validation (sample data) for <b>" + esc(c.name) + "</b>: +" + S.xval[c.id].adj.total + " adjustment on the trigger score.");
-  save(); renderAll();
 }
 function applyLiveX(c, handle, user, tweets){
   var followers = user.followers || 0, following = user.following || 0;
@@ -1324,22 +1401,28 @@ function applyLiveX(c, handle, user, tweets){
   var hi = null;
   tweets.forEach(function(t){ if (!hi || (t.likes || 0) > (hi.likes || 0)) hi = t; });
   S.xval[c.id] = {
-    sample:false, provider: LLM.xProvider || "X API", handle:handle,
+    provider: LLM.xProvider || "X API", handle:handle,
     followers:followers, following:following,
     ratio: Math.round(followers / Math.max(1, following) * 10) / 10,
     ageDays: isNaN(created) ? null : Math.max(0, Math.round((Date.now() - created) / 864e5)),
     ppw:ppw, lastDays:lastDays, engMed:engMed, insufficient:times.length < 2,
     highlight: hi ? { text: (hi.text || "").slice(0, 200), likes: hi.likes || 0 } : null,
     adj: xAdjFrom({ ppw:ppw, followers:followers, engMed:engMed }),
-    day: S.demo
+    date: todayKey(), time: nowHM(), day: S.demo
   };
+  /* the same live payload refreshes the profile card, no extra call */
+  c.xprof = xprofFrom(user);
+  if (user.name) c.name = user.name;
+  if (user.bio){ c.bio = String(user.bio).trim(); c.oneliner = bioLine(user.bio) || c.oneliner; }
+  var keepSigs = c.signals.filter(function(s){ return s.t === "watched_follow"; });
+  c.signals = keepSigs.concat(deriveRealSignals(user));
   XP = { cid:c.id, mode:"live" };
-  feedPush("XVAL", "X validation (live, @" + esc(handle) + ") for <b>" + esc(c.name) + "</b>: " + followers + " followers, " + (ppw == null ? "insufficient cadence data" : ppw + " posts/week") + ". Adjustment +" + S.xval[c.id].adj.total + ".");
+  feedPush("XVAL", "X check (live, @" + esc(handle) + ") for <b>" + esc(c.name) + "</b>: " + followers + " followers, " + (ppw == null ? "insufficient cadence data" : ppw + " posts/week") + ". Adjustment +" + S.xval[c.id].adj.total + ".");
   save(); renderAll();
 }
-function validateOnX(c, handleOverride){
-  var handle = (handleOverride || c.handle || "").replace(/^@/, "").split(/[\s(]/)[0].trim();
-  if (!handle){ toast("No handle on this candidate", true); return; }
+function validateOnX(c){
+  var handle = c.xhandle;
+  if (!handle){ return; }
   XP = { cid:c.id, busy:true };
   renderDetail();
   var serverUp = false;
@@ -1347,9 +1430,12 @@ function validateOnX(c, handleOverride){
     .then(function(r){ return r.json(); })
     .then(function(j){
       serverUp = true;
-      if (j && j.configured === false){ applySampleX(c); return; }
+      if (j && j.configured === false){
+        XP = { cid:null, busy:false }; xfState = "offline";
+        toast("X connector offline", true); renderAll(); return;
+      }
       if (j && j.ok === false){
-        if (j.error === "not_found"){ XP = { cid:c.id, mode:"notfound", handle:handle }; renderDetail(); return; }
+        if (j.error === "not_found"){ XP = { cid:c.id, mode:"notfound" }; renderDetail(); return; }
         throw new Error(j.error || "X lookup failed");
       }
       if (!j || !j.user) throw new Error("unexpected response from /api/x/user");
@@ -1362,69 +1448,64 @@ function validateOnX(c, handleOverride){
     .catch(function(e){
       XP = { cid:null, busy:false };
       if (serverUp) toast("X lookup failed: " + e.message, true);
-      else toast("Local X connector unavailable", true);
-      renderDetail();
+      else { xfState = "offline"; toast("X connector offline", true); }
+      renderDetail(); renderHeader();
     });
 }
 function xcell(k, v, s){
   return '<div class="xcell"><div class="k">' + k + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : "") + "</div>";
 }
 function fmtNum(n){ n = n || 0; return n >= 1000 ? (n / 1000).toFixed(1) + "k" : String(n); }
-function xTryInput(ph){
-  return '<div class="xtry"><input id="xTryInput" placeholder="' + esc(ph) + '" autocomplete="off"/><button class="mini" id="xTryBtn">Check live</button></div>';
-}
 function renderXSection(c, b){
-  var xv = b.xv, active = XP.cid === c.id;
-  if (!xv && !(active && (XP.busy || XP.mode))) return "";
-  var h = '<div class="sect" id="xSect"><h3>X check</h3><div class="xwrap">';
-  if (active && XP.busy){
-    h += '<p class="bio" style="color:var(--muted)">Checking ' + esc(c.handle) + " on X...</p>";
-  } else if (active && XP.mode === "notfound"){
-    h += '<div class="xbanner">No X profile returned.</div>';
-    h += xTryInput("any real handle, e.g. janoberhauser");
-  } else if (active && XP.mode === "nolive"){
-    h += '<div class="xbanner">No X data returned.</div>';
-  } else if (xv){
-    if (xv.sample){
-      h += '<div><span class="smpltag">SAMPLE</span></div>';
-    } else {
-      h += '<div class="xbanner live">X live &middot; ' + esc(xv.provider) + " &middot; @" + esc(xv.handle) + "</div>";
-    }
+  if (!c.xhandle) return "";                 /* no confirmed real handle, no X panel */
+  var busy = XP.cid === c.id && XP.busy;
+  var nf = XP.cid === c.id && XP.mode === "notfound";
+  var xv = b.xv;                              /* live posts check, with adjustment */
+  var xp = c.xprof;                           /* live profile numbers from the pull */
+  if (!busy && !nf && !xv && !xp) return "";
+  var h = '<div class="sect" id="xSect"><h3>X numbers</h3><div class="xwrap">';
+  if (busy){
+    h += '<p class="bio" style="color:var(--muted)">Checking @' + esc(c.xhandle) + " on X...</p>";
+  } else if (nf){
+    h += '<div class="xbanner">No X profile found for @' + esc(c.xhandle) + ".</div>";
+  } else {
+    var srcDate = xv ? xv.date : xp.date, srcTime = xv ? xv.time : xp.time;
+    var stamp = srcTime ? "X " + (srcDate === todayKey() ? srcTime : keyLabel(srcDate)) : "";
+    h += '<div class="xbanner live">X live &middot; @' + esc(c.xhandle) + (stamp ? ' &middot; <span class="srcstamp" style="color:inherit">' + esc(stamp) + "</span>" : "") + "</div>";
+    var followers = xv ? xv.followers : (xp.followers || 0);
+    var following = xv ? xv.following : xp.following;
+    var ageDays = xv ? xv.ageDays : xAgeDays(xp.created_at);
     h += '<div class="xgrid">';
-    h += xcell("Followers", fmtNum(xv.followers), null);
-    h += xcell("Following ratio", xv.ratio + "x", fmtNum(xv.followers) + " / " + fmtNum(xv.following) + " following");
-    h += xcell("Account age", xv.ageDays == null ? "n/a" : (xv.ageDays / 365).toFixed(1) + "y", xv.ageDays == null ? "not reported" : xv.ageDays + " days");
-    h += xcell("Post cadence", xv.ppw == null ? "insufficient" : xv.ppw + "/wk", xv.lastDays == null ? "fewer than 2 dated posts returned" : "last post " + (xv.lastDays === 0 ? "today" : xv.lastDays + "d ago"));
-    h += xcell("Engagement median", xv.engMed == null ? "insufficient" : xv.engMed + " likes", xv.engMed == null ? "no posts returned" : "per recent post");
-    h += "</div>";
-    if (xv.highlight){
-      h += '<div class="xhl"><b>Flagged highlight post</b>&quot;' + esc(xv.highlight.text) + "&quot; &middot; " + xv.highlight.likes + " likes</div>";
+    h += xcell("Followers", fmtNum(followers), null);
+    h += xcell("Following ratio", following == null ? "n/a" : (Math.round(followers / Math.max(1, following) * 10) / 10) + "x",
+               following == null ? "not reported" : fmtNum(followers) + " / " + fmtNum(following) + " following");
+    h += xcell("Account age", ageDays == null ? "n/a" : (ageDays / 365).toFixed(1) + "y", ageDays == null ? "not reported" : ageDays + " days");
+    if (xv){
+      h += xcell("Post cadence", xv.ppw == null ? "insufficient" : xv.ppw + "/wk", xv.lastDays == null ? "fewer than 2 dated posts returned" : "last post " + (xv.lastDays === 0 ? "today" : xv.lastDays + "d ago"));
+      h += xcell("Engagement median", xv.engMed == null ? "insufficient" : xv.engMed + " likes", xv.engMed == null ? "no posts returned" : "per recent post");
+    } else {
+      h += xcell("Post cadence", "not checked", "run the posts check");
+      h += xcell("Engagement median", "not checked", "run the posts check");
     }
-    h += (xv.insufficient ? '<div class="xnote">Fewer than two dated posts came back. Cadence and engagement count 0 for now; audience still counts.</div>' : '');
-    h += '<div class="xmath">X adjustment = cadence min(4, ' + (xv.ppw == null ? 'insufficient' : xv.ppw) + ") = " + xv.adj.cad +
-         " + audience min(4, log10(" + xv.followers + ")) = " + xv.adj.aud +
-         " + engagement (median " + (xv.engMed == null ? 'insufficient' : xv.engMed + ' likes') + ") = " + xv.adj.eng +
-         ' &rarr; <b>+' + xv.adj.total + "</b> on the trigger-score receipt (cap 10)</div>";
+    h += "</div>";
+    if (xv && xv.highlight){
+      h += '<div class="xhl"><b>Most liked recent post</b>&quot;' + esc(xv.highlight.text) + "&quot; &middot; " + xv.highlight.likes + " likes</div>";
+    }
+    if (xv){
+      h += (xv.insufficient ? '<div class="xnote">Fewer than two dated posts came back. Cadence and engagement count 0 for now; audience still counts.</div>' : '');
+      h += '<div class="xmath">X adjustment = cadence min(4, ' + (xv.ppw == null ? 'insufficient' : xv.ppw) + ") = " + xv.adj.cad +
+           " + audience min(4, log10(" + xv.followers + ")) = " + xv.adj.aud +
+           " + engagement (median " + (xv.engMed == null ? 'insufficient' : xv.engMed + ' likes') + ") = " + xv.adj.eng +
+           ' &rarr; <b>+' + xv.adj.total + "</b> on the trigger-score receipt (cap 10)</div>";
+    } else {
+      h += '<div class="xnote">Profile numbers come from the daily X pull. The posts check reads recent posts to add cadence and engagement to the score receipt.</div>';
+    }
     h += '<div style="display:flex;gap:7px;margin-top:10px;align-items:center;flex-wrap:wrap">' +
-         '<button class="mini" id="xRevalBtn">Re-check</button>' +
-         '<button class="mini ghost" id="xClearBtn">Remove adjustment</button></div>';
-    if (!xv.sample) h += xTryInput("try any real handle, e.g. janoberhauser");
+         '<button class="mini" id="xRevalBtn">' + (xv ? "Re-check posts" : "Check posts") + "</button>" +
+         (xv ? '<button class="mini ghost" id="xClearBtn">Remove adjustment</button>' : "") + "</div>";
   }
   h += "</div></div>";
   return h;
-}
-function openXPanel(c){
-  if (XP.busy) return;
-  if (S.xval[c.id]){
-    XP = { cid:c.id, mode: S.xval[c.id].sample ? "sample" : "live" };
-    renderDetail();
-  } else if (c.live){
-    validateOnX(c);
-  } else {
-    applySampleX(c);
-  }
-  var xs = document.getElementById("xSect");
-  if (xs && typeof xs.scrollIntoView === "function") xs.scrollIntoView({ behavior:"smooth", block:"nearest" });
 }
 
 /* ---------- list / tabs / ask ---------- */
@@ -1479,6 +1560,11 @@ function liveStamp(){
   if (!S.hnPull) return "HN live";
   return "HN " + (S.hnPull.date === todayKey() ? S.hnPull.time : keyLabel(S.hnPull.date));
 }
+function stampTxt(c){
+  if (c.src === "x" && c.pull) return "X " + (c.pull.date === todayKey() ? c.pull.time : keyLabel(c.pull.date));
+  if (isReal(c)) return liveStamp();
+  return "";
+}
 function renderHeader(){
   var vis = allCands().filter(function(c){ return isVisible(c, S.demo); });
   var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
@@ -1494,6 +1580,15 @@ function renderHeader(){
   } else {
     stamp.textContent = ""; stamp.className = "stamp";
   }
+  var xs = document.getElementById("xStamp");
+  var latest = null;
+  Object.keys(S.wfPulls).forEach(function(k){
+    var r = S.wfPulls[k];
+    if (r && r.date && (!latest || (r.date + " " + r.time) > (latest.date + " " + latest.time))) latest = r;
+  });
+  xs.textContent = latest ? "X " + (latest.date === todayKey() ? latest.time : keyLabel(latest.date)) : "";
+  var xfEl = document.getElementById("xFoot");
+  xfEl.textContent = xfState === "offline" ? "X connector offline" : (xfState === "error" ? "X pull failed" : "");
 }
 
 function renderTabs(){
@@ -1527,11 +1622,11 @@ function renderList(){
       var f = freshLabel(c);
       return '<div class="cand' + (c.id === S.sel ? " sel" : "") + '" data-id="' + esc(c.id) + '">' +
         '<div class="top"><span class="nm">' + esc(c.name) + '</span><span class="sc ' + heat(sc) + '">' + sc + "</span></div>" +
-        '<div class="hd">' + esc(c.handle) + " &middot; " + esc(c.city) + "</div>" +
+        '<div class="hd">' + (isReal(c) ? esc(c.handle) + " &middot; " : "") + esc(c.city) + "</div>" +
         '<div class="ln">' + esc(c.oneliner) + "</div>" +
         '<div class="mt"><span class="atag">' + esc(c.archetype) + '</span><span class="fresh' + (f === "today" ? " new" : "") + '">&#9679; ' + f + "</span>" +
         (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-        (c.live ? '<span class="srcstamp">' + esc(liveStamp()) + "</span>" : '<span class="smpl">SAMPLE</span>') +
+        (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : '<span class="smpl">SAMPLE</span>') +
         "</div></div>";
     }).join("");
   }
@@ -1555,14 +1650,11 @@ function stageOf(c){
 
 function renderDetail(){
   var el = document.getElementById("detail");
-  var bar = document.getElementById("actionbar");
   var c = S.sel ? byId(S.sel) : null;
   if (!c){
-    bar.style.display = "none";
     el.innerHTML = '<div class="placeholder"><b>No candidate selected</b><span>Pick someone from the queue.</span></div>';
     return;
   }
-  bar.style.display = "";
   var T = S.demo, b = breakdown(c, T), s = st(c);
   var stage = stageOf(c);
   var scoreOpen = scoreOpenFor === c.id;
@@ -1572,18 +1664,32 @@ function renderDetail(){
   h += '<div class="dhandle mono">' + esc(c.city) + '<span class="sep">|</span>first seen ' + fmtDay(firstSeenDay(c)) + "</div>";
   h += '<div class="dbadges"><span class="atag">' + esc(c.archetype) + '</span><span class="atag">' + esc(b.prior.label) + ' &times;' + b.prior.mult.toFixed(2) + "</span>" +
        (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-       (c.live ? '<span class="srcstamp">' + esc(liveStamp()) + "</span>" : '<span class="smpl">SAMPLE</span>') + "</div>";
+       (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : '<span class="smpl">SAMPLE</span>') + "</div>";
   h += '<p class="dline">' + esc(c.oneliner) + "</p>";
-  h += '<div class="pipe">' + PIPE.map(function(p, i){
+  h += '<div class="stagebar"><div class="pipe">' + PIPE.map(function(p, i){
     return '<span class="st' + (i === stage ? " cur" : i < stage ? " done" : "") + '" data-stg="' + i + '" title="Set pipeline stage">' + p.toUpperCase() + "</span>";
   }).join("") + "</div>";
+  h += '<div class="dact">' +
+       (s === "ignored" ? "" : '<button id="actIgnore">Ignore</button>') +
+       '<button id="actWatch">Watchlist</button>' +
+       '<button id="actReach" class="primary">Outreach</button>' +
+       (s === "contacted" ? '<button id="actMeet">Advance to meeting</button>' : "") +
+       (s !== "inbox" ? '<button id="actBack" class="ghost">Back to inbox</button>' : "") +
+       "</div></div>";
   h += "</div>";
   /* right column: X control on top, score below */
   var pct = b.score / SCORE_CAP, r = 34, circ = 2 * Math.PI * r;
   var col = b.score >= 70 ? "var(--ember)" : b.score >= 45 ? "var(--ink)" : "var(--faint)";
   h += '<div class="dright">';
-  h += '<div class="xctl"><button class="xicon" id="xHeadBtn" title="' + (c.live ? "Check on X" : "Open sample X profile") + '">' + XSVG + "</button>" +
-       '<span class="xh">' + esc(c.handle) + "</span>" + (c.live ? "" : '<span class="smpl">SAMPLE</span>') + "</div>";
+  if (c.xhandle){
+    var xu = "https://x.com/" + encodeURIComponent(c.xhandle);
+    h += '<div class="xctl"><a class="xicon" href="' + xu + '" target="_blank" rel="noopener" title="Open @' + esc(c.xhandle) + ' on X">' + XSVG + "</a>" +
+         '<a class="xh" href="' + xu + '" target="_blank" rel="noopener">' + esc(c.handle) + "</a></div>";
+  } else if (isReal(c)){
+    h += '<div class="xctl"><span class="xh">' + esc(c.handle) + "</span></div>";
+  } else {
+    h += '<div class="xctl"><span class="xh dim">sample profile, no public handle</span></div>';
+  }
   h += '<div class="gauge" id="scoreGauge" title="' + (scoreOpen ? "Hide receipt" : "Show receipt") + '"><svg width="96" height="96" viewBox="0 0 96 96">' +
     '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--line2)" stroke-width="7"/>' +
     '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" ' +
@@ -1596,7 +1702,10 @@ function renderDetail(){
   h += '<div class="sect"><h3>Enriched bio</h3><p class="bio">' + esc(c.bio) + "</p></div>";
 
   h += '<div class="sect"><h3>How we found them</h3><div class="found">' +
-    (c.found || []).map(function(f){ return '<div class="f">' + esc(f) + "</div>"; }).join("") + "</div></div>";
+    (c.found || []).map(function(f){
+      return '<div class="f">' + esc(f) +
+        (c.src === "x" && c.pull ? ' <span class="srcstamp" style="margin-left:6px">' + esc(stampTxt(c)) + "</span>" : "") + "</div>";
+    }).join("") + "</div></div>";
 
   var vis = c.signals.filter(function(x){ return x.d <= T; }).slice().sort(function(a,b){ return b.d - a.d; });
   var pending = c.signals.filter(function(x){ return x.d > T; }).length;
@@ -1638,50 +1747,50 @@ function renderDetail(){
   var d = S.drafts[c.id], ai = S.aiDrafts[c.id];
   if (d){
     var draftTxt = ai ? ai.text : d.text;
+    var real = isReal(c);
     h += '<div class="sect"><h3>Outreach draft</h3>';
     h += '<div class="draftcard"><div class="dh">' +
       '<div class="actions">' + (LLM.live && !ai ? '<button class="mini" id="aiRewrite">Rewrite with AI</button>' : "") +
       '<button class="mini" id="copyDraft">Copy</button>' +
-      '<a class="btnlink primary" href="' + esc(gmailUrl(c, draftTxt)) + '" target="_blank" rel="noopener">Open in Gmail</a>' +
+      (real
+        ? (c.xhandle ? '<a class="btnlink primary" href="https://x.com/' + encodeURIComponent(c.xhandle) + '" target="_blank" rel="noopener">DM on X</a>' : "")
+        : '<a class="btnlink primary" href="' + esc(gmailUrl(c, draftTxt)) + '" target="_blank" rel="noopener">Open in Gmail</a>') +
       "</div></div>" +
       "<pre>" + esc(draftTxt) + "</pre>" +
-      '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + '</span><span class="smpl">SAMPLE</span></div>' +
+      (real
+        ? '<div class="dfoot"><span>no public email on file; copy the draft and send it yourself</span></div>'
+        : '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + '</span><span class="smpl">SAMPLE</span></div>') +
       "</div></div>";
   }
   h += '<div style="height:8px"></div>';
   el.innerHTML = h;
 
-  /* action bar states */
-  document.getElementById("actMeet").style.display = (s === "contacted") ? "" : "none";
-  document.getElementById("actBack").style.display = (s !== "inbox") ? "" : "none";
-  document.getElementById("actIgnore").style.display = (s === "ignored") ? "none" : "";
+  /* triage actions (detail header) */
+  var bi = document.getElementById("actIgnore");
+  if (bi) bi.onclick = function(){ actWithFx("ignored", bi); };
+  var bw = document.getElementById("actWatch");
+  if (bw) bw.onclick = function(){ actWithFx("watchlist", bw); };
+  var br = document.getElementById("actReach");
+  if (br) br.onclick = function(){ actWithFx("contacted", br); };
+  var bm = document.getElementById("actMeet");
+  if (bm) bm.onclick = function(){ actWithFx("meeting", bm); };
+  var bb = document.getElementById("actBack");
+  if (bb) bb.onclick = function(){ actOnSel("inbox"); };
 
-  /* X control (detail header) + score receipt toggle */
-  var xh = document.getElementById("xHeadBtn");
-  if (xh) xh.onclick = function(){ openXPanel(c); };
+  /* score receipt toggle */
   var gg = document.getElementById("scoreGauge");
   if (gg) gg.onclick = function(){ scoreOpenFor = scoreOpen ? null : c.id; renderDetail(); };
 
-  /* X validation controls */
+  /* X panel controls */
   var xr = document.getElementById("xRevalBtn");
-  if (xr) xr.onclick = function(){
-    var prev = S.xval[c.id];
-    validateOnX(c, prev && !prev.sample ? prev.handle : null);
-  };
+  if (xr) xr.onclick = function(){ validateOnX(c); };
   var xc = document.getElementById("xClearBtn");
   if (xc) xc.onclick = function(){
     delete S.xval[c.id];
     XP = { cid:null };
-    feedPush("XVAL", "X validation removed for <b>" + esc(c.name) + "</b>; adjustment reverted.");
+    feedPush("XVAL", "X check removed for <b>" + esc(c.name) + "</b>; adjustment reverted.");
     save(); renderAll();
   };
-  var xt = document.getElementById("xTryBtn");
-  var xi = document.getElementById("xTryInput");
-  if (xt && xi){
-    var goX = function(){ var v = xi.value.trim(); if (v) validateOnX(c, v); };
-    xt.onclick = goX;
-    xi.onkeydown = function(e){ if (e.key === "Enter"){ e.preventDefault(); goX(); } };
-  }
 
   var cp = document.getElementById("copyDraft");
   if (cp) cp.onclick = function(){
@@ -1707,23 +1816,6 @@ function renderDetail(){
   };
 }
 
-/* The brief regenerates deterministically at most once per calendar day
-   (keyed by date, cached in localStorage). A day-old brief shows its date. */
-function ensureBrief(){
-  if (!S.brief || S.brief.date !== todayKey()){
-    S.brief = { date: todayKey(), html: briefDetHtml() };
-    save();
-  }
-  renderBrief();
-}
-function renderBrief(){
-  var el = document.getElementById("brief");
-  var title = document.getElementById("briefTitle");
-  var b = S.brief;
-  title.textContent = "Brief for " + keyLabel(b ? b.date : todayKey());
-  el.innerHTML = b ? b.html : briefDetHtml();
-}
-
 function renderFeed(){
   var el = document.getElementById("feed");
   var evs = S.feed.slice().reverse();
@@ -1740,14 +1832,16 @@ function renderFeed(){
       '<div class="top"><span class="tag ' + esc(e.tag) + '">' + esc(e.tag) + '</span><span class="when">' + fmtDay(e.day) + "</span></div>" +
       '<div class="msg">' + e.msg + "</div>" +
       (draft ? '<div class="draftbox">' + esc(draft) + '</div><div class="evbtns">' +
-        (dc ? '<a class="btnlink primary" href="' + esc(gmailUrl(dc, draft)) + '" target="_blank" rel="noopener">Open in Gmail</a>' : "") +
+        (dc ? (isReal(dc)
+          ? (dc.xhandle ? '<a class="btnlink primary" href="https://x.com/' + encodeURIComponent(dc.xhandle) + '" target="_blank" rel="noopener">DM on X</a>' : "")
+          : '<a class="btnlink primary" href="' + esc(gmailUrl(dc, draft)) + '" target="_blank" rel="noopener">Open in Gmail</a>') : "") +
         '<button class="mini" data-copycid="' + esc(e.cid) + '">Copy</button><button class="mini ghost" data-open="' + esc(e.cid) + '">Open</button></div>' : "") +
       "</div>";
   }).join("") || '<div class="empty">No agent activity yet.</div>';
 }
 
 function renderAll(){
-  renderHeader(); renderTabs(); renderList(); renderDetail(); renderBrief(); renderFeed();
+  renderHeader(); renderTabs(); renderList(); renderDetail(); renderFeed();
   save();
 }
 
@@ -1778,9 +1872,11 @@ function fallbackCopy(txt){
 
 /* ---------- modal ---------- */
 function buildModal(){
-  var order = ["left_job","cofounder_search","show_hn","preprint","github_spike","demo_day_post","bio_change","domain_registered","watched_follow","hn_traction"];
+  var order = ["left_job","cofounder_search","preprint","github_spike","bio_change","show_hn","domain_registered","x_bio_builder","watched_follow","hn_traction","demo_day_post","x_account_new","x_audience"];
   document.getElementById("wTable").innerHTML = order.map(function(k){
-    return "<tr><td>" + esc(SIG_LABEL[k]) + '</td><td class="w">' + WEIGHTS[k] + '</td><td class="note">' + esc(SIG_NOTE[k]) + "</td></tr>";
+    return "<tr><td>" + esc(SIG_LABEL[k]) + '</td><td class="w">' + WEIGHTS[k] +
+      '</td><td class="note">' + esc(SIG_HOW[k]) +
+      '</td><td class="stat' + (SIG_WIRED[k] ? "" : " smp") + '">' + (SIG_WIRED[k] ? "WIRED" : "SAMPLE CONNECTOR") + "</td></tr>";
   }).join("");
   document.getElementById("pTable").innerHTML = Object.keys(PRIORS).map(function(k){
     return "<tr><td>" + esc(PRIORS[k].label) + '</td><td class="w">&times;' + PRIORS[k].mult.toFixed(2) + "</td><td class=\"note\"></td></tr>";
@@ -1842,6 +1938,19 @@ document.addEventListener("keydown", function(e){
 /* ---------- events ---------- */
 document.addEventListener("click", function(e){
   var el = e.target;
+  /* click outside the watch popover closes it */
+  var pop = document.getElementById("watchPop");
+  if (pop && pop.style.display !== "none" && el.closest && !el.closest("#watchPop") && !el.closest("#watchBtn")){
+    toggleWatchPop(false);
+  }
+  var rmw = el.closest ? el.closest("[data-rmw]") : null;
+  if (rmw){
+    var acc = rmw.getAttribute("data-rmw");
+    S.watch = S.watch.filter(function(a){ return a.toLowerCase() !== acc.toLowerCase(); });
+    save(); renderWatchPop();
+    toast("Stopped watching @" + acc + "; people already in the queue stay");
+    return;
+  }
   var tab = el.closest ? el.closest("[data-tab]") : null;
   if (tab){ S.tab = tab.getAttribute("data-tab"); S.sel = null; renderAll(); return; }
   var card = el.closest ? el.closest(".cand[data-id]") : null;
@@ -1888,19 +1997,21 @@ document.getElementById("igLink").addEventListener("click", function(){
   save(); renderAll(); toast(n + " restored to inbox");
 });
 document.getElementById("askInput").addEventListener("input", function(){ renderList(); renderDetail(); });
-document.getElementById("actIgnore").addEventListener("click", function(){ actWithFx("ignored", this); });
-document.getElementById("actWatch").addEventListener("click", function(){ actWithFx("watchlist", this); });
-document.getElementById("actReach").addEventListener("click", function(){ actWithFx("contacted", this); });
-document.getElementById("actMeet").addEventListener("click", function(){ actWithFx("meeting", this); });
-document.getElementById("actBack").addEventListener("click", function(){ actOnSel("inbox"); });
+document.getElementById("watchBtn").addEventListener("click", function(){ toggleWatchPop(); });
+document.getElementById("watchAdd").addEventListener("click", addWatchAccount);
+document.getElementById("watchInput").addEventListener("keydown", function(e){
+  if (e.key === "Enter"){ e.preventDefault(); addWatchAccount(); }
+});
 
 /* ---------- boot ---------- */
 buildModal();
+deepLinkBoot();
 renderAll();
 if (!localStorage.getItem("fr_intro_seen")) openHow();
 /* live by default: auto-pull Hacker News once per calendar day */
 if (!S.hnPull || S.hnPull.date !== todayKey()) pullHN(true);
-else ensureBrief();
+/* watched follows: one pull per watch account per calendar day */
+pullAllFollowings();
 </script>
 </body>
 </html>

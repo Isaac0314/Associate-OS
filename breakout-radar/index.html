@@ -336,6 +336,7 @@
     <a href="../growth-scout/">GROWTH SCOUT</a>
     <span aria-current="page">BREAKOUT RADAR</span>
     <a href="../associate-os/">ASSOCIATE OS</a>
+    <a href="../brief/">BRIEF</a>
   </div>
 </nav>
 
@@ -359,10 +360,6 @@
 <main class="layout">
   <section class="grid" id="grid"></section>
   <aside class="rail">
-    <div class="card brief-card">
-      <div class="card-h"><h2>IC brief</h2><div class="r" id="briefWhen"></div></div>
-      <div class="brief-body" id="briefBody"></div>
-    </div>
     <div class="card">
       <div class="card-h"><h2>Agent activity</h2></div>
       <div class="actlist" id="actlist"></div>
@@ -790,7 +787,7 @@ function renderGrid(){
   }).join('');
 }
 
-/* ------- IC brief (daily, deterministic) ------- */
+/* ------- daily snapshot for the unified /brief/ page (deterministic) ------- */
 function briefData(){
   const w=state.simWeek;
   const rows=COMPANIES.map(c=>({name:c.n,stage:c.s,geo:c.g,sector:c.arch,index:scoreAt(c,w),delta:deltaOf(c,w)}));
@@ -809,32 +806,22 @@ function briefData(){
   return {weekOf:fmtDateY(dateOfWeek(w)),risers,newBreakouts:newBrk,falsifierAlerts:alerts.slice(0,3),
           breakouts:rows.filter(r=>r.index>=THRESHOLD).map(r=>r.name)};
 }
-function briefHtml(){
-  const d=briefData();
-  let h='<h4>Top risers</h4><ul>';
-  h+=d.risers.length?d.risers.map(r=>'<li><b>'+esc(r.name)+'</b> +'+r.delta+' to '+r.index+'. '+esc(r.driver)+'</li>').join(''):'<li>No positive movement this window.</li>';
-  h+='</ul><h4>New breakouts</h4><ul>';
-  h+=d.newBreakouts.length?d.newBreakouts.map(r=>'<li><b>'+esc(r.name)+'</b> crossed '+THRESHOLD+' (now '+r.index+'). '+esc(r.sector)+', '+esc(r.stage)+'.</li>').join(''):'<li>None crossed the threshold in the last two weeks.</li>';
-  h+='</ul><h4>Falsifier alerts</h4><ul>';
-  h+=d.falsifierAlerts.length?d.falsifierAlerts.map(a=>'<li><b>'+esc(a.name)+'</b> at '+a.index+': '+esc(a.why)+'.</li>').join(''):'<li>No stale-score alerts.</li>';
-  h+='</ul>';
-  return h;
-}
 function todayKey(){
   const d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
-function briefLabel(d){return DAYS[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()];}
-function renderBrief(){
-  const key=todayKey();
-  let stored=null;
-  try{stored=JSON.parse(localStorage.getItem('br_brief_v1')||'null');}catch(e){}
-  if(!stored||!stored.html||stored.date!==key){
-    stored={date:key,label:briefLabel(new Date()),html:briefHtml()};
-    try{localStorage.setItem('br_brief_v1',JSON.stringify(stored));}catch(e){}
-  }
-  el('briefBody').innerHTML=stored.html;
-  el('briefWhen').textContent='Brief for '+stored.label;
+/* The /brief/ page composes its TODAY section from this compact key. */
+function writeDailySnapshot(){
+  try{
+    const d=briefData();
+    const flagged=state.acts.filter(a=>a.kind==='flag'&&a.ping&&a.ping.co).map(a=>a.ping.co);
+    localStorage.setItem('breakout.dailySnapshot.v1',JSON.stringify({
+      date:todayKey(),
+      topRisers:d.risers.map(r=>({name:r.name,delta:r.delta,index:r.index})),
+      newBreakouts:d.newBreakouts.map(r=>r.name),
+      flaggedToday:[...new Set(flagged)]
+    }));
+  }catch(e){}
 }
 
 /* ------- activity rail ------- */
@@ -1101,7 +1088,6 @@ function closeIntro(){
 /* ------- refresh + init ------- */
 function refresh(){
   renderTabs();renderClock();renderStats();renderGrid();
-  renderBrief();
   if(state.detailId!=null)openDetail(state.detailId);
 }
 function init(){
@@ -1172,6 +1158,7 @@ function init(){
   for(const f of [...flags].reverse()){
     pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> at '+f.idx+' (<span class="pos">'+(f.d>=0?'+':'')+f.d+'</span> in 2 wk). Draft ping ready below.',pingFor(f.c,f.idx,f.d));
   }
+  writeDailySnapshot();
 
   let seen=false;
   try{seen=!!localStorage.getItem('intro_seen');}catch(e){}

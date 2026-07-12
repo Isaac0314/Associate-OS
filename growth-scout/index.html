@@ -199,6 +199,8 @@
   .fdrs .flab{font:400 8.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);flex:none}
   .fdrs b{font-weight:600;color:var(--ink)}
   .fdrs .fn{white-space:nowrap}
+  .fdrs a.fdlink{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+  .fdrs a.fdlink:hover{border-bottom-color:var(--line-strong)}
   .star{
     background:none;border:0;padding:0;height:auto;width:auto;flex:none;
     color:var(--faint);font-size:14px;line-height:1;cursor:pointer;
@@ -297,12 +299,6 @@
   .modal .mh h3{margin:0;font:500 15px/1.2 var(--grotesk);letter-spacing:-.01em}
   .modal .mh .x{margin-left:auto}
   .modal .mb{padding:16px 18px;overflow:auto}
-  pre.brief{
-    margin:0;white-space:pre-wrap;word-wrap:break-word;
-    font:11.5px/1.62 var(--mono);
-    color:var(--ink2);background:var(--panel-2);
-    border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;
-  }
   .mfoot{display:flex;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line)}
   .mfoot .note{font-size:11px;color:var(--faint);margin-left:auto}
 
@@ -366,6 +362,7 @@
     <span aria-current="page">GROWTH SCOUT</span>
     <a href="../breakout-radar/">BREAKOUT RADAR</a>
     <a href="../associate-os/">ASSOCIATE OS</a>
+    <a href="../brief/">BRIEF</a>
   </div>
 </nav>
 
@@ -375,7 +372,6 @@
   <span class="spacer"></span>
   <span class="vh-stamps" id="stamps">No live pull yet.</span>
   <button id="btnRefresh" title="Refresh signals" aria-label="Refresh signals" style="min-width:28px;padding:0 6px;justify-content:center">&#8635;</button>
-  <button id="btnBrief" class="primary">Daily brief</button>
   <button id="btnHow" title="How scoring works" aria-label="How scoring works" style="width:28px;padding:0;justify-content:center">?</button>
 </header>
 
@@ -421,23 +417,6 @@
         <button class="mini primary" id="btnScan" title="Scan TechCrunch, Sifted and EU-Startups for funding-round headlines and surface companies not yet on the watchlist">Scan press feeds</button>
       </div>
       <div class="dsec" id="discBody"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Daily pipeline brief modal -->
-<div class="mback" id="briefBack">
-  <div class="modal">
-    <div class="mh">
-      <h3 id="briefTitle">Pipeline brief</h3>
-      <button class="ghost x mini" data-close>Close</button>
-    </div>
-    <div class="mb">
-      <pre class="brief" id="briefText"></pre>
-    </div>
-    <div class="mfoot">
-      <button class="primary" id="btnCopyBrief">Copy markdown</button>
-      <span class="note">Regenerates once per day.</span>
     </div>
   </div>
 </div>
@@ -744,7 +723,6 @@ const DAILY_KEY='growthScout.dailyPull.v1';   // {jobs:'YYYY-MM-DD',hn:...,gh:..
 const X_DAILY_KEY='growthScout.xDaily.v1';    // {handle:'YYYY-MM-DD'} paid API, one pull/handle/day
 const SCAN_KEY='growthScout.scan.v1';         // {date, disc}
 const WIRE_KEY='growthScout.wire.v1';         // {date, at, which, items}
-const BRIEF_KEY='growthScout.brief.v1';       // {date, text}
 function todayKey(){
   const d=new Date();const z=n=>String(n).padStart(2,'0');
   return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
@@ -1008,34 +986,6 @@ function whyNow(c,p){
   return bits.slice(0,3).join('; ')+'.';
 }
 
-/* ---------- suggested next action (deterministic) ----------
-   Returns {text, mail}. mail is set only for outreach-shaped actions and
-   feeds the "Open in Gmail" button. Contacts without a public email get a
-   clearly-sample example.com address to swap before sending. */
-function slugMail(name){
-  return String(name).toLowerCase().replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')||'contact';
-}
-function nextAction(c,sc,why){
-  const whyLine=why?('Why now: '+why+'\n\n'):'';
-  if(c.discovered)return {text:'Fresh from the press scan: verify the round in the linked article, classify sector and HQ, then keep or drop.',mail:null};
-  if(c.watch)return {text:'Hold on watch; log the status change, no partner time yet.',mail:null};
-  if(c.network)return {text:'Warm path: request context from the portfolio network before any outreach.',
-    mail:{to:slugMail(c.name)+'.network@example.com',
-      su:'Context request: '+c.name,
-      body:'Hi,\n\nWe track '+c.name+' ('+c.hq+' · '+c.stage+') on the Growth Scout watchlist and it sits close to the portfolio network. Before any outreach, could you share quick context on the team and how things are going there?\n\n'+whyLine+'Thanks,\nIsaac\n\n(Draft prepared by Growth Scout. Sample address: swap in the real network contact before sending.)'}};
-  const js=SIG.jobs[c.id];
-  if(js&&js.prev&&(js.count-js.prev.count)>=5)return {text:'Track the careers page weekly; hiring acceleration is the live trigger.',mail:null};
-  if(c.round&&c.round.date){
-    const m=monthsSince(c.round.date);
-    if(m<4&&(c.round.amt||0)>=100)return {text:'Recently capitalized; monitor exec hires and expansion signals, revisit next quarter.',mail:null};
-    if(m>=15&&m<27)return {text:'Flag to partner: entering the typical re-raise window; open a coverage file.',
-      mail:{to:'partner@example.com',
-        su:'Coverage flag: '+c.name+' entering the re-raise window',
-        body:'Hi,\n\n'+c.name+' ('+c.hq+' · '+c.stage+') is about '+Math.round(m)+' months past its '+c.round.label+' ('+c.round.src+'), inside the typical 18 to 26 month re-raise window. Suggest we open a coverage file.\n\n'+whyLine+'Isaac\n\n(Draft prepared by Growth Scout. Sample address: swap in the real partner before sending.)'}};
-  }
-  if(sc>=75)return {text:'Prepare a one-pager for the Monday meeting; signals justify partner visibility.',mail:null};
-  return {text:'Keep on the tracking sheet; re-check signals on the next daily run.',mail:null};
-}
 /* strip markdown / markup artifacts from press-feed text before display */
 function cleanCopy(s){
   return String(s||'')
@@ -1301,6 +1251,7 @@ function render(){
   const vis=sortRows(visible(rows));
   if(!ui.sel||!vis.some(r=>r.c.id===ui.sel))ui.sel=vis.length?vis[0].c.id:(rows[0]&&rows[0].c.id);
   renderTabs(rows);renderChips();renderHead();renderList(rows,vis);renderStamps();renderDetail(rows);
+  writeDailySnapshot(rows);
 }
 
 function renderTabs(rows){
@@ -1497,7 +1448,7 @@ function renderDetail(rows){
       (c.line?'<div class="meta" style="margin-top:5px;color:var(--ink2)">'+esc(c.line)+'</div>':'')+
       (c.founders&&c.founders.length
         ?'<div class="fdrs"><span class="flab">Founders</span><span>'+
-           c.founders.map(f=>'<span class="fn"><b>'+esc(f.name)+'</b>'+(f.x?xCtrl(f.x,c.id):'')+'</span>').join(', ')+
+           c.founders.map(f=>'<span class="fn"><b>'+founderLink(f)+'</b>'+(f.x?xCtrl(f.x,c.id):'')+'</span>').join(', ')+
          '</span></div>'
         :(c.x?'<div class="fdrs"><span class="flab">X</span><span class="fn">'+xCtrl(c.x,c.id)+'</span></div>':''))+
     '</div>'+scoreBig+'</div>'+
@@ -1506,6 +1457,14 @@ function renderDetail(rows){
     receipt+
     '<div class="dsec"><h4>Last disclosed round</h4>'+roundCard+'</div>'+
     '<div class="dsec"><h4>Events</h4>'+evs+'</div>';
+}
+
+/* founder names open that person in Founder Radar; the handle param is
+   sent only when a verified public X handle is stored for the founder */
+function founderLink(f){
+  const href='../founder-radar/?person='+encodeURIComponent(f.name)+
+    (f.x?'&handle='+encodeURIComponent(f.x):'')+'&from=growth-scout';
+  return '<a class="fdlink" href="'+esc(href)+'" title="Open '+esc(f.name)+' in Founder Radar">'+esc(f.name)+'</a>';
 }
 
 function xCtrl(handle,cid){
@@ -1521,62 +1480,40 @@ function xCtrl(handle,cid){
 }
 
 /* =====================================================================
-   Daily pipeline brief. Deterministic; regenerates at most once per
-   calendar day, keyed by date in localStorage. The header shows its date
-   honestly even when it is a day or two old.
+   Daily snapshot for the unified Brief page (../brief/). Written on each
+   load and refresh, small and deterministic. scores and base ride along
+   so day-over-day deltas stay stable; the Brief page reads the named
+   fields (date, topMovers, newDiscoveries, starredCount, freshness).
    ===================================================================== */
-function buildBrief(){
-  const rows=ranked().filter(r=>!r.c.watch).slice(0,5);
-  const d=new Date();
-  const dateStr=d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();
-  let out='# Pipeline brief - '+dateStr+'\n';
-  out+='Prepared by Growth Scout. Ranked by Mandate Momentum (deterministic). Signals for discussion, not recommendations.\n\n';
-  rows.forEach((r,i)=>{
-    const c=r.c;
-    out+=(i+1)+'. **'+c.name+'** ('+c.hq+' · '+c.stage+' · '+(SECTORS[c.sector]||'Unclassified')+') - momentum '+r.s.total+'\n';
-    out+='   Why now: '+r.s.whyNow+'\n';
-    if(c.round)out+='   Last round: '+c.round.label+', led by '+c.round.lead+' ('+c.round.src+')\n';
-    out+='   Next action: '+nextAction(c,r.s.total).text+'\n\n';
-  });
-  const w=ranked().filter(r=>r.c.watch);
-  if(w.length){
-    out+='Watch list: '+w.map(r=>r.c.name+' ('+r.s.whyNow.replace(/\.$/,'')+')').join('; ')+'.\n\n';
-  }
-  const pulled=lastStamp.jobs||lastStamp.hn||lastStamp.gh||lastStamp.x;
-  out+='Signal freshness: '+(pulled?'live pulls at '+hhmmss(pulled)+' local':'cached / curated signals only, no live pull today')+'. ';
-  out+='Sources: Greenhouse, Lever and Ashby boards; Hacker News (Algolia); GitHub; X founder cadence through the local sidecar; curated press facts each carry their source and date.\n';
-  return out;
-}
-
-const DAYS_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-function fmtBriefDate(iso){
-  const d=parseD(iso);
-  return d?DAYS_SHORT[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()]:iso;
-}
-function openBrief(){
+const SNAP_KEY='growthScout.dailySnapshot.v1';
+function writeDailySnapshot(rowsIn){
   const t=todayKey();
-  let stored=loadJSON(BRIEF_KEY,null);
-  if(!stored||stored.date!==t||!stored.text){
-    stored={date:t,text:buildBrief()};
-    saveJSON(BRIEF_KEY,stored);
+  const prev=loadJSON(SNAP_KEY,null);
+  let base=null;
+  if(prev&&prev.scores){
+    base=prev.date===t?(prev.base||null):{date:prev.date,scores:prev.scores};
   }
-  document.getElementById('briefTitle').textContent='Brief for '+fmtBriefDate(stored.date);
-  document.getElementById('briefText').textContent=stored.text;
-  document.getElementById('briefBack').classList.add('open');
-}
-
-function copyBrief(){
-  const txt=document.getElementById('briefText').textContent;
-  const done=()=>toast('Brief copied as markdown.','ok');
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
-  }else fallbackCopy(txt,done);
-}
-function fallbackCopy(txt,done){
-  const ta=document.createElement('textarea');
-  ta.value=txt;document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');done();}catch(e){toast('Copy failed; select the text manually.','err');}
-  document.body.removeChild(ta);
+  const rows=rowsIn||ranked();
+  const scores={};
+  rows.forEach(r=>{scores[r.c.name]=r.s.total;});
+  const topMovers=rows.map(r=>({
+    name:r.c.name,
+    score:r.s.total,
+    delta:(base&&base.scores&&base.scores[r.c.name]!=null)?r.s.total-base.scores[r.c.name]:0
+  })).sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)||b.score-a.score).slice(0,5);
+  const seen=new Set(),newDiscoveries=[];
+  COMPANIES.filter(c=>c.discovered).map(c=>c.name)
+    .concat((DISC.items||[]).map(d=>d.name))
+    .forEach(n=>{const k=normName(n);if(k&&!seen.has(k)){seen.add(k);newDiscoveries.push(n);}});
+  saveJSON(SNAP_KEY,{
+    date:t,
+    topMovers:topMovers,
+    newDiscoveries:newDiscoveries,
+    starredCount:STARRED.size,
+    freshness:{jobs:lastStamp.jobs||null,hn:lastStamp.hn||null,github:lastStamp.gh||null,x:lastStamp.x||null},
+    scores:scores,
+    base:base
+  });
 }
 
 /* =====================================================================
@@ -1788,6 +1725,7 @@ async function scanFeeds(force){
   if(fails.length<SCAN_FEEDS.length)saveJSON(SCAN_KEY,{date:t,disc:DISC});
   scanning=false;btn.disabled=false;btn.textContent=orig;
   renderDiscovery();
+  writeDailySnapshot();
   if(fails.length===SCAN_FEEDS.length)toast('All three press feeds failed ('+fails.join('; ')+'). Cached and curated data are still available.','err');
   else if(fails.length)toast(fails.join(', ')+' failed; other feeds scanned. '+found.length+' funding headline'+(found.length===1?'':'s')+' found.','err');
   else toast(all.length+' headlines scanned: '+found.length+' new funding candidate'+(found.length===1?'':'s')+', '+skipped.watch+' already on the watchlist.','ok');
@@ -1988,8 +1926,6 @@ document.addEventListener('click',e=>{
 });
 
 document.getElementById('btnRefresh').addEventListener('click',refreshAll);
-document.getElementById('btnBrief').addEventListener('click',openBrief);
-document.getElementById('btnCopyBrief').addEventListener('click',copyBrief);
 document.getElementById('btnTC').addEventListener('click',()=>pullWire('tc',true));
 document.getElementById('btnSifted').addEventListener('click',()=>pullWire('sifted',true));
 document.getElementById('btnScan').addEventListener('click',()=>scanFeeds(true));
@@ -2025,7 +1961,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='j'||e.key==='ArrowDown'){if(idx<vis.length-1){ui.sel=vis[idx+1].c.id;render();scrollSel();}e.preventDefault();}
   else if(e.key==='k'||e.key==='ArrowUp'){if(idx>0){ui.sel=vis[idx-1].c.id;render();scrollSel();}e.preventDefault();}
   else if(e.key==='r'){refreshAll();}
-  else if(e.key==='b'){openBrief();}
   else if(e.key==='/'){document.getElementById('q').focus();e.preventDefault();}
   else if(e.key>='1'&&e.key<='4'){ui.tab=TABS[+e.key-1].id;render();}
 });

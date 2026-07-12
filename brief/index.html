@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brief</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root{
+    /* Signal OS light tokens */
+    --paper:#FCFCFA;
+    --panel:#FFFFFF;
+    --panel2:#FCFCFA;
+    --ink:#16181B;
+    --ink2:#3A3F46;
+    --ink3:#4B5563;
+    --muted:#6B7280;
+    --faint:#9CA3AF;
+
+    --line:#E7E5E0;
+    --line2:#F0EEE9;
+    --line-strong:#D6D3CD;
+
+    /* Coral: the single accent */
+    --ember:#E8543F;
+    --ember-2:#D64934;
+    --ember-ink:#B23A28;
+    --ember-soft:rgba(232,84,63,.07);
+    --ember-line:rgba(232,84,63,.3);
+
+    --positive:#0E7D5E;
+    --positive-line:rgba(14,125,94,.32);
+    --negative:#B42318;
+
+    --grotesk:"Space Grotesk","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
+    --mono:"Space Mono","Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;
+
+    --shadow-md:0 8px 28px rgba(22,24,27,.1);
+
+    --r-sm:3px; --r-md:4px; --r-lg:5px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.004em;
+  }
+  ::selection{background:var(--ember-soft)}
+
+  button{
+    font:inherit;cursor:pointer;
+    border:1px solid var(--line-strong);
+    background:var(--panel);color:var(--ink);
+    border-radius:var(--r-md);
+    padding:6px 11px;height:28px;
+    font-weight:500;font-size:12.5px;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    transition:background .12s,border-color .12s,color .12s;
+  }
+  button:hover{border-color:var(--ink);color:var(--ink)}
+  button:active{background:var(--line2)}
+  .mono{font-family:var(--mono)}
+
+  /* ---------- suite nav (Signal OS shell contract, verbatim) ---------- */
+.sos-nav{position:sticky;top:0;z-index:80;height:42px;display:flex;align-items:center;gap:28px;padding:0 20px;background:#FCFCFA;border-bottom:1px solid #E7E5E0;font-family:"Space Mono","Cascadia Mono",Consolas,monospace}
+.sos-brand{font-size:11px;font-weight:700;letter-spacing:.24em;color:#16181B;text-decoration:none}
+.sos-links{display:flex;gap:24px;margin-left:auto}
+.sos-links a,.sos-links span{font-size:10.5px;font-weight:400;letter-spacing:.16em;color:#6B7280;text-decoration:none;line-height:42px}
+.sos-links a:hover{color:#16181B}
+.sos-links [aria-current="page"]{color:#16181B;font-weight:700;border-bottom:2px solid #16181B}
+
+  /* ---------- view header (uniform shell row) ---------- */
+  header{
+    height:48px;display:flex;align-items:center;gap:10px;
+    padding:0 20px;border-bottom:1px solid var(--line);
+    background:var(--paper);
+    position:relative;z-index:30;
+  }
+  .vh-left{display:flex;align-items:baseline;gap:12px;min-width:0}
+  .vh-name{font:400 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+  .vh-scope{font:400 13px/1.4 var(--grotesk);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .spacer{flex:1}
+  .stamp{font:400 10px/1 var(--mono);color:var(--muted);white-space:nowrap;letter-spacing:.04em}
+  .linkbtn{
+    border:none;background:transparent;padding:0;height:auto;border-radius:0;
+    font:400 10px/1 var(--mono);letter-spacing:.08em;color:var(--muted);
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .linkbtn:hover{color:var(--ink);background:transparent;border:none}
+
+  /* ---------- brief body ---------- */
+  main{max-width:760px;margin:0 auto;padding:26px 20px 64px}
+  .sec{margin:0 0 26px}
+  .sec-head{
+    display:flex;align-items:baseline;gap:12px;
+    padding:0 0 9px;border-bottom:1px solid var(--line);
+  }
+  .sec-label{font:700 10px/1 var(--mono);letter-spacing:.18em;color:var(--ink)}
+  .sec-date{font:400 10px/1 var(--mono);letter-spacing:.06em;color:var(--muted)}
+  .vb{padding:11px 0 8px;border-bottom:1px solid var(--line2)}
+  .vb:last-child{border-bottom:none}
+  .vb-label{font:700 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ember-ink);margin:0 0 6px}
+  .vb p{margin:3px 0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+  .vb p.quiet{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav class="sos-nav">
+  <a class="sos-brand" href="../">SIGNAL OS</a>
+  <div class="sos-links">
+    <a href="../founder-radar/">FOUNDER RADAR</a>
+    <a href="../growth-scout/">GROWTH SCOUT</a>
+    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <a href="../associate-os/">ASSOCIATE OS</a>
+    <span aria-current="page">BRIEF</span>
+  </div>
+</nav>
+
+<header>
+  <div class="vh-left">
+    <span class="vh-name">Brief</span>
+    <span class="vh-scope">one daily update, one weekly debrief</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="stamp" id="genStamp"></span>
+  <button class="linkbtn" id="regenBtn" type="button">regenerate</button>
+</header>
+
+<main>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-label">TODAY</span><span class="sec-date" id="todayDate"></span></div>
+    <div id="todayBody"></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-label">THIS WEEK</span><span class="sec-date" id="weekDate"></span></div>
+    <div id="weekBody"></div>
+  </section>
+</main>
+
+<script>
+"use strict";
+/* The unified Brief. Composed client-side, read-only, from the same-origin
+   localStorage the four views already write. The only key this page writes
+   is its own per-day cache, sos.brief.v1. No network calls. */
+
+/* ---------- small helpers ---------- */
+var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function pad2(n){ return (n < 10 ? "0" : "") + n; }
+function keyOf(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+function todayKey(){ return keyOf(new Date()); }
+function keyLabel(key){
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || "");
+  var d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
+  return WD[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()];
+}
+function hhmm(ts){ var d = new Date(ts); return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+function startOfToday(){ var d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+function weekStart(){ return startOfToday() - 6 * 86400000; }
+function weekStartKey(){ return keyOf(new Date(weekStart())); }
+function stampWord(ts){
+  var k = keyOf(new Date(ts));
+  return k === todayKey() ? hhmm(ts) : keyLabel(k);
+}
+function esc(s){
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function unesc(s){
+  return String(s).replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+function pl(n, one, many){ return n + " " + (n === 1 ? one : many); }
+function lsGet(k){
+  try{ var v = JSON.parse(localStorage.getItem(k)); return v == null ? null : v; }catch(e){ return null; }
+}
+function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+var FROM_NAME = {
+  "founder-radar": "Founder Radar",
+  "growth-scout": "Growth Scout",
+  "breakout-radar": "Breakout Radar",
+  "associate-os": "Associate OS"
+};
+function fromName(f){ return FROM_NAME[f] || "another view"; }
+
+/* ---------- readers: one per store, every field guarded ---------- */
+
+/* founder_radar_v2: statuses, live HN candidates, the radar's own cached
+   daily brief (queue and likely counts, top of queue) and the HN pull stamp. */
+function readFounder(){
+  var raw = lsGet("founder_radar_v2");
+  if (!raw || typeof raw !== "object") return null;
+  var o = { queue:null, likely:null, fromScan:false, briefDate:null, top:[],
+            hnTotal:0, hnNewToday:0, hnWeek:0, hnPull:null,
+            outreach:0, watchlist:0, meetings:0, ignored:0 };
+  var st = raw.statuses;
+  if (st && typeof st === "object"){
+    for (var k in st){
+      if (st[k] === "contacted") o.outreach++;
+      else if (st[k] === "watchlist") o.watchlist++;
+      else if (st[k] === "meeting") o.meetings++;
+      else if (st[k] === "ignored") o.ignored++;
+    }
+  }
+  if (Array.isArray(raw.hn)){
+    o.hnTotal = raw.hn.length;
+    raw.hn.forEach(function(c){
+      var sgs = (c && Array.isArray(c.signals)) ? c.signals : [];
+      for (var i = 0; i < sgs.length; i++){
+        var s = sgs[i];
+        if (s && s.t === "show_hn" && typeof s.d === "number"){
+          if (s.d === 0) o.hnNewToday++;
+          if (s.d > -7) o.hnWeek++;
+          break;
+        }
+      }
+    });
+  }
+  if (raw.hnPull && raw.hnPull.date) o.hnPull = raw.hnPull;
+  var bh = (raw.brief && typeof raw.brief.html === "string") ? raw.brief.html : "";
+  if (bh){
+    o.briefDate = raw.brief.date || null;
+    var mq = bh.match(/<b>(\d+)<\/b>\s*in queue/);
+    var ml = bh.match(/<b>(\d+)<\/b>\s*likely/);
+    if (mq) o.queue = +mq[1];
+    if (ml) o.likely = +ml[1];
+    var re = /Queue outreach for <b>([^<]+)<\/b>\s*\((\d+)\)/g, m;
+    while ((m = re.exec(bh)) && o.top.length < 3) o.top.push({ name: unesc(m[1]), score: +m[2] });
+  }
+  if (o.queue == null && Array.isArray(raw.feed)){
+    for (var j = raw.feed.length - 1; j >= 0; j--){
+      var f = raw.feed[j];
+      var ms = (f && typeof f.msg === "string") ? f.msg.match(/Scored <b>(\d+) profiles<\/b>; (\d+) are likely/) : null;
+      if (ms){ o.queue = +ms[1]; o.likely = +ms[2]; o.fromScan = true; break; }
+    }
+  }
+  return o;
+}
+
+/* growthScout.*: stars, per-day pull caches, press scan, wire, signal stamps. */
+function readScout(){
+  var stars = lsGet("growthScout.starred.v1");
+  var sig = lsGet("growthScout.signals.v1");
+  var daily = lsGet("growthScout.dailyPull.v1");
+  var xdaily = lsGet("growthScout.xDaily.v1");
+  var scan = lsGet("growthScout.scan.v1");
+  var wire = lsGet("growthScout.wire.v1");
+  if (stars == null && !sig && !daily && !xdaily && !scan && !wire) return null;
+  var t = todayKey();
+  var o = { stars: Array.isArray(stars) ? stars.length : 0,
+            pulls: [], xToday: 0, scan: null, wire: null, sigAt: null, sigWeek: 0 };
+  var srcNames = { jobs: "job boards", hn: "Hacker News", gh: "GitHub" };
+  if (daily && typeof daily === "object"){
+    ["jobs","hn","gh"].forEach(function(k){ if (daily[k] === t) o.pulls.push(srcNames[k]); });
+  }
+  if (xdaily && typeof xdaily === "object"){
+    for (var h in xdaily) if (xdaily[h] === t) o.xToday++;
+  }
+  if (scan && scan.date === t && scan.disc && Array.isArray(scan.disc.items)){
+    var added = 0;
+    scan.disc.items.forEach(function(it){ if (it && it.added) added++; });
+    o.scan = { found: scan.disc.items.length, added: added };
+  }
+  if (wire && wire.date === t && Array.isArray(wire.items)){
+    var feedNames = { tc: "TechCrunch", sifted: "Sifted" };
+    o.wire = { name: feedNames[wire.which] || "Press", n: wire.items.length,
+               time: (typeof wire.at === "number") ? hhmm(wire.at) : "" };
+  }
+  if (sig && typeof sig === "object"){
+    var ws = weekStart(), seen = {};
+    ["jobs","hn","gh","x"].forEach(function(b){
+      var bk = sig[b];
+      if (!bk || typeof bk !== "object") return;
+      for (var id in bk){
+        var v = bk[id];
+        if (!v || typeof v.at !== "number") continue;
+        if (o.sigAt == null || v.at > o.sigAt) o.sigAt = v.at;
+        if (v.at >= ws) seen[id] = true;
+      }
+    });
+    o.sigWeek = Object.keys(seen).length;
+  }
+  return o;
+}
+
+/* breakout.dailySnapshot.v1 (written by Breakout Radar for this page)
+   plus br_watch, the starred watchlist names. */
+function readBreakout(){
+  var snap = lsGet("breakout.dailySnapshot.v1");
+  var watch = lsGet("br_watch");
+  if (!snap && !Array.isArray(watch)) return null;
+  return { snap: (snap && typeof snap === "object") ? snap : null,
+           watch: Array.isArray(watch) ? watch.length : null };
+}
+
+/* aos_v1 raw state first (commitments and meetings carry real dates),
+   aos.dailySnapshot.v1 as the fallback plus the cold-relationship names. */
+function readAos(){
+  var raw = lsGet("aos_v1");
+  var snap = lsGet("aos.dailySnapshot.v1");
+  if (!raw && !snap) return null;
+  var t = todayKey(), wk = weekStartKey();
+  var o = { open:null, overdue:null, heldWeek:null, doneWeek:null, upcoming:null, cold:[] };
+  if (raw && Array.isArray(raw.commitments)){
+    var open = 0, over = 0, done7 = 0;
+    raw.commitments.forEach(function(c){
+      if (!c) return;
+      if (c.status === "done"){
+        if (typeof c.doneOn === "string" && c.doneOn >= wk && c.doneOn <= t) done7++;
+        return;
+      }
+      if (typeof c.snoozeUntil === "string" && c.snoozeUntil > t) return;
+      open++;
+      if (typeof c.due === "string" && c.due && c.due < t) over++;
+    });
+    o.open = open; o.overdue = over; o.doneWeek = done7;
+  }
+  if (raw && Array.isArray(raw.meetings)){
+    var held = 0, up = 0;
+    raw.meetings.forEach(function(m){
+      if (!m || typeof m.date !== "string") return;
+      if (m.date >= wk && m.date <= t) held++;
+      else if (m.date > t) up++;
+    });
+    o.heldWeek = held; o.upcoming = up;
+  }
+  if (snap && typeof snap === "object"){
+    if (o.open == null && typeof snap.openCommitments === "number"){
+      o.open = snap.openCommitments;
+      o.overdue = (typeof snap.overdueCommitments === "number") ? snap.overdueCommitments : 0;
+    }
+    if (o.heldWeek == null && typeof snap.meetingsThisWeek === "number") o.heldWeek = snap.meetingsThisWeek;
+    if (Array.isArray(snap.coldRelationships)) o.cold = snap.coldRelationships.slice(0, 3);
+  }
+  return o;
+}
+
+/* sos.pipeline.v1: the shared workflow store all four views write. */
+function readPipe(){
+  var v = lsGet("sos.pipeline.v1");
+  if (!Array.isArray(v)) return null;
+  return v.filter(function(e){ return e && typeof e === "object" && e.name; });
+}
+function pipeAdds(pipe, from){
+  if (!pipe) return [];
+  var ws = weekStart();
+  return pipe.filter(function(e){ return e.from === from && typeof e.at === "number" && e.at >= ws; });
+}
+
+/* ---------- TODAY lines ---------- */
+
+function frToday(fr){
+  if (!fr) return [q("No data yet from Founder Radar.")];
+  var L = [];
+  if (fr.queue != null){
+    var tail = "";
+    if (fr.fromScan) tail = " at the last scan";
+    else if (fr.briefDate && fr.briefDate !== todayKey()) tail = " as of " + keyLabel(fr.briefDate);
+    L.push(fr.queue + " in the queue" + (fr.likely != null ? ", " + fr.likely + " likely" : "") + tail + ".");
+  }
+  if (fr.top.length){
+    L.push("Top of the queue: " + fr.top.map(function(p){ return esc(p.name) + " " + p.score; }).join(", ") + ".");
+  }
+  if (fr.hnTotal){
+    var s = pl(fr.hnTotal, "live person", "live people") + " in from Show HN";
+    if (fr.hnNewToday) s += ", " + fr.hnNewToday + " posted today";
+    if (fr.hnPull && fr.hnPull.date === todayKey() && fr.hnPull.time) s += ", pulled " + esc(fr.hnPull.time);
+    L.push(s + ".");
+  } else if (fr.hnPull && fr.hnPull.date === todayKey()){
+    L.push("Show HN pulled" + (fr.hnPull.time ? " " + esc(fr.hnPull.time) : "") + ", nothing new.");
+  }
+  var tr = [];
+  if (fr.outreach) tr.push(pl(fr.outreach, "person", "people") + " queued for outreach");
+  if (fr.watchlist) tr.push(fr.watchlist + " on the watchlist");
+  if (fr.meetings) tr.push(pl(fr.meetings, "meeting", "meetings") + " set");
+  if (fr.ignored) tr.push(fr.ignored + " ignored");
+  if (tr.length) L.push(tr.join(", ") + ".");
+  if (!L.length) L.push(q("Founder Radar has no stored activity yet."));
+  return L;
+}
+
+function gsToday(gs){
+  if (!gs) return [q("No data yet from Growth Scout.")];
+  var L = [];
+  L.push(gs.stars === 0 ? "No companies starred yet." : pl(gs.stars, "company", "companies") + " starred.");
+  if (gs.pulls.length) L.push("Pulled today: " + gs.pulls.join(", ") + ".");
+  else L.push(q("No live pulls yet today."));
+  if (gs.xToday) L.push(pl(gs.xToday, "X profile", "X profiles") + " pulled today.");
+  if (gs.scan) L.push("Press scan found " + pl(gs.scan.found, "funding headline", "funding headlines") +
+                      (gs.scan.added ? ", " + gs.scan.added + " added" : "") + ".");
+  if (gs.wire) L.push(esc(gs.wire.name) + " wire read" + (gs.wire.time ? " " + gs.wire.time : "") + ", " +
+                      pl(gs.wire.n, "headline", "headlines") + ".");
+  if (gs.sigAt != null) L.push("Signals last updated " + stampWord(gs.sigAt) + ".");
+  return L;
+}
+
+function brToday(br){
+  if (!br) return [q("No data yet from Breakout Radar.")];
+  var L = [];
+  if (br.watch != null) L.push(br.watch === 0 ? "Watchlist is empty." : pl(br.watch, "company", "companies") + " on the watchlist.");
+  var s = br.snap;
+  if (s && s.date === todayKey()){
+    if (Array.isArray(s.topRisers) && s.topRisers.length){
+      L.push("Top risers: " + s.topRisers.map(function(r){
+        return esc(r.name) + " +" + (+r.delta || 0) + " to " + (+r.index || 0);
+      }).join(", ") + ".");
+    }
+    if (Array.isArray(s.newBreakouts)){
+      L.push(s.newBreakouts.length
+        ? "New breakouts: " + s.newBreakouts.map(esc).join(", ") + "."
+        : "No new breakouts.");
+    }
+    if (Array.isArray(s.flaggedToday) && s.flaggedToday.length){
+      L.push("Flagged for partner review: " + s.flaggedToday.map(esc).join(", ") + ".");
+    }
+  } else if (s && s.date){
+    L.push(q("No snapshot today, last was " + keyLabel(s.date) + "."));
+  }
+  if (!L.length) L.push(q("Breakout Radar has no stored activity yet."));
+  return L;
+}
+
+function aoToday(ao){
+  if (!ao) return [q("No data yet from Associate OS.")];
+  var L = [];
+  if (ao.open != null) L.push(pl(ao.open, "commitment", "commitments") + " open, " + ao.overdue + " overdue.");
+  if (ao.heldWeek != null){
+    var s = pl(ao.heldWeek, "meeting", "meetings") + " held this week";
+    if (ao.upcoming) s += ", " + ao.upcoming + " upcoming";
+    L.push(s + ".");
+  }
+  if (ao.cold.length) L.push("Gone cold: " + ao.cold.map(esc).join(", ") + ".");
+  if (!L.length) L.push(q("Associate OS has no stored activity yet."));
+  return L;
+}
+
+function pipeToday(pipe){
+  if (!pipe) return [q("No data yet from the shared pipeline.")];
+  if (!pipe.length) return [q("The shared pipeline is empty.")];
+  var t0 = startOfToday();
+  var fresh = pipe.filter(function(e){ return typeof e.at === "number" && e.at >= t0; });
+  var L = [];
+  if (fresh.length){
+    L.push(pl(fresh.length, "entry", "entries") + " added today: " + fresh.slice(0, 4).map(function(e){
+      return esc(e.name) + " from " + fromName(e.from) + " (" + esc(e.stage || "Sourced") + ")";
+    }).join(", ") + (fresh.length > 4 ? " and " + (fresh.length - 4) + " more" : "") + ".");
+  } else {
+    L.push("Nothing added today.");
+  }
+  L.push(pl(pipe.length, "entry", "entries") + " tracked in total.");
+  return L;
+}
+
+/* ---------- THIS WEEK lines (trailing 7 days, timestamps where present) ---------- */
+
+function frWeek(fr, pipe){
+  var adds = pipeAdds(pipe, "founder-radar");
+  var L = [];
+  if (adds.length){
+    L.push(pl(adds.length, "person", "people") + " moved to outreach: " +
+      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
+      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
+  }
+  if (fr && fr.hnWeek) L.push(pl(fr.hnWeek, "live person", "live people") + " surfaced from Show HN.");
+  if (!L.length) L.push(fr ? q("No movement in the last 7 days.") : q("No data yet from Founder Radar."));
+  return L;
+}
+
+function gsWeek(gs, pipe){
+  var adds = pipeAdds(pipe, "growth-scout");
+  var L = [];
+  if (adds.length){
+    L.push(pl(adds.length, "company", "companies") + " starred into the pipeline: " +
+      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
+      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
+  }
+  if (gs && gs.sigWeek) L.push("Signal snapshots refreshed for " + pl(gs.sigWeek, "company", "companies") + ".");
+  if (!L.length) L.push(gs ? q("No movement in the last 7 days.") : q("No data yet from Growth Scout."));
+  return L;
+}
+
+function brWeek(br, pipe){
+  var adds = pipeAdds(pipe, "breakout-radar");
+  var L = [];
+  if (adds.length){
+    L.push(pl(adds.length, "company", "companies") + " flagged into diligence: " +
+      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
+      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
+  }
+  if (br && br.watch) L.push(br.watch + " on the watchlist now.");
+  if (!L.length) L.push(br ? q("No movement in the last 7 days.") : q("No data yet from Breakout Radar."));
+  return L;
+}
+
+function aoWeek(ao){
+  if (!ao) return [q("No data yet from Associate OS.")];
+  var L = [];
+  if (ao.heldWeek != null) L.push(pl(ao.heldWeek, "meeting", "meetings") + " held.");
+  if (ao.doneWeek != null) L.push(pl(ao.doneWeek, "commitment", "commitments") + " completed.");
+  if (ao.overdue) L.push(pl(ao.overdue, "commitment", "commitments") + " overdue now.");
+  if (!L.length) L.push(q("No movement in the last 7 days."));
+  return L;
+}
+
+function pipeWeekBlock(pipe){
+  if (!pipe) return [q("No data yet from the shared pipeline.")];
+  if (!pipe.length) return [q("The shared pipeline is empty.")];
+  var ws = weekStart();
+  var weekly = pipe.filter(function(e){ return typeof e.at === "number" && e.at >= ws; });
+  var L = [];
+  if (weekly.length){
+    var byFrom = {};
+    weekly.forEach(function(e){ var n = fromName(e.from); byFrom[n] = (byFrom[n] || 0) + 1; });
+    var parts = Object.keys(byFrom).map(function(k){ return byFrom[k] + " from " + k; });
+    L.push(pl(weekly.length, "entry", "entries") + " added in the last 7 days: " + parts.join(", ") + ".");
+    var newest = weekly.slice().sort(function(a, b){ return b.at - a.at; }).slice(0, 4);
+    L.push("Newest: " + newest.map(function(e){
+      return esc(e.name) + " (" + esc(e.stage || "Sourced") + ")";
+    }).join(", ") + ".");
+  } else {
+    L.push("Nothing added in the last 7 days.");
+  }
+  var order = ["Sourced","Outreach","Meeting","Diligence","Passed"];
+  var counts = {};
+  pipe.forEach(function(e){
+    var s = (typeof e.stage === "string" && e.stage) ? e.stage : "Sourced";
+    counts[s] = (counts[s] || 0) + 1;
+  });
+  var keys = Object.keys(counts).sort(function(a, b){
+    var ia = order.indexOf(a), ib = order.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+  L.push(pl(pipe.length, "entry", "entries") + " tracked in total: " +
+    keys.map(function(k){ return counts[k] + " " + esc(k.toLowerCase()); }).join(", ") + ".");
+  return L;
+}
+
+/* ---------- compose, cache per day, render ---------- */
+
+function q(text){ return { quiet: text }; }
+function block(label, lines){
+  return '<div class="vb"><div class="vb-label">' + label + '</div>' +
+    lines.map(function(l){
+      if (l && typeof l === "object") return '<p class="quiet">' + l.quiet + '</p>';
+      return '<p>' + l + '</p>';
+    }).join("") + '</div>';
+}
+
+function compose(){
+  var fr = readFounder(), gs = readScout(), br = readBreakout(), ao = readAos(), pipe = readPipe();
+  return {
+    date: todayKey(),
+    at: Date.now(),
+    today: block("FOUNDER RADAR", frToday(fr)) +
+           block("GROWTH SCOUT", gsToday(gs)) +
+           block("BREAKOUT RADAR", brToday(br)) +
+           block("ASSOCIATE OS", aoToday(ao)) +
+           block("SHARED PIPELINE", pipeToday(pipe)),
+    week:  block("FOUNDER RADAR", frWeek(fr, pipe)) +
+           block("GROWTH SCOUT", gsWeek(gs, pipe)) +
+           block("BREAKOUT RADAR", brWeek(br, pipe)) +
+           block("ASSOCIATE OS", aoWeek(ao)) +
+           block("SHARED PIPELINE", pipeWeekBlock(pipe))
+  };
+}
+
+var CACHE_KEY = "sos.brief.v1";
+function render(b){
+  document.getElementById("todayBody").innerHTML = b.today;
+  document.getElementById("weekBody").innerHTML = b.week;
+  document.getElementById("todayDate").textContent = keyLabel(b.date);
+  document.getElementById("weekDate").textContent = keyLabel(weekStartKey()) + " to " + keyLabel(b.date);
+  document.getElementById("genStamp").textContent = "BRIEF " + stampWord(b.at || Date.now());
+}
+function ensureBrief(force){
+  if (!force){
+    var c = lsGet(CACHE_KEY);
+    if (c && c.date === todayKey() && typeof c.today === "string" && typeof c.week === "string"){
+      render(c);
+      return;
+    }
+  }
+  var b = compose();
+  lsSet(CACHE_KEY, b);
+  render(b);
+}
+document.getElementById("regenBtn").addEventListener("click", function(){ ensureBrief(true); });
+ensureBrief(false);
+</script>
+</body>
+</html>
