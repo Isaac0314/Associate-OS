@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal OS</title>
+<link rel="icon" href="data:,">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --accent:#FF6A54;
+  --paper:#F5F5F5;
+  --ink:#000000;
+  --body-ink:#1A1A1A;
+  --mut:#666666;
+  --faint:#999999;
+  --hair:#DDDDDD;
+  --grotesk:'Space Grotesk','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'Space Mono','Cascadia Code',Consolas,'Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background:#141414;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ===== stage: 1920x1080, scaled to fit the viewport ===== */
+#stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%);}
+#stage section.slide{position:absolute;inset:0;background:var(--paper);display:none;flex-direction:column;padding:72px 88px;overflow:hidden;}
+#stage section.slide.active{display:flex;}
+
+/* ===== shared type ===== */
+.mono{font-family:var(--mono);}
+.kicker{font-family:var(--mono);font-size:24px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);}
+.kicker.accent{color:var(--accent);}
+h1,h2{font-family:var(--grotesk);color:var(--ink);}
+.job-kicker{font-family:var(--mono);font-size:24px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;}
+.job-row{display:flex;gap:22px;align-items:baseline;font-family:var(--grotesk);margin-bottom:22px;}
+.job-row .num{font-family:var(--mono);color:var(--faint);font-size:24px;min-width:40px;flex:none;}
+.job-row .txt{font-size:30px;color:var(--body-ink);line-height:1.35;}
+.cue{position:absolute;right:88px;bottom:64px;font-family:var(--mono);font-size:22px;letter-spacing:0.06em;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;padding:14px 22px;background:#FFFFFF;}
+
+/* ===== slide 1, title ===== */
+.title-slide{align-items:center;justify-content:center;text-align:center;}
+.title-slide .kicker{letter-spacing:0.34em;margin-bottom:56px;}
+.title-slide h1{font-size:240px;font-weight:500;line-height:0.92;letter-spacing:-0.03em;}
+.title-slide .byline{font-family:var(--mono);font-size:24px;letter-spacing:0.06em;color:var(--mut);margin-top:64px;}
+
+/* ===== slides 2 and 3, demo setups ===== */
+.setup h2{font-size:76px;font-weight:400;line-height:1.1;letter-spacing:-0.02em;max-width:1520px;margin-top:40px;text-wrap:balance;}
+.setup .job{margin-top:auto;margin-bottom:36px;max-width:1100px;}
+
+/* ===== slide 4, philosophy ===== */
+.folder h2{font-size:104px;font-weight:500;line-height:1.02;letter-spacing:-0.025em;margin-top:32px;}
+.anatomy{display:grid;grid-template-columns:1.15fr 1fr;gap:64px;margin-top:52px;align-items:center;}
+.tree{font-family:var(--mono);font-size:25px;line-height:1.9;color:var(--body-ink);padding:34px 42px;border:1.5px solid #CCCCCC;background:#FFFFFF;border-radius:8px;}
+.tree .tree-name{font-weight:700;font-size:29px;color:var(--ink);display:block;margin-bottom:10px;}
+.tree .branch{color:var(--faint);}
+.tree b{font-weight:700;}
+.tree .desc{color:var(--mut);}
+.loop-chips{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:var(--mono);font-size:24px;color:var(--body-ink);}
+.loop-chips .chip{border:1.5px solid #CCCCCC;background:#FFFFFF;border-radius:6px;padding:12px 20px;}
+.loop-chips .arrow{color:var(--faint);font-size:24px;}
+.loop-chips .again{color:var(--accent);letter-spacing:0.04em;}
+.creeds{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:auto;margin-bottom:20px;}
+.creed{border-left:6px solid var(--accent);padding-left:26px;font-family:var(--grotesk);font-size:33px;font-weight:400;line-height:1.3;color:var(--body-ink);}
+
+/* ===== slide 5, production proof ===== */
+.proof h2{font-size:84px;font-weight:400;line-height:1.08;letter-spacing:-0.02em;max-width:1560px;margin-top:40px;text-wrap:balance;}
+.proof .prose{font-family:var(--grotesk);font-size:32px;font-weight:300;color:var(--mut);line-height:1.5;max-width:1180px;margin-top:52px;}
+.proof .statline{margin-top:auto;margin-bottom:48px;align-self:flex-start;font-family:var(--mono);font-size:24px;letter-spacing:0.04em;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;padding:16px 24px;background:#FFFFFF;}
+
+/* ===== slide 6, close ===== */
+.close-head{display:flex;align-items:baseline;gap:22px;}
+.close-head .rule{flex:1;height:1px;background:#DADADA;}
+.close h2{font-size:64px;font-weight:500;line-height:1.02;letter-spacing:-0.025em;margin-top:20px;}
+.close-grid{flex:1;min-height:0;display:grid;grid-template-columns:0.92fr 1.08fr;gap:64px;margin-top:40px;align-items:center;}
+.qr-col{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.qr-card{background:#FFFFFF;border:1.5px solid #E4E4E4;border-radius:18px;padding:34px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
+#qr{width:440px;height:440px;display:block;image-rendering:pixelated;}
+.qr-caption{font-size:24px;letter-spacing:0.06em;color:#888888;margin-top:26px;}
+.links-col{display:flex;flex-direction:column;}
+.links-col .kicker{margin-bottom:30px;}
+.link-row{text-decoration:none;display:flex;gap:26px;align-items:baseline;padding:26px 0;border-top:1px solid var(--hair);}
+.link-row.last{border-bottom:1px solid var(--hair);}
+.link-num{font-size:24px;color:#BBBBBB;min-width:40px;flex:none;}
+.link-body{display:flex;flex-direction:column;gap:9px;}
+.link-title{font-family:var(--grotesk);font-size:38px;font-weight:500;color:var(--ink);letter-spacing:-0.02em;line-height:1.0;}
+.link-sub{font-size:25px;color:var(--mut);}
+
+/* ===== chrome: counter + notes, viewport space ===== */
+#counter{position:fixed;right:18px;bottom:14px;font-family:var(--mono);font-size:12px;letter-spacing:0.12em;color:rgba(255,255,255,0.38);user-select:none;}
+#notes{position:fixed;left:0;right:0;bottom:0;display:none;background:rgba(10,10,10,0.92);color:#E8E8E8;font-family:var(--mono);font-size:14px;line-height:1.6;padding:16px 24px 20px;border-top:1px solid rgba(255,255,255,0.15);}
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- ===== SLIDE 1 / TITLE ===== -->
+  <section class="slide title-slide" data-label="Signal OS" data-screen-label="01"
+    data-speaker-notes="Quick framing before the hero demo. This is not a platform pitch. It is one working context layer, plus brief proof that the same operating model ships in production.">
+    <div class="kicker">Useful agents for venture work</div>
+    <h1>Signal OS</h1>
+    <div class="byline">Isaac Luo</div>
+  </section>
+
+  <!-- ===== SLIDE 2 / FOLLOW-THROUGH ===== -->
+  <section class="slide setup" data-label="Follow-through" data-screen-label="02"
+    data-speaker-notes="Conclusions get noted. How we got there never does. Every call produces commitments and they die in the transcript. This agent reads every call, extracts each commitment with the verbatim quote attached, and drafts the follow-through. Switch to the live Associate OS now.">
+    <div class="kicker accent">01 / The context layer</div>
+    <h2>After every call, commitments get made. Then they die in a transcript.</h2>
+    <div class="job">
+      <div class="job-kicker">The job</div>
+      <div class="job-row"><span class="num">01</span><span class="txt">Reads selected founder calls.</span></div>
+      <div class="job-row"><span class="num">02</span><span class="txt">Extracts commitments, verbatim quote attached.</span></div>
+      <div class="job-row"><span class="num">03</span><span class="txt">Drafts the follow-through: emails, intros, nudges.</span></div>
+      <div class="job-row"><span class="num">04</span><span class="txt">Keeps relationships warm and the pipeline honest.</span></div>
+    </div>
+    <div class="cue">DEMO: Associate OS</div>
+  </section>
+
+  <!-- ===== SLIDE 3 / SOURCING ===== -->
+  <section class="slide setup" data-label="Sourcing" data-screen-label="05"
+    data-speaker-notes="Optional appendix only if the conversation turns to sourcing. Show one ranked company, the visible score receipt, and one fresh timestamp. Keep it under sixty seconds.">
+    <div class="kicker accent">Appendix / The sourcing queue</div>
+    <h2>Sourcing is a data problem before it is a network problem.</h2>
+    <div class="job">
+      <div class="job-kicker">The job</div>
+      <div class="job-row"><span class="num">01</span><span class="txt">Watches public signals: X, job boards, GitHub, press.</span></div>
+      <div class="job-row"><span class="num">02</span><span class="txt">Enriches the people and companies behind them.</span></div>
+      <div class="job-row"><span class="num">03</span><span class="txt">Ranks with visible arithmetic, falsifiers included.</span></div>
+      <div class="job-row"><span class="num">04</span><span class="txt">Hands me a queue to act on.</span></div>
+    </div>
+    <div class="cue">OPTIONAL LIVE: Growth Scout</div>
+  </section>
+
+  <!-- ===== SLIDE 5 / PRODUCTION PROOF ===== -->
+  <section class="slide proof" data-label="Not a demo" data-screen-label="03"
+    data-speaker-notes="The same architecture publishes a public AI brief every weekday: source scan, script, lint gate, voice, publish. The public feed is proof of operation, not another live demo.">
+    <div class="kicker accent">Not a demo</div>
+    <h2>Newsletters in, a public AI brief out. Publishing every weekday.</h2>
+    <p class="prose">The Six-Month Signal is generated end to end by an agent pipeline: source scan, script, lint gate, voice, publish. The public feed carries the dated output.</p>
+    <div class="statline">cron 21:15, public-safe gate, public RSS + audio</div>
+  </section>
+
+  <!-- ===== SLIDE 6 / CLOSE ===== -->
+  <section class="slide close" data-label="Take it with you" data-screen-label="04"
+    data-speaker-notes="Leave this slide up for questions. The QR opens the generic Signal OS site; the public brief and contact link are listed beside it. Growth Scout remains one arrow-key away as an optional appendix.">
+    <div class="close-head">
+      <div class="kicker accent">Take it with you</div>
+      <div class="rule"></div>
+    </div>
+    <h2>Steal the stack.</h2>
+    <div class="close-grid">
+      <div class="qr-col">
+        <div class="qr-card"><canvas id="qr" width="592" height="592"></canvas></div>
+        <div class="qr-caption mono">Scan for the demos</div>
+      </div>
+      <div class="links-col">
+        <div class="kicker accent">The links</div>
+        <a id="link-demos" class="link-row" href="https://isaac0314.github.io/Associate-OS/">
+          <span class="link-num mono">01</span>
+          <span class="link-body">
+            <span class="link-title">Signal OS demos</span>
+            <span class="link-sub mono" id="demo-url">isaac0314.github.io/Associate-OS/</span>
+          </span>
+        </a>
+        <a id="link-podcast" class="link-row" href="https://isaac0314.github.io/six-month-signal/">
+          <span class="link-num mono">02</span>
+          <span class="link-body">
+            <span class="link-title">The Six-Month Signal</span>
+            <span class="link-sub mono">A weekday AI brief, public RSS + audio</span>
+          </span>
+        </a>
+        <a id="link-contact" class="link-row last" href="mailto:isaacluo0314@gmail.com">
+          <span class="link-num mono">03</span>
+          <span class="link-body">
+            <span class="link-title">Email me</span>
+            <span class="link-sub mono">isaacluo0314@gmail.com</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="counter">01 / 06</div>
+<div id="notes"></div>
+
+<!-- Production links -->
+<script>
+"use strict";
+
+/* Swap this one line after the Vercel deploy and the QR plus link 01 re-render. */
+const DECK_LINKS = {
+  demos:   "https://isaac0314.github.io/Associate-OS/",
+  podcast: "https://isaac0314.github.io/six-month-signal/",
+  contact: "mailto:isaacluo0314@gmail.com"
+};
+
+/* ============================================================
+   Compact dependency-free QR encoder (byte mode, ECC level M,
+   versions 1-10, automatic mask selection). No CDN, no network.
+   ============================================================ */
+const QR = (() => {
+  const ECC_M = [0, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26];   // ecc codewords per block, ver 1..10
+  const BLK_M = [0,  1,  1,  1,  2,  2,  4,  4,  4,  5,  5];   // number of blocks, ver 1..10
+  const getBit = (x, i) => ((x >>> i) & 1) !== 0;
+
+  function mul(x, y) {           // GF(256) multiply, reducer 0x11D
+    let z = 0;
+    for (let i = 7; i >= 0; i--) {
+      z = (z << 1) ^ ((z >>> 7) * 0x11D);
+      z ^= ((y >>> i) & 1) * x;
+    }
+    return z & 0xFF;
+  }
+  function rawModules(v) {
+    let n = (16 * v + 128) * v + 64;
+    if (v >= 2) {
+      const a = Math.floor(v / 7) + 2;
+      n -= (25 * a - 10) * a - 55;
+      if (v >= 7) n -= 36;
+    }
+    return n;
+  }
+  function dataCodewords(v) { return Math.floor(rawModules(v) / 8) - ECC_M[v] * BLK_M[v]; }
+  function rsDivisor(deg) {
+    const r = new Array(deg).fill(0); r[deg - 1] = 1;
+    let root = 1;
+    for (let i = 0; i < deg; i++) {
+      for (let j = 0; j < deg; j++) {
+        r[j] = mul(r[j], root);
+        if (j + 1 < deg) r[j] ^= r[j + 1];
+      }
+      root = mul(root, 2);
+    }
+    return r;
+  }
+  function rsRemainder(data, div) {
+    const res = new Array(div.length).fill(0);
+    for (const b of data) {
+      const f = b ^ res.shift();
+      res.push(0);
+      for (let i = 0; i < div.length; i++) res[i] ^= mul(div[i], f);
+    }
+    return res;
+  }
+
+  function encode(text) {
+    const bytes = Array.from(new TextEncoder().encode(text));
+    let ver = 1;
+    while (4 + (ver < 10 ? 8 : 16) + bytes.length * 8 > dataCodewords(ver) * 8) {
+      ver++;
+      if (ver > 10) throw new Error("QR payload too long for versions 1-10");
+    }
+
+    /* --- bit stream: mode, count, data, terminator, padding --- */
+    const bits = [];
+    const push = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    push(4, 4);
+    push(bytes.length, ver < 10 ? 8 : 16);
+    for (const b of bytes) push(b, 8);
+    const cap = dataCodewords(ver) * 8;
+    push(0, Math.min(4, cap - bits.length));
+    while (bits.length % 8 !== 0) bits.push(0);
+    for (let pad = 0xEC; bits.length < cap; pad ^= 0xFD) push(pad, 8);
+    const data = [];
+    for (let i = 0; i < bits.length; i += 8) {
+      let b = 0;
+      for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+      data.push(b);
+    }
+
+    /* --- Reed-Solomon blocks, interleaved --- */
+    const nb = BLK_M[ver], el = ECC_M[ver];
+    const raw = Math.floor(rawModules(ver) / 8);
+    const nShort = nb - raw % nb, shortLen = Math.floor(raw / nb);
+    const div = rsDivisor(el), blocks = [];
+    for (let i = 0, k = 0; i < nb; i++) {
+      const dat = data.slice(k, k + shortLen - el + (i < nShort ? 0 : 1));
+      k += dat.length;
+      const ecc = rsRemainder(dat, div);
+      if (i < nShort) dat.push(0);
+      blocks.push(dat.concat(ecc));
+    }
+    const all = [];
+    for (let i = 0; i < blocks[0].length; i++) {
+      blocks.forEach((b, j) => { if (i !== shortLen - el || j >= nShort) all.push(b[i]); });
+    }
+
+    /* --- matrix + function patterns --- */
+    const size = ver * 4 + 17;
+    const mods = Array.from({ length: size }, () => new Array(size).fill(false));
+    const isF  = Array.from({ length: size }, () => new Array(size).fill(false));
+    const setF = (x, y, d) => { mods[y][x] = d; isF[y][x] = true; };
+    for (let i = 0; i < size; i++) { setF(6, i, i % 2 === 0); setF(i, 6, i % 2 === 0); }
+    const finder = (cx, cy) => {
+      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+        const x = cx + dx, y = cy + dy;
+        if (x >= 0 && x < size && y >= 0 && y < size) {
+          const d = Math.max(Math.abs(dx), Math.abs(dy));
+          setF(x, y, d !== 2 && d !== 4);
+        }
+      }
+    };
+    finder(3, 3); finder(size - 4, 3); finder(3, size - 4);
+    let ap = [];
+    if (ver > 1) {
+      const na = Math.floor(ver / 7) + 2;
+      const step = Math.ceil((ver * 4 + 4) / (na * 2 - 2)) * 2;
+      ap = [6];
+      for (let pos = size - 7; ap.length < na; pos -= step) ap.splice(1, 0, pos);
+    }
+    for (let i = 0; i < ap.length; i++) for (let j = 0; j < ap.length; j++) {
+      if ((i === 0 && j === 0) || (i === 0 && j === ap.length - 1) || (i === ap.length - 1 && j === 0)) continue;
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++)
+        setF(ap[i] + dx, ap[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+    }
+    const drawFormat = (mask) => {
+      const d = (0 << 3) | mask;                 // ECC level M format bits are 0b00
+      let rem = d;
+      for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+      const fb = ((d << 10) | rem) ^ 0x5412;
+      for (let i = 0; i <= 5; i++) setF(8, i, getBit(fb, i));
+      setF(8, 7, getBit(fb, 6)); setF(8, 8, getBit(fb, 7)); setF(7, 8, getBit(fb, 8));
+      for (let i = 9; i < 15; i++) setF(14 - i, 8, getBit(fb, i));
+      for (let i = 0; i < 8; i++) setF(size - 1 - i, 8, getBit(fb, i));
+      for (let i = 8; i < 15; i++) setF(8, size - 15 + i, getBit(fb, i));
+      setF(8, size - 8, true);
+    };
+    drawFormat(0);
+    if (ver >= 7) {
+      let rem = ver;
+      for (let i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1F25);
+      const vb = (ver << 12) | rem;
+      for (let i = 0; i < 18; i++) {
+        const b = getBit(vb, i);
+        const a = size - 11 + i % 3, c = Math.floor(i / 3);
+        setF(a, c, b); setF(c, a, b);
+      }
+    }
+
+    /* --- data placement, zigzag --- */
+    let bi = 0;
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (let vert = 0; vert < size; vert++) for (let j = 0; j < 2; j++) {
+        const x = right - j;
+        const up = ((right + 1) & 2) === 0;
+        const y = up ? size - 1 - vert : vert;
+        if (!isF[y][x] && bi < all.length * 8) {
+          mods[y][x] = getBit(all[bi >>> 3], 7 - (bi & 7));
+          bi++;
+        }
+      }
+    }
+
+    /* --- masking with penalty-based selection --- */
+    const applyMask = (mask) => {
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        let inv;
+        switch (mask) {
+          case 0: inv = (x + y) % 2 === 0; break;
+          case 1: inv = y % 2 === 0; break;
+          case 2: inv = x % 3 === 0; break;
+          case 3: inv = (x + y) % 3 === 0; break;
+          case 4: inv = (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0; break;
+          case 5: inv = ((x * y) % 2 + (x * y) % 3) === 0; break;
+          case 6: inv = (((x * y) % 2 + (x * y) % 3) % 2) === 0; break;
+          default: inv = (((x + y) % 2 + (x * y) % 3) % 2) === 0; break;
+        }
+        if (inv && !isF[y][x]) mods[y][x] = !mods[y][x];
+      }
+    };
+    const penaltyOf = () => {
+      let p = 0;
+      for (let y = 0; y < size; y++) {           // row runs
+        let color = mods[y][0], run = 1;
+        for (let x = 1; x < size; x++) {
+          if (mods[y][x] === color) { run++; }
+          else { if (run >= 5) p += 3 + (run - 5); color = mods[y][x]; run = 1; }
+        }
+        if (run >= 5) p += 3 + (run - 5);
+      }
+      for (let x = 0; x < size; x++) {           // column runs
+        let color = mods[0][x], run = 1;
+        for (let y = 1; y < size; y++) {
+          if (mods[y][x] === color) { run++; }
+          else { if (run >= 5) p += 3 + (run - 5); color = mods[y][x]; run = 1; }
+        }
+        if (run >= 5) p += 3 + (run - 5);
+      }
+      for (let y = 0; y < size - 1; y++) for (let x = 0; x < size - 1; x++) {   // 2x2 blocks
+        const c = mods[y][x];
+        if (c === mods[y][x + 1] && c === mods[y + 1][x] && c === mods[y + 1][x + 1]) p += 3;
+      }
+      let dark = 0;                              // balance
+      for (const row of mods) for (const c of row) if (c) dark++;
+      p += (Math.ceil(Math.abs(dark * 20 - size * size * 10) / (size * size)) - 1) * 10;
+      return p;
+    };
+    let best = 0, min = Infinity;
+    for (let m = 0; m < 8; m++) {
+      applyMask(m); drawFormat(m);
+      const p = penaltyOf();
+      if (p < min) { min = p; best = m; }
+      applyMask(m);                              // XOR undo
+    }
+    applyMask(best); drawFormat(best);
+    return mods;
+  }
+
+  return { encode };
+})();
+
+function renderQR(canvas, text) {
+  const mods = QR.encode(text);
+  const n = mods.length, border = 4, scale = 16;
+  canvas.width = canvas.height = (n + border * 2) * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#000000";
+  let dark = 0;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    if (mods[y][x]) { ctx.fillRect((x + border) * scale, (y + border) * scale, scale, scale); dark++; }
+  }
+  canvas.dataset.modules = String(dark);
+  document.body.dataset.qrModules = String(dark);
+  return dark;
+}
+
+/* ============================================================
+   Deck runtime: fit-to-viewport scaling + keyboard navigation
+   ============================================================ */
+const stage = document.getElementById("stage");
+const slideOrder = ["Signal OS", "Follow-through", "Not a demo", "Take it with you", "Sourcing"];
+const slides = slideOrder.map(label => document.querySelector('#stage > section[data-label="' + label + '"]'));
+const counter = document.getElementById("counter");
+const notes = document.getElementById("notes");
+let current = -1;
+
+function show(n) {
+  n = Math.max(0, Math.min(slides.length - 1, n));
+  if (n === current) return;
+  current = n;
+  slides.forEach((s, i) => s.classList.toggle("active", i === n));
+  counter.textContent = String(n + 1).padStart(2, "0") + " / " + String(slides.length).padStart(2, "0");
+  if (notes.style.display === "block") notes.textContent = slides[n].getAttribute("data-speaker-notes") || "";
+  history.replaceState(null, "", location.pathname + location.search + "#" + (n + 1));
+}
+function fit() {
+  const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  stage.style.transform = "translate(-50%,-50%) scale(" + s + ")";
+}
+window.addEventListener("resize", fit);
+window.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "PageDown") {
+    e.preventDefault(); show(current + 1);
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp") {
+    e.preventDefault(); show(current - 1);
+  } else if (e.key === "Home") { e.preventDefault(); show(0);
+  } else if (e.key === "End")  { e.preventDefault(); show(slides.length - 1);
+  } else if (e.key === "n" || e.key === "N") {
+    const open = notes.style.display === "block";
+    notes.style.display = open ? "none" : "block";
+    if (!open) notes.textContent = slides[current].getAttribute("data-speaker-notes") || "";
+  }
+});
+window.addEventListener("hashchange", () => {
+  const n = parseInt(location.hash.slice(1), 10);
+  if (!Number.isNaN(n)) show(n - 1);
+});
+stage.addEventListener("click", (e) => {
+  if (e.target.closest("a")) return;
+  show(current + 1);
+});
+
+/* wire the close slide from DECK_LINKS, then boot */
+document.getElementById("link-demos").href = DECK_LINKS.demos;
+document.getElementById("demo-url").textContent = DECK_LINKS.demos.replace(/^https?:\/\//, "");
+document.getElementById("link-podcast").href = DECK_LINKS.podcast;
+document.getElementById("link-contact").href = DECK_LINKS.contact;
+renderQR(document.getElementById("qr"), DECK_LINKS.demos);
+
+fit();
+const qp = new URLSearchParams(location.search);
+let start = parseInt(location.hash.slice(1) || qp.get("slide") || "1", 10);
+if (Number.isNaN(start)) start = 1;
+show(start - 1);
+</script>
+</body>
+</html>

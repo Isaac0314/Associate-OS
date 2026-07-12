@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Associate OS. Founder calls in, follow-through out.</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1014; --panel:#14171d; --panel2:#191d24; --panel3:#1f242d;
+  --line:#252b35; --line2:#2e3642;
+  --text:#e7eaef; --text2:#9aa4b2; --muted:#5d6775;
+  --agent:#e8a33d; --agent-dim:#e8a33d26; --agent-line:#e8a33d4d;
+  --ok:#4cc38a; --ok-dim:#4cc38a1f;
+  --warn:#e0a83b; --warn-dim:#e0a83b1f;
+  --bad:#e05d52; --bad-dim:#e05d521f;
+  --info:#5b9fe3; --info-dim:#5b9fe31f;
+  --hot:#e8845a; --cooling:#d9b54a; --cold:#6e8fb5;
+  --serif:"Newsreader",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:400 13px/1.5 var(--sans);overflow:hidden;
+  background-image:radial-gradient(1100px 500px at 85% -10%, #e8a33d0a, transparent 60%),radial-gradient(900px 420px at -10% 110%, #5b9fe308, transparent 60%)}
+.app{display:grid;grid-template-rows:48px 1fr 30px;height:100vh}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#2b323d;border-radius:9px;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:5px 9px;outline:none}
+input:focus,select:focus{border-color:var(--agent-line)}
+a{color:var(--info);text-decoration:none}
+.mono{font-family:var(--mono)}
+.serif{font-family:var(--serif)}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#161a21,#12151b)}
+.brand{display:flex;align-items:baseline;gap:9px;white-space:nowrap}
+.brand .mark{width:19px;height:19px;border-radius:5px;background:linear-gradient(135deg,var(--agent),#c77f22);display:inline-flex;align-items:center;justify-content:center;color:#14171d;font:700 11px var(--mono);align-self:center}
+.brand b{font-weight:700;font-size:14px;letter-spacing:.01em}
+.brand .tag{font:italic 500 13px/1 var(--serif);color:var(--text2);letter-spacing:.01em}
+@media (max-width:1280px){.brand .tag{display:none}}
+.tabs{display:flex;gap:2px;margin-left:6px}
+.tab{padding:5px 11px;border-radius:6px;color:var(--text2);font-weight:500;font-size:12.5px;position:relative}
+.tab:hover{color:var(--text);background:var(--panel2)}
+.tab.on{color:var(--text);background:var(--panel3)}
+.tab .n{font:500 10px var(--mono);color:var(--muted);margin-left:5px}
+.tab.on .n{color:var(--agent)}
+.spacer{flex:1}
+.askwrap{position:relative}
+.ask{width:295px;background:var(--panel2);border:1px solid var(--line2);border-radius:7px;padding:5px 9px 5px 27px;font-size:12.5px}
+.askwrap .spark{position:absolute;left:9px;top:6px;color:var(--agent);font-size:12px;pointer-events:none}
+.askwrap .hint{position:absolute;right:8px;top:7px;font:500 10px var(--mono);color:var(--muted);border:1px solid var(--line2);border-radius:4px;padding:0 4px;pointer-events:none}
+.askpanel{position:absolute;top:34px;right:0;width:460px;max-height:430px;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:0 18px 50px #000a;padding:10px;display:none;z-index:60}
+.askpanel.open{display:block}
+.askpanel .chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.chip{font-size:11px;color:var(--text2);border:1px solid var(--line2);border-radius:20px;padding:2.5px 9px;background:var(--panel2)}
+.chip:hover{color:var(--text);border-color:var(--agent-line)}
+.qa{border-top:1px solid var(--line);padding:8px 2px}
+.qa .q{font-weight:600;font-size:12px;margin-bottom:4px}
+.qa .q::before{content:"you ";font:500 10px var(--mono);color:var(--muted);margin-right:4px}
+.qa .a{color:var(--text2);font-size:12.5px}
+.qa .a b{color:var(--text)}
+.askhelp{font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px;margin-top:2px;line-height:1.7}
+.askhelp code{font:500 10.5px var(--mono);color:var(--text2);background:var(--panel2);padding:1px 5px;border-radius:4px}
+.simctl{display:flex;align-items:center;gap:6px}
+.btn{padding:5px 11px;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);font-size:12px;font-weight:500;color:var(--text2)}
+.btn:hover{color:var(--text);border-color:#3a4452}
+.btn.pri{background:var(--agent-dim);border-color:var(--agent-line);color:var(--agent)}
+.btn.pri:hover{background:#e8a33d33}
+.btn:disabled{opacity:.45;cursor:default}
+.datechip{display:flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--line2);border-radius:7px;padding:4px 10px}
+.datechip .d{font:500 11.5px var(--mono);color:var(--text)}
+.datechip .simnote{font:500 10px var(--mono);color:var(--warn)}
+.livechip{display:flex;align-items:center;gap:6px;border-radius:7px;padding:4px 10px;font:600 10.5px var(--mono);letter-spacing:.08em;border:1px solid var(--line2);background:var(--panel2);color:var(--text2)}
+.livechip .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.livechip.live{color:var(--agent);border-color:var(--agent-line);background:var(--agent-dim)}
+.livechip.live .dot{background:var(--agent);box-shadow:0 0 0 0 #e8a33d66;animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #e8a33d59}70%{box-shadow:0 0 0 7px #e8a33d00}100%{box-shadow:0 0 0 0 #e8a33d00}}
+
+/* ---------- layout ---------- */
+.main{display:grid;grid-template-columns:1fr 318px;min-height:0}
+.content{min-width:0;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;min-height:0;flex:1;overflow:hidden}
+.view.on{display:flex}
+
+/* ---------- rail ---------- */
+.rail{border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:0}
+.rail-h{padding:11px 14px 8px;border-bottom:1px solid var(--line)}
+.rail-h .t{font-weight:700;font-size:12.5px;letter-spacing:.02em;display:flex;align-items:center;gap:7px}
+.rail-h .t .adot{width:8px;height:8px;border-radius:3px;background:var(--agent)}
+.rail-h .s{font:italic 400 12px var(--serif);color:var(--text2);margin-top:2px}
+.rail-b{flex:1;overflow-y:auto;padding:8px 10px 20px}
+.ev{border:1px solid var(--line);border-radius:9px;background:var(--panel2);padding:8px 10px;margin-bottom:7px}
+.ev .top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.ev .k{font:600 9.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;border-radius:4px;padding:1px 6px}
+.ev .k.draft{background:var(--agent-dim);color:var(--agent)}
+.ev .k.nudge{background:var(--bad-dim);color:var(--bad)}
+.ev .k.rewarm{background:#6e8fb526;color:var(--cold)}
+.ev .k.move{background:var(--info-dim);color:var(--info)}
+.ev .k.log{background:var(--ok-dim);color:var(--ok)}
+.ev .k.import{background:#a56de326;color:#b48ae8}
+.ev .k.action{background:var(--panel3);color:var(--text2)}
+.ev .k.brief{background:var(--agent-dim);color:var(--agent)}
+.ev .ts{font:400 10px var(--mono);color:var(--muted);margin-left:auto}
+.ev .tt{font-size:12px;line-height:1.45;color:var(--text)}
+.ev details{margin-top:6px}
+.ev summary{font:500 11px var(--sans);color:var(--text2);cursor:pointer;list-style:none;display:flex;align-items:center;gap:5px}
+.ev summary::before{content:"▸";font-size:9px;color:var(--muted);transition:transform .15s}
+.ev details[open] summary::before{transform:rotate(90deg)}
+.ev .draftbox{margin-top:6px}
+
+/* ---------- draft box ---------- */
+.draftbox{background:var(--bg);border:1px solid var(--line2);border-left:2px solid var(--agent);border-radius:7px;padding:9px 11px;position:relative}
+.draftbox .sub{font-weight:600;font-size:12px;margin-bottom:5px;padding-right:56px}
+.draftbox .body{white-space:pre-wrap;color:var(--text2);font-size:12px;line-height:1.55}
+.copybtn{position:absolute;top:7px;right:7px;font:500 10.5px var(--mono);color:var(--text2);border:1px solid var(--line2);border-radius:5px;padding:2px 8px;background:var(--panel2)}
+.copybtn:hover{color:var(--agent);border-color:var(--agent-line)}
+
+/* ---------- meetings ---------- */
+.m-split{display:grid;grid-template-columns:305px 1fr;flex:1;min-height:0}
+.m-list{border-right:1px solid var(--line);overflow-y:auto;min-height:0}
+.m-list-h{position:sticky;top:0;background:var(--bg);padding:11px 12px 8px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;z-index:5}
+.m-list-h .t{font-weight:700;font-size:12.5px}
+.m-list-h .n{font:500 10.5px var(--mono);color:var(--muted)}
+.mrow{padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
+.mrow:hover{background:var(--panel)}
+.mrow.on{background:var(--panel2)}
+.mrow.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--agent)}
+.mrow .r1{display:flex;align-items:center;gap:7px}
+.mrow .who{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .dt{font:400 10.5px var(--mono);color:var(--muted);margin-left:auto;flex-shrink:0}
+.mrow .r2{display:flex;align-items:center;gap:6px;margin-top:3px}
+.mrow .co{font-size:11.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font:500 9.5px var(--mono);letter-spacing:.04em;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.tag.intro{background:var(--info-dim);color:var(--info)}
+.tag.portfolio{background:var(--ok-dim);color:var(--ok)}
+.tag.diligence{background:var(--warn-dim);color:var(--warn)}
+.tag.lp{background:#a56de326;color:#b48ae8}
+.tag.partner{background:var(--panel3);color:var(--text2)}
+.tag.imported{background:#a56de326;color:#b48ae8}
+.mrow .cnum{font:500 10px var(--mono);color:var(--muted);margin-left:auto;flex-shrink:0}
+.mrow .cnum .od{color:var(--bad)}
+.m-detail{overflow-y:auto;min-height:0;padding:16px 20px 40px}
+.m-empty{color:var(--muted);padding:40px;text-align:center;font-style:italic;font-family:var(--serif);font-size:15px}
+.md-h .t{font:600 19px/1.25 var(--serif);letter-spacing:.01em}
+.md-h .meta{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+.md-h .meta .d{font:400 11px var(--mono);color:var(--text2)}
+.md-h .meta .p{font-size:11.5px;color:var(--text2)}
+.md-actions{display:flex;gap:7px;margin-top:11px}
+.sect{margin-top:20px}
+.sect-h{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.sect-h .t{font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
+.sect-h .ln{flex:1;height:1px;background:var(--line)}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:1180px){.cgrid{grid-template-columns:1fr}}
+.cgroup .gh{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.cgroup .gh .t{font-weight:600;font-size:12px}
+.cgroup .gh .n{font:500 10px var(--mono);color:var(--muted)}
+.cc{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:9px 11px;margin-bottom:8px}
+.cc.overdue{border-color:#e05d5245}
+.cc .r1{display:flex;align-items:flex-start;gap:8px}
+.cc .txt{font-size:12.5px;font-weight:500;line-height:1.4;flex:1}
+.cc .txt.done{color:var(--muted);text-decoration:line-through}
+.due{font:500 10px var(--mono);border-radius:4px;padding:1.5px 7px;white-space:nowrap}
+.due.ok{background:var(--panel3);color:var(--text2)}
+.due.soon{background:var(--warn-dim);color:var(--warn)}
+.due.over{background:var(--bad-dim);color:var(--bad)}
+.due.done{background:var(--ok-dim);color:var(--ok)}
+.due.snz{background:var(--info-dim);color:var(--info)}
+.cc .quote{margin-top:7px;padding:6px 10px;border-left:2px solid var(--line2);font:italic 400 12.5px/1.5 var(--serif);color:var(--text2)}
+.cc .quote .attr{display:block;font:500 9.5px var(--mono);font-style:normal;color:var(--muted);margin-top:3px;letter-spacing:.03em}
+.cc .ctx{margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.5;cursor:pointer;padding:2px 0}
+.cc .ctx:hover{color:var(--text2)}
+.cc .ctx .cl{font:600 9px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--info);background:var(--info-dim);border-radius:4px;padding:1px 6px;margin-right:6px}
+.cc .ctx .cq{font:italic 400 11.5px var(--serif)}
+.linkrow{display:flex;gap:8px;flex-wrap:wrap}
+.lc{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:7px 11px;cursor:pointer;max-width:300px}
+.lc:hover{border-color:var(--agent-line);background:var(--panel2)}
+.lc .t{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc .why{font:italic 400 11px/1.45 var(--serif);color:var(--muted);margin-top:2px}
+.lc .why b{color:var(--text2);font-weight:500}
+.cc .ops{display:flex;gap:6px;margin-top:7px}
+.mini{font:500 10.5px var(--mono);color:var(--text2);border:1px solid var(--line2);border-radius:5px;padding:2px 8px;background:var(--panel2)}
+.mini:hover{color:var(--text);border-color:#3a4452}
+.mini.good:hover{color:var(--ok);border-color:#4cc38a55}
+.dtabs{display:flex;gap:2px;margin-bottom:9px}
+.dtab{padding:4px 11px;border-radius:6px;font-size:12px;font-weight:500;color:var(--text2)}
+.dtab:hover{color:var(--text)}
+.dtab.on{background:var(--panel3);color:var(--text)}
+.transcript{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:10px 13px;max-height:340px;overflow-y:auto}
+.tl{display:flex;gap:9px;padding:3.5px 0;font-size:12.5px}
+.tl .sp{font:500 10.5px var(--mono);color:var(--muted);min-width:74px;text-align:right;padding-top:2px;flex-shrink:0}
+.tl .tx{color:var(--text2);line-height:1.5}
+.tl.me .sp{color:var(--agent)}
+.tl.hl{background:var(--agent-dim);border-radius:6px;margin:0 -6px;padding:3.5px 6px}
+.tl.hl .tx{color:var(--text)}
+
+/* ---------- relationships ---------- */
+.r-wrap{flex:1;overflow-y:auto;min-height:0;padding:16px 20px 40px}
+.pathcard{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:13px 16px;margin-bottom:16px}
+.pathcard .h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pathcard .h .t{font-weight:700;font-size:12.5px}
+.pathviz{display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap;row-gap:10px}
+.pnode{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:6px 12px;text-align:center}
+.pnode .nm{font-weight:600;font-size:12.5px}
+.pnode .co{font-size:10.5px;color:var(--muted)}
+.pnode.you{border-color:var(--agent-line);background:var(--agent-dim)}
+.pnode.tgt{border-color:#6e8fb566}
+.pedge{display:flex;flex-direction:column;align-items:center;padding:0 4px;min-width:98px}
+.pedge .how{font:italic 400 10.5px var(--serif);color:var(--muted);text-align:center;line-height:1.3;max-width:150px}
+.pedge .arrow{color:var(--agent);font-size:13px;line-height:1}
+table.rt{width:100%;border-collapse:collapse}
+.rt th{font:600 10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-align:left;padding:7px 10px;border-bottom:1px solid var(--line2);white-space:nowrap}
+.rt td{padding:9px 10px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+.rt tr:hover td{background:var(--panel)}
+.pcell{display:flex;align-items:center;gap:9px}
+.av{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font:600 9.5px var(--mono);color:#e9edf2;flex-shrink:0}
+.pcell .nm{font-weight:600}
+.rt .co{color:var(--text2)}
+.rt .rl{font-size:11px;color:var(--muted)}
+.warmth{display:inline-flex;align-items:center;gap:6px;font:500 11px var(--mono)}
+.warmth .wd{width:8px;height:8px;border-radius:50%}
+.warmth.warm{color:var(--hot)} .warmth.warm .wd{background:var(--hot);box-shadow:0 0 7px #e8845a66}
+.warmth.cooling{color:var(--cooling)} .warmth.cooling .wd{background:var(--cooling)}
+.warmth.cold{color:var(--cold)} .warmth.cold .wd{background:var(--cold)}
+.warmth.none{color:var(--muted)} .warmth.none .wd{background:var(--muted)}
+.lt{font:400 11px var(--mono);color:var(--text2)}
+.lt .ago{color:var(--muted)}
+.nact{font-size:12px;color:var(--text2);max-width:270px}
+.via{font:italic 400 12px var(--serif);color:var(--text2)}
+
+/* ---------- pipeline ---------- */
+.p-wrap{flex:1;min-height:0;overflow:auto;padding:16px 20px 30px}
+.board{display:grid;grid-template-columns:repeat(5,minmax(196px,1fr));gap:11px;min-width:1030px}
+.col .col-h{display:flex;align-items:center;gap:7px;padding:2px 4px 8px}
+.col .col-h .t{font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.col .col-h .n{font:500 10px var(--mono);color:var(--muted)}
+.col-b{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;min-height:130px}
+.card{background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:9px 11px;margin-bottom:8px}
+.card .co{font-weight:700;font-size:13px}
+.card .fo{font-size:11.5px;color:var(--text2);margin-top:1px}
+.card .sec{font:500 9.5px var(--mono);color:var(--muted);margin-top:5px;letter-spacing:.03em}
+.card .dstage{font:400 10px var(--mono);color:var(--muted);margin-top:5px}
+.card .why{margin-top:6px;font:italic 400 11.5px var(--serif);color:var(--text2);border-left:2px solid var(--line2);padding-left:8px}
+.card .ops{display:flex;gap:5px;margin-top:8px}
+.card .ops .mini{padding:2px 7px}
+
+/* ---------- brief ---------- */
+.b-wrap{flex:1;overflow-y:auto;min-height:0;padding:20px;display:flex;justify-content:center}
+.briefcard{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 32px 30px;height:fit-content}
+.briefcard .bh{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line2);padding-bottom:13px;margin-bottom:6px}
+.briefcard .bh .t{font:600 25px/1.1 var(--serif)}
+.briefcard .bh .wk{font:400 11px var(--mono);color:var(--muted)}
+.briefcard .bh .right{margin-left:auto;display:flex;gap:7px;align-items:center}
+.bchip{font:600 9.5px var(--mono);letter-spacing:.08em;border-radius:4px;padding:2px 7px}
+.bchip.live{background:var(--agent-dim);color:var(--agent)}
+.bchip.sim{background:var(--panel3);color:var(--text2)}
+.bbody{font-size:13px;color:var(--text2);line-height:1.65}
+.bbody h3{font:600 13.5px var(--sans);color:var(--text);margin:16px 0 5px;display:flex;align-items:center;gap:8px}
+.bbody h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.bbody .lede{font:italic 400 15.5px/1.5 var(--serif);color:var(--text);margin:12px 0 4px}
+.bbody ul{list-style:none;margin:2px 0}
+.bbody li{padding:2.5px 0 2.5px 16px;position:relative}
+.bbody li::before{content:"·";position:absolute;left:4px;color:var(--agent);font-weight:700}
+.bbody b{color:var(--text);font-weight:600}
+.bbody .odue{color:var(--bad)}
+.bthink{color:var(--muted);font-style:italic;font-family:var(--serif);padding:18px 0}
+
+/* ---------- modals ---------- */
+.scrim{position:fixed;inset:0;background:#000a;backdrop-filter:blur(2px);z-index:90;display:none}
+.scrim.show{display:block}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;max-width:94vw;max-height:84vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line2);border-radius:13px;box-shadow:0 30px 80px #000c;z-index:95;display:none;padding:19px 22px}
+.modal.show{display:block}
+.modal .mh{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.modal .mh .t{font-weight:700;font-size:14.5px}
+.modal .mh .x{margin-left:auto;color:var(--muted);font-size:17px;padding:2px 7px;border-radius:5px}
+.modal .mh .x:hover{color:var(--text);background:var(--panel2)}
+.gmrow{display:flex;align-items:center;gap:10px;padding:8px 9px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:6px}
+.gmrow:hover{background:var(--panel2)}
+.gmrow input[type=checkbox]{width:14px;height:14px;accent-color:var(--agent)}
+.gmrow .t{font-weight:500;font-size:12.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gmrow .d{font:400 10.5px var(--mono);color:var(--muted);flex-shrink:0}
+.gmrow .p{font:400 10px var(--mono);color:var(--muted);flex-shrink:0}
+.gnote{font-size:11.5px;color:var(--muted);margin:9px 0;font-style:italic;font-family:var(--serif)}
+.gfoot{display:flex;gap:8px;margin-top:13px;align-items:center}
+.gstatus{font:400 11px var(--mono);color:var(--text2)}
+.tree{font:400 12px/1.75 var(--mono);color:var(--text2);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:13px 16px;margin:10px 0}
+.tree b{color:var(--agent);font-weight:600}
+.tree .cm{color:var(--muted)}
+.agenttext{font-size:12.5px;color:var(--text2);line-height:1.65}
+.agenttext h4{font-size:12px;color:var(--text);margin:13px 0 4px;letter-spacing:.06em;text-transform:uppercase}
+.agenttext .thesis{font:italic 500 15px/1.55 var(--serif);color:var(--text);border-left:2px solid var(--agent);padding-left:13px;margin:12px 0}
+.kbd{font:500 10.5px var(--mono);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--panel2);color:var(--text2)}
+
+/* ---------- footer + toast ---------- */
+.footer{display:flex;align-items:center;gap:16px;padding:0 14px;border-top:1px solid var(--line);background:var(--panel);font-size:11px;color:var(--muted)}
+.footer .gov{color:var(--text2);font-weight:500}
+.footer .gov b{color:var(--agent);font-weight:600}
+.footer .lnk{color:var(--muted)}
+.footer .lnk:hover{color:var(--text)}
+.toasts{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:7px;align-items:center}
+.toast{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px 15px;font-size:12.5px;color:var(--text);box-shadow:0 12px 34px #000a;animation:tin .18s ease-out}
+.toast.warn{border-color:var(--warn-dim);color:var(--warn)}
+.toast.ok{border-color:#4cc38a44}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.empty-sm{color:var(--muted);font-style:italic;font-family:var(--serif);font-size:12.5px;padding:6px 2px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">a</span><b>Associate OS</b>
+    </div>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="spacer"></div>
+    <div class="simctl">
+      <button class="btn" id="btnSkip" title="Advance simulated time by 7 days (W)">+7 days</button>
+      <button class="btn" id="btnToday" title="Return to the real date (T)">Today</button>
+    </div>
+    <div class="datechip"><span class="d" id="todayTxt"></span><span class="simnote" id="simNote" style="display:none">SIM +0d</span></div>
+    <div class="livechip" id="liveChip" title="Checking local server..."><span class="dot"></span><span id="liveTxt">CHECKING</span></div>
+  </div>
+
+  <div class="main">
+    <div class="content">
+
+      <div class="view" id="view-meetings">
+        <div class="m-split">
+          <div class="m-list">
+            <div class="m-list-h">
+              <span class="t">Meetings</span><span class="n" id="mCount"></span>
+              <span style="flex:1"></span>
+              <button class="btn pri" id="btnGranola" style="padding:3px 9px;font-size:11px">Granola import</button>
+            </div>
+            <div id="mRows"></div>
+          </div>
+          <div class="m-detail" id="mDetail"></div>
+        </div>
+      </div>
+
+      <div class="view" id="view-relationships">
+        <div class="r-wrap">
+          <div class="pathcard">
+            <div class="h">
+              <span class="t">Path to X</span>
+              <span style="font-size:11.5px;color:var(--muted)">warm-intro chains inside this network</span>
+              <span style="flex:1"></span>
+              <select id="pathTarget" style="font-size:12px"></select>
+            </div>
+            <div class="pathviz" id="pathViz"></div>
+          </div>
+          <table class="rt">
+            <thead><tr><th>Person</th><th>Company</th><th>Last touch</th><th>Warmth</th><th>Next action</th><th>Reach</th></tr></thead>
+            <tbody id="rBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="view" id="view-pipeline">
+        <div class="p-wrap"><div class="board" id="board"></div></div>
+      </div>
+
+      <div class="view" id="view-brief">
+        <div class="b-wrap">
+          <div class="briefcard">
+            <div class="bh">
+              <span class="t">Monday brief</span>
+              <span class="wk" id="briefWk"></span>
+              <div class="right">
+                <span class="bchip sim" id="briefChip">SIM</span>
+                <button class="mini" id="briefCopy">copy</button>
+                <button class="mini" id="briefAI" style="display:none">rewrite with AI</button>
+              </div>
+            </div>
+            <div class="bbody" id="briefBody"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rail">
+      <div class="rail-h">
+        <div class="t"><span class="adot"></span>Activity</div>
+      </div>
+      <div class="rail-b" id="feed"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="gov"><b>LOCAL</b> &middot; review before send</span>
+    <span style="flex:1"></span>
+    <button class="lnk" id="btnReset">Reset</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="modal" id="modalGranola">
+  <div class="mh"><span class="t">Import from Granola</span><button class="x" data-close>&times;</button></div>
+  <div class="gnote">Private local data. Reveal meeting titles only off-screen.</div>
+  <div id="gList" style="max-height:380px;overflow-y:auto"></div>
+  <div class="gfoot">
+    <button class="btn pri" id="gReveal">Reveal private meeting titles</button>
+    <button class="btn pri" id="gImport" style="display:none">Import selected</button>
+    <span class="gstatus" id="gStatus"></span>
+  </div>
+</div>
+
+<div class="modal" id="modalPass" style="width:440px">
+  <div class="mh"><span class="t">Pass on <span id="passCo"></span></span><button class="x" data-close>&times;</button></div>
+  <div style="font-size:12.5px;color:var(--text2);margin-bottom:9px">Log a reason for the record.</div>
+  <input id="passReason" style="width:100%" placeholder="e.g. no wedge vs incumbents; revisit at Series A">
+  <div class="gfoot"><button class="btn pri" id="passGo">Log the pass</button></div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+'use strict';
+/* =========================================================================
+   Associate OS. Founder calls in, follow-through out.
+   Design thesis: code owns the facts, the LLM owns the language.
+   ========================================================================= */
+
+// ---------- tiny utils ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const d2 = n => String(n).padStart(2,'0');
+function iso(dt){ return dt.getFullYear() + '-' + d2(dt.getMonth()+1) + '-' + d2(dt.getDate()); }
+function pd(s){ const p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+function addDays(s, n){ const t = pd(s); t.setDate(t.getDate()+n); return iso(t); }
+function diffDays(a, b){ return Math.round((pd(b) - pd(a)) / 86400000); } // b - a
+const MONS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function nice(s){ const t = pd(s); return t.getDate() + ' ' + MONS[t.getMonth()]; }
+function niceFull(s){ const t = pd(s); return DOWS[t.getDay()] + ' ' + t.getDate() + ' ' + MONS[t.getMonth()]; }
+function first(name){ return (name||'').split(' ')[0]; }
+function hue(s){ let h = 0; for (let i = 0; i < (s||'').length; i++) h = (h*31 + s.charCodeAt(i)) % 360; return h; }
+function avatar(name){
+  const init = (name||'?').split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+  return '<span class="av" style="background:hsl(' + hue(name) + ' 42% 38%)">' + esc(init) + '</span>';
+}
+const REAL_TODAY = iso(new Date());
+function today(){ return addDays(REAL_TODAY, S.simDays || 0); }
+let seq = 1000;
+function uid(){ return 'x' + (seq++); }
+
+// ---------- date phrase parser (code owns the dates) ----------
+const DOWMAP = {sunday:0, monday:1, tuesday:2, wednesday:3, thursday:4, friday:5, saturday:6};
+function nextDow(base, dow){ let t = base; for (let i = 0; i < 8; i++){ t = addDays(t, 1); if (pd(t).getDay() === dow) return t; } return t; }
+function parseDatePhrase(phrase, base){
+  const p = (phrase||'').toLowerCase().trim().replace(/[.?!,]+$/,'');
+  if (!p) return addDays(base, 3);
+  const isoM = p.match(/(\d{4}-\d{2}-\d{2})/); if (isoM) return isoM[1];
+  if (/today|this afternoon|end of day|eod/.test(p)) return base;
+  if (/tomorrow/.test(p)) return addDays(base, 1);
+  const inM = p.match(/in\s+(\d+)\s+days?/); if (inM) return addDays(base, +inM[1]);
+  if (/couple of days/.test(p)) return addDays(base, 2);
+  if (/few days/.test(p)) return addDays(base, 3);
+  const wnum = p.match(/\b(one|two|three|four|five|six|seven|eight|nine|ten)\s+days?/);
+  if (wnum) return addDays(base, {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10}[wnum[1]]);
+  if (/within the week/.test(p)) return addDays(base, 7);
+  if (/end of next week/.test(p)) return nextDow(addDays(base, 7), 5);
+  if (/early next week/.test(p)) return nextDow(base, 1);
+  if (/next week/.test(p)) return addDays(nextDow(base, 1), 2);
+  if (/in a week|a week or so|week or so/.test(p)) return addDays(base, 7);
+  if (/end of (the )?week|this week/.test(p)) { const f = nextDow(base, 5); return diffDays(base, f) > 5 ? base : f; }
+  for (const k in DOWMAP){ if (p.includes(k)) return nextDow(base, DOWMAP[k]); }
+  const numM = p.match(/(\d+)\s+days?/); if (numM) return addDays(base, +numM[1]);
+  return addDays(base, 3);
+}
+
+// ---------- seed data (all fictional) ----------
+const STAGES = ['Met','Screening','Partner intro','IC memo','Passed'];
+const TYPE_LABEL = {intro:'founder intro', portfolio:'portfolio check-in', diligence:'diligence call', lp:'LP sync', partner:'partner sync', imported:'granola import'};
+
+function seed(){
+  const T = REAL_TODAY;
+  const off = n => addDays(T, n);
+  // meetings never land on weekends, whatever day the demo runs on
+  const wkd = n => { let d = addDays(T, n); const g = pd(d).getDay(); if (g === 6) d = addDays(d, -1); if (g === 0) d = addDays(d, -2); return d; };
+  const people = [
+    {id:'elena', name:'Elena Voss', company:'Fernwell AI', role:'Co-founder and CEO'},
+    {id:'noah', name:'Noah Feld', company:'Fernwell AI', role:'Head of Engineering'},
+    {id:'priya', name:'Priya Anand', company:'Ledgerline', role:'Co-founder and CEO'},
+    {id:'dev', name:'Dev Khanna', company:'Ledgerline', role:'CFO'},
+    {id:'mara', name:'Mara Lindqvist', company:'Veridian Grid', role:'Founder and CEO'},
+    {id:'daniel', name:'Daniel Okafor', company:'Cobalt Harbor', role:'Founder and CEO'},
+    {id:'sofia', name:'Sofia Marchetti', company:'Quillon Health', role:'Co-founder and CEO (portfolio)'},
+    {id:'camille', name:'Camille Roux', company:'Northgate Capital', role:'Partner'},
+    {id:'henrik', name:'Henrik Olsen', company:'Baltnord Capital', role:'Investment Director (LP)'},
+    {id:'marcus', name:'Marcus Hale', company:'Northgate Capital', role:'Partner, insurance fintech'},
+    {id:'rachel', name:'Rachel Kim', company:'Angel investor', role:'ex VP Engineering, Stackmesh'},
+    {id:'jonas', name:'Jonas Beck', company:'Parqet Labs', role:'Founder and CEO'}
+  ];
+  const knows = [
+    {a:'sofia', b:'marcus', how:'Northgate led the Quillon Health seed'},
+    {a:'mara', b:'rachel', how:'Rachel is an angel in Veridian Grid'}
+  ];
+  const meetings = [
+    {id:'m1', date:wkd(-19), type:'intro', company:'Fernwell AI', title:'Fernwell AI, founder intro', attendees:['elena'], logged:true, transcript:[
+      {sp:'Isaac', text:'Thanks for making time, Elena. I would love to start with the origin story.'},
+      {sp:'Elena Voss', text:'Sure. Nadia and I ran claims operations at a mid-size insurer for six years. Every claim above five thousand pounds still gets touched by four people.'},
+      {sp:'Isaac', text:'And Fernwell sits where in that flow?'},
+      {sp:'Elena Voss', text:'We sit at first notice of loss. The model drafts the claim file, flags fraud signals, and routes it. Adjusters approve instead of assemble.'},
+      {sp:'Isaac', text:'What does traction look like today?'},
+      {sp:'Elena Voss', text:'Two carriers live, one in a paid pilot. About 41k MRR, growing roughly 18 percent month on month since January.'},
+      {sp:'Isaac', text:'Retention on the two live carriers?'},
+      {sp:'Elena Voss', text:'Gross retention is 100 percent so far, but it is early. The cohort file will show you everything.'},
+      {sp:'Isaac', text:'That would be great. What would be most useful from us at this stage?'},
+      {sp:'Elena Voss', text:'Honestly, insurance distribution. Warm doors into specialty lines matter more than anything else right now.'},
+      {sp:'Isaac', text:'Marcus Hale at Northgate spends a lot of time in insurance fintech. I will check with Marcus first, and if he is open I will connect you two.'},
+      {sp:'Elena Voss', text:'That would be brilliant.'},
+      {sp:'Isaac', text:'I will send over our diligence questionnaire by Wednesday.'},
+      {sp:'Elena Voss', text:'Perfect. I will get you the data room and our cohort retention file by Friday.'}
+    ]},
+    {id:'m2', date:wkd(-16), type:'intro', company:'Ledgerline', title:'Ledgerline, founder intro', attendees:['priya'], logged:true, transcript:[
+      {sp:'Isaac', text:'Priya, great to finally connect. Talk me through Ledgerline in a minute.'},
+      {sp:'Priya Anand', text:'We are treasury automation for SMBs. Sweep accounts, FX hedging, and idle cash yield in one dashboard, for companies doing 2 to 50 million in revenue.'},
+      {sp:'Isaac', text:'Who buys it today?'},
+      {sp:'Priya Anand', text:'The CFO or the founder. Sales cycle is about three weeks. We have 34 paying companies.'},
+      {sp:'Isaac', text:'What is net revenue retention doing?'},
+      {sp:'Priya Anand', text:'117 percent as of last quarter, mostly from balance growth.'},
+      {sp:'Isaac', text:'And the competitive picture against the banks themselves?'},
+      {sp:'Priya Anand', text:'Banks cross-sell it badly. Our wedge is that we are multi-bank by design.'},
+      {sp:'Isaac', text:'We built a market map on SMB treasury last quarter. I will share the market map with you tomorrow.'},
+      {sp:'Priya Anand', text:'That would be useful. We will send the updated deck and our pipeline metrics early next week.'},
+      {sp:'Isaac', text:'Perfect. At some point I will want to sit down with Dev on the numbers.'},
+      {sp:'Priya Anand', text:'Easy. He will enjoy that.'}
+    ]},
+    {id:'m3', date:wkd(-14), type:'portfolio', company:'Quillon Health', title:'Quillon Health, portfolio check-in', attendees:['sofia'], logged:false, transcript:[
+      {sp:'Isaac', text:'Sofia, good to see you. How was the board meeting?'},
+      {sp:'Sofia Marchetti', text:'Productive. We agreed the Series A narrative needs two more quarters of GTM proof.'},
+      {sp:'Isaac', text:'Where is the GTM team today?'},
+      {sp:'Sofia Marchetti', text:'Two AEs and one clinical success lead. We want a VP Sales and two more AEs in Q3.'},
+      {sp:'Isaac', text:'What is blocking the VP hire?'},
+      {sp:'Sofia Marchetti', text:'Calibration, honestly. We do not know what great looks like at this stage in clinical AI.'},
+      {sp:'Isaac', text:'I will pull the GTM hiring benchmarks we have from the portfolio.'},
+      {sp:'Sofia Marchetti', text:'That would help a lot. I will share the updated hiring plan once the board signs off, call it ten days.'},
+      {sp:'Isaac', text:'How is the Northgate relationship?'},
+      {sp:'Sofia Marchetti', text:'Marcus has been hands-on in a good way. He knows this space cold.'},
+      {sp:'Isaac', text:'Good context, thank you.'}
+    ]},
+    {id:'m4', date:wkd(-12), type:'diligence', company:'Fernwell AI', title:'Fernwell AI, technical diligence', attendees:['elena','noah'], logged:true, transcript:[
+      {sp:'Isaac', text:'Noah, thanks for joining. I want to understand what is actually proprietary here.'},
+      {sp:'Noah Feld', text:'The claims ontology. Three years of labelled claim files mapped to outcomes. The model layer is replaceable, the data layer is not.'},
+      {sp:'Isaac', text:'How do carriers get comfortable on security?'},
+      {sp:'Noah Feld', text:'We are SOC 2 Type I now, Type II in audit. Everything is single-tenant per carrier.'},
+      {sp:'Isaac', text:'Can you put that in writing for our IC?'},
+      {sp:'Noah Feld', text:'I will write up the security architecture overview and send it by Thursday.'},
+      {sp:'Isaac', text:'Great. On references, I will send you a shortlist of customer references we would like to call.'},
+      {sp:'Elena Voss', text:'Send it over, we will make the connections same week.'},
+      {sp:'Isaac', text:'Then we are moving. Thank you both.'}
+    ]},
+    {id:'m5', date:wkd(-11), type:'intro', company:'Veridian Grid', title:'Veridian Grid, founder intro', attendees:['mara'], logged:true, transcript:[
+      {sp:'Isaac', text:'Mara, thanks for the time. Grid analytics is a crowded phrase. What is the sharp version?'},
+      {sp:'Mara Lindqvist', text:'We predict battery degradation at the cell level for grid-scale storage. Operators overprovision by 20 percent because they cannot see it.'},
+      {sp:'Isaac', text:'Who pays today?'},
+      {sp:'Mara Lindqvist', text:'Two pilot LOIs with Nordic operators, both paid. Revenue is small but the LOIs convert to 200k contracts if the pilots hit spec.'},
+      {sp:'Isaac', text:'Can I see the LOIs?'},
+      {sp:'Mara Lindqvist', text:'I can forward the two pilot LOIs, you will have them next week.'},
+      {sp:'Isaac', text:'Helpful. If the data holds up I would want you in front of a partner quickly. Let me set up time with one of our partners in the next week or so.'},
+      {sp:'Mara Lindqvist', text:'That works. Rachel Kim, one of our angels, said your fund moves fast. I hope she is right.'},
+      {sp:'Isaac', text:'We try. Speak soon.'}
+    ]},
+    {id:'m6', date:wkd(-8), type:'partner', company:'Northgate Capital', title:'Partner sync with Camille', attendees:['camille'], logged:false, transcript:[
+      {sp:'Isaac', text:'Quick pipeline pass? Fernwell is the one I want to push.'},
+      {sp:'Camille Roux', text:'I read your notes. The retention number is the story. What is missing for IC?'},
+      {sp:'Isaac', text:'Security overview from their side, reference calls, and a memo skeleton. I will have the memo skeleton ready before the IC.'},
+      {sp:'Camille Roux', text:'Good. And Veridian?'},
+      {sp:'Isaac', text:'Waiting on pilot LOIs. If they hold I want them in front of you next.'},
+      {sp:'Camille Roux', text:'Book it when you are ready. Keep the pipeline stages honest please, half the board reads them now.'},
+      {sp:'Isaac', text:'I will tidy the pipeline this afternoon.'}
+    ]},
+    {id:'m7', date:wkd(-6), type:'intro', company:'Cobalt Harbor', title:'Cobalt Harbor, founder intro', attendees:['daniel'], logged:true, transcript:[
+      {sp:'Isaac', text:'Daniel, good to meet. Maritime fuel procurement, walk me in.'},
+      {sp:'Daniel Okafor', text:'Shipping buys 250 billion of fuel a year over email and phone. We are the procurement layer for the green fuels coming into that mix.'},
+      {sp:'Isaac', text:'Who is the buyer inside a shipping company?'},
+      {sp:'Daniel Okafor', text:'The bunker desk. We started with one mid-size operator, Nordwave Shipping, and their desk runs everything through us now.'},
+      {sp:'Isaac', text:'Can I speak to Nordwave directly?'},
+      {sp:'Daniel Okafor', text:'I will connect you with our pilot customer at Nordwave next week.'},
+      {sp:'Isaac', text:'Perfect. From my side, I will send our overview and what diligence would look like by Friday.'},
+      {sp:'Daniel Okafor', text:'Looking forward to it.'}
+    ]},
+    {id:'m8', date:wkd(-5), type:'lp', company:'Baltnord Capital', title:'LP sync with Henrik Olsen', attendees:['henrik'], logged:false, transcript:[
+      {sp:'Isaac', text:'Henrik, thanks for the call. You wanted a feel for the early pipeline this quarter.'},
+      {sp:'Henrik Olsen', text:'Yes. Not names necessarily, but shape. Sectors, stage spread, where conviction is building.'},
+      {sp:'Isaac', text:'Vertical AI and climate are the two clusters. Fintech is steady. I will put together an anonymised pipeline snapshot for you within the week.'},
+      {sp:'Henrik Olsen', text:'That is exactly what our committee wants to see. Appreciate it.'},
+      {sp:'Isaac', text:'It will be in your inbox.'}
+    ]},
+    {id:'m9', date:wkd(-4), type:'diligence', company:'Ledgerline', title:'Ledgerline, numbers deep-dive', attendees:['priya','dev'], logged:true, transcript:[
+      {sp:'Isaac', text:'Dev, the NRR number is strong. I want to understand its composition.'},
+      {sp:'Dev Khanna', text:'About 60 percent of the expansion is balance growth, the rest is seat and module expansion. I will export the cohort revenue data and send it over by end of next week.'},
+      {sp:'Isaac', text:'That works. And churn?'},
+      {sp:'Dev Khanna', text:'Two logos in twelve months, both under 5 million revenue companies that went back to spreadsheets.'},
+      {sp:'Isaac', text:'Priya, on references, I will line up the two customer reference calls once you send the contact list.'},
+      {sp:'Priya Anand', text:'Will do. And the deck is coming, I know we owe you that.'},
+      {sp:'Isaac', text:'No stress. It unblocks our screening note, that is all.'}
+    ]},
+    {id:'m10', date:wkd(-1), type:'diligence', company:'Fernwell AI', title:'Fernwell AI, commercial deep-dive', attendees:['elena'], logged:true, transcript:[
+      {sp:'Isaac', text:'Elena, last big block before IC: commercial motion. Who sells, and to whom?'},
+      {sp:'Elena Voss', text:'Founder-led today. The buyer is the head of claims, the champion is usually an operations lead who is drowning.'},
+      {sp:'Isaac', text:'Sales cycle?'},
+      {sp:'Elena Voss', text:'Four months for the first two carriers. The pilot converts because we price the pilot against a single claims category.'},
+      {sp:'Isaac', text:'What does the next 12 months of revenue look like if nothing new closes?'},
+      {sp:'Elena Voss', text:'Contracted base gets us to roughly 700k ARR. I will send the updated ARR bridge with the Q2 numbers in a few days.'},
+      {sp:'Isaac', text:'Good. From my side, I will map out our IC timeline so you know exactly what happens next, in a couple of days.'},
+      {sp:'Elena Voss', text:'Appreciated. This has been the most organised process we have run.'}
+    ]}
+  ];
+  const MD = {}; for (const mm of meetings) MD[mm.id] = mm.date;
+  // Due dates are computed from the phrase used on the call, relative to the
+  // meeting date, by the same parser live imports use. A non-null due is an
+  // explicit override for phrases too vague to parse ("before the IC").
+  const C = (id, meetingId, who, owner, text, quote, duePhrase, due, status, doneOn, intro) => (
+    {id, meetingId, who, owner, text, quote, duePhrase, due: due || parseDatePhrase(duePhrase, MD[meetingId]), status, doneOn: doneOn || null, snoozeUntil: null, lastEscalation: null, intro: intro || null});
+  const commitments = [
+    C('c1','m1','mine','Isaac','Send Elena the diligence questionnaire','I will send over our diligence questionnaire by Wednesday.','by Wednesday', null,'done', null),
+    C('c2','m1','mine','Isaac','Intro Elena Voss to Marcus Hale, double opt-in','Marcus Hale at Northgate spends a lot of time in insurance fintech. I will check with Marcus first, and if he is open I will connect you two.','', null,'open', null, {from:'elena', to:'marcus'}),
+    C('c3','m1','theirs','Elena Voss','Data room and cohort retention file','Perfect. I will get you the data room and our cohort retention file by Friday.','by Friday', null,'done', off(-13)),
+    C('c4','m2','mine','Isaac','Send Priya the SMB treasury market map','We built a market map on SMB treasury last quarter. I will share the market map with you tomorrow.','tomorrow', null,'done', null),
+    C('c5','m2','theirs','Priya Anand','Updated deck and pipeline metrics','That would be useful. We will send the updated deck and our pipeline metrics early next week.','early next week', null,'open', null),
+    C('c6','m3','mine','Isaac','Send Sofia the GTM hiring benchmarks','I will pull the GTM hiring benchmarks we have from the portfolio.','', null,'done', null),
+    C('c7','m3','theirs','Sofia Marchetti','Updated Q3 hiring plan','That would help a lot. I will share the updated hiring plan once the board signs off, call it ten days.','ten days', null,'open', null),
+    C('c8','m4','theirs','Noah Feld','Security architecture overview for IC','I will write up the security architecture overview and send it by Thursday.','by Thursday', null,'open', null),
+    C('c9','m4','mine','Isaac','Send reference call shortlist to Fernwell','Great. On references, I will send you a shortlist of customer references we would like to call.','', null,'done', null),
+    C('c10','m5','mine','Isaac','Book partner intro with Camille for Veridian Grid','Helpful. If the data holds up I would want you in front of a partner quickly. Let me set up time with one of our partners in the next week or so.','next week or so', null,'open', null, {from:'mara', to:'camille'}),
+    C('c11','m5','theirs','Mara Lindqvist','Forward the two pilot LOIs','I can forward the two pilot LOIs, you will have them next week.','next week', null,'done', off(-6)),
+    C('c12','m6','mine','Isaac','Draft the Fernwell IC memo skeleton','Security overview from their side, reference calls, and a memo skeleton. I will have the memo skeleton ready before the IC.','before the IC', off(3),'open', null),
+    C('c13','m6','mine','Isaac','Tidy the pipeline stages','I will tidy the pipeline this afternoon.','this afternoon', null,'done', null),
+    C('c14','m7','mine','Isaac','Send Cobalt Harbor the overview and diligence outline','Perfect. From my side, I will send our overview and what diligence would look like by Friday.','by Friday', null,'done', off(-4)),
+    C('c15','m7','theirs','Daniel Okafor','Intro to pilot customer at Nordwave Shipping','I will connect you with our pilot customer at Nordwave next week.','next week', null,'open', null),
+    C('c16','m8','mine','Isaac','Send Baltnord the anonymised Q2 pipeline snapshot','Vertical AI and climate are the two clusters. Fintech is steady. I will put together an anonymised pipeline snapshot for you within the week.','within the week', null,'open', null),
+    C('c17','m9','theirs','Dev Khanna','Export the cohort revenue data','About 60 percent of the expansion is balance growth, the rest is seat and module expansion. I will export the cohort revenue data and send it over by end of next week.','end of next week', null,'open', null),
+    C('c18','m9','mine','Isaac','Line up two Ledgerline customer reference calls','Priya, on references, I will line up the two customer reference calls once you send the contact list.','once you send the contact list', off(4),'open', null),
+    C('c19','m10','mine','Isaac','Send Elena the IC timeline and next steps','Good. From my side, I will map out our IC timeline so you know exactly what happens next, in a couple of days.','in a couple of days', null,'open', null),
+    C('c20','m10','theirs','Elena Voss','Updated ARR bridge with Q2 numbers','Contracted base gets us to roughly 700k ARR. I will send the updated ARR bridge with the Q2 numbers in a few days.','in a few days', null,'open', null)
+  ];
+  for (const c of commitments){ if (c.status === 'done' && !c.doneOn) c.doneOn = c.due; }
+  // the agent already chased the stale ones once; it re-escalates after a week of silence
+  const seedEsc = {c5: off(-7), c8: off(-6), c7: off(-3)};
+  for (const c of commitments){ if (seedEsc[c.id]) c.lastEscalation = seedEsc[c.id]; }
+  // the "how we got there" layer: the reasoning behind a commitment, quote-cited
+  const CTX = {
+    c2:{reason:'her top ask on the call was distribution into specialty lines', quote:'Honestly, insurance distribution. Warm doors into specialty lines matter more than anything else right now.'},
+    c5:{reason:'the deck should evidence the multi-bank wedge she claimed', quote:'Banks cross-sell it badly. Our wedge is that we are multi-bank by design.'},
+    c7:{reason:'the VP hire is blocked on calibration, which the plan should answer', quote:'Calibration, honestly. We do not know what great looks like at this stage in clinical AI.'},
+    c8:{reason:'IC wants the SOC 2 position in writing, not on a call', quote:'We are SOC 2 Type I now, Type II in audit. Everything is single-tenant per carrier.'},
+    c10:{reason:'speed is the promise made on this call', quote:'That works. Rachel Kim, one of our angels, said your fund moves fast. I hope she is right.'},
+    c12:{reason:'Camille wants the retention story framed for IC', quote:'I read your notes. The retention number is the story. What is missing for IC?'},
+    c16:{reason:'the committee wants shape, not names', quote:'Yes. Not names necessarily, but shape. Sectors, stage spread, where conviction is building.'},
+    c17:{reason:'the open question is NRR composition, not the headline number', quote:'Dev, the NRR number is strong. I want to understand its composition.'},
+    c20:{reason:'the contracted-base question is what the bridge answers', quote:'What does the next 12 months of revenue look like if nothing new closes?'}
+  };
+  for (const c of commitments){ if (CTX[c.id]) c.context = CTX[c.id]; }
+  const pipeline = [
+    {id:'pl1', company:'Fernwell AI', founder:'elena', sector:'Vertical AI, insurance claims', pitch:'AI claims automation for specialty insurers. Two carriers live, 100 percent gross retention so far.', stage:'Screening',
+      history:[{date:MD.m1, from:null, to:'Met', note:'Founder intro'},{date:MD.m4, from:'Met', to:'Screening', note:'Data room in, technical diligence held'}], notes:[]},
+    {id:'pl2', company:'Ledgerline', founder:'priya', sector:'Fintech, SMB treasury', pitch:'Multi-bank treasury automation for SMBs. 34 paying companies, 117 percent NRR.', stage:'Screening',
+      history:[{date:MD.m2, from:null, to:'Met', note:'Founder intro'},{date:MD.m9, from:'Met', to:'Screening', note:'Numbers deep-dive with CFO'}], notes:[]},
+    {id:'pl3', company:'Veridian Grid', founder:'mara', sector:'Climate, grid storage analytics', pitch:'Cell-level battery degradation prediction for grid-scale storage. Two paid pilot LOIs.', stage:'Met',
+      history:[{date:MD.m5, from:null, to:'Met', note:'Founder intro'}], notes:[]},
+    {id:'pl4', company:'Cobalt Harbor', founder:'daniel', sector:'Climate, maritime fuel', pitch:'Procurement layer for green maritime fuels. Pilot desk live at Nordwave Shipping.', stage:'Met',
+      history:[{date:MD.m7, from:null, to:'Met', note:'Founder intro'}], notes:[]},
+    {id:'pl5', company:'Parqet Labs', founder:'jonas', sector:'Fintech, expense management', pitch:'Expense cards for agencies.', stage:'Passed',
+      history:[{date:off(-26), from:null, to:'Met', note:'Founder intro'},{date:off(-16), from:'Met', to:'Passed', note:'No wedge vs incumbent expense suites; revisit if the payroll module ships'}], notes:[]}
+  ];
+  const A = (date, time, kind, title, ref) => ({id: uid(), date, time, kind, title, ref: ref || null});
+  const activity = [
+    A(off(-17),'09:12','draft','Follow-up email drafted for Elena Voss (founder intro)', {type:'followup', mId:'m1'}),
+    A(off(-15),'08:40','draft','Follow-up email drafted for Priya Anand (founder intro)', {type:'followup', mId:'m2'}),
+    A(off(-13),'18:02','log','Fernwell data room received. Commitment closed and filed.', null),
+    A(off(-13),'18:05','draft','Double opt-in drafted: Elena Voss x Marcus Hale. Waiting on Isaac.', {type:'intro', cId:'c2'}),
+    A(off(-12),'19:30','move','Fernwell AI moved Met to Screening', null),
+    A(off(-7),'08:00','nudge','Deck and metrics from Priya Anand overdue. Nudge drafted.', {type:'nudge', cId:'c5'}),
+    A(off(-6),'08:00','nudge','Security overview from Noah Feld overdue. Nudge drafted.', {type:'nudge', cId:'c8'}),
+    A(off(-4),'19:55','move','Ledgerline moved Met to Screening', null),
+    A(off(-3),'08:00','nudge','Hiring plan from Sofia Marchetti overdue. Nudge drafted.', {type:'nudge', cId:'c7'}),
+    A(off(-2),'09:00','draft','Baltnord snapshot coming due. Deliverable email pre-drafted.', {type:'reminder', cId:'c16'}),
+    A(off(-1),'21:41','log','Meeting logged to pipeline: Fernwell AI, commercial deep-dive', null),
+    A(off(-1),'21:41','draft','Follow-up email drafted for Elena Voss (deep-dive)', {type:'followup', mId:'m10'})
+  ];
+  return {v:2, simDays:0, people, knows, meetings, commitments, pipeline, activity, rewarmed:{}, briefCache:null};
+}
+
+// ---------- state ----------
+const LS_KEY = 'aos_v1';
+function loadState(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(LS_KEY));
+    if (raw && raw.v === 2 && raw.seededOn === REAL_TODAY) return raw;
+  }catch(e){}
+  return null;
+}
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+let S = loadState();
+if (!S){ S = seed(); S.seededOn = REAL_TODAY; save(); }
+const UI = {tab:'meetings', sel:null, draftTab:'followup', showTranscript:false, hlQuote:null, granolaSel:{}, granolaList:[], passTarget:null, briefBusy:false};
+window.__COPY = {};
+
+// ---------- derived facts (code owns these) ----------
+function meetingById(id){ return S.meetings.find(m => m.id === id); }
+function personById(id){ return S.people.find(p => p.id === id); }
+function personByName(n){ const q = (n||'').toLowerCase(); return S.people.find(p => p.name.toLowerCase() === q) || S.people.find(p => p.name.toLowerCase().includes(q) || q.includes(first(p.name).toLowerCase())); }
+function counterpartName(m){
+  if (m.counterpart) return m.counterpart;
+  const p = (m.attendees||[]).map(personById).filter(Boolean)[0];
+  return p ? p.name : m.company;
+}
+function commitmentsOf(mId){ return S.commitments.filter(c => c.meetingId === mId); }
+function cState(c){
+  const t = today();
+  if (c.status === 'done') return 'done';
+  if (c.snoozeUntil && diffDays(t, c.snoozeUntil) > 0) return 'snoozed';
+  const dd = diffDays(t, c.due);
+  if (dd < 0) return 'overdue';
+  if (dd <= 2) return 'soon';
+  return 'open';
+}
+function dueChip(c){
+  const st = cState(c);
+  if (st === 'done') return '<span class="due done">done ' + nice(c.doneOn) + '</span>';
+  if (st === 'snoozed') return '<span class="due snz">snoozed to ' + nice(c.snoozeUntil) + '</span>';
+  if (st === 'overdue') return '<span class="due over">' + (-diffDays(today(), c.due)) + 'd overdue</span>';
+  if (st === 'soon') return '<span class="due soon">due ' + nice(c.due) + '</span>';
+  return '<span class="due ok">due ' + nice(c.due) + '</span>';
+}
+function lastTouch(pid){
+  let best = null;
+  for (const m of S.meetings){
+    if (diffDays(m.date, today()) < 0) continue;
+    if ((m.attendees||[]).includes(pid)){ if (!best || diffDays(best, m.date) > 0) best = m.date; }
+  }
+  return best;
+}
+function warmth(pid){
+  const lt = lastTouch(pid);
+  if (!lt) return {k:'none', days:null, lt:null};
+  const days = diffDays(lt, today());
+  return {k: days < 14 ? 'warm' : (days < 21 ? 'cooling' : 'cold'), days, lt};
+}
+function nextActionFor(p){
+  const cands = S.commitments.filter(c => {
+    if (c.status === 'done') return false;
+    if (c.who === 'theirs' && c.owner === p.name) return true;
+    if (c.who === 'mine'){
+      const m = meetingById(c.meetingId);
+      if (m && (m.attendees||[]).includes(p.id)) return true;
+    }
+    return false;
+  });
+  cands.sort((a,b) => diffDays(b.due, a.due));
+  return cands[0] || null;
+}
+// relationship graph for path-to-X
+function graphEdges(){
+  const edges = [];
+  for (const m of S.meetings){
+    for (const a of (m.attendees||[])){
+      edges.push({a:'isaac', b:a, how:'met: ' + m.title});
+      for (const b of m.attendees){ if (a < b) edges.push({a, b, how:'both in: ' + m.title}); }
+    }
+  }
+  for (const k of S.knows) edges.push(k);
+  return edges;
+}
+function pathTo(targetId){
+  const edges = graphEdges();
+  const adj = {};
+  const add = (x,y,how) => { (adj[x] = adj[x] || []).push({to:y, how}); };
+  for (const e of edges){ add(e.a, e.b, e.how); add(e.b, e.a, e.how); }
+  const prev = {isaac:null}; const q = ['isaac'];
+  while (q.length){
+    const cur = q.shift();
+    if (cur === targetId) break;
+    for (const nb of (adj[cur]||[])){
+      if (!(nb.to in prev)){ prev[nb.to] = {from:cur, how:nb.how}; q.push(nb.to); }
+    }
+  }
+  if (!(targetId in prev)) return null;
+  const chain = []; let cur = targetId;
+  while (cur !== 'isaac'){ const p = prev[cur]; chain.unshift({id:cur, how:p.how}); cur = p.from; }
+  return chain;
+}
+
+// ---------- drafts (templates filled only with computed facts) ----------
+function plRec(company){ const q = (company||'').toLowerCase(); return S.pipeline.find(p => p.company.toLowerCase() === q) || S.pipeline.find(p => p.company.toLowerCase().includes(q)); }
+function draftFollowup(m){
+  const mine = commitmentsOf(m.id).filter(c => c.who === 'mine');
+  const theirs = commitmentsOf(m.id).filter(c => c.who === 'theirs');
+  const to = counterpartName(m);
+  let b = 'Hi ' + first(to) + ',\n\nGreat speaking on ' + niceFull(m.date) + '. Locking in what we each took away:\n';
+  if (mine.length){ b += '\nOn my side:\n' + mine.map(c => '- ' + c.text + (c.status === 'done' ? ' (sent)' : ', by ' + nice(c.due))).join('\n') + '\n'; }
+  if (theirs.length){ b += '\nFrom your side:\n' + theirs.map(c => '- ' + c.text + (c.duePhrase ? ' (you mentioned "' + c.duePhrase + '", so I have ' + nice(c.due) + ' pencilled)' : ' (' + nice(c.due) + ' pencilled)')).join('\n') + '\n'; }
+  b += '\nShout if any of the dates need moving.\n\nBest,\nIsaac';
+  return {subject:'Follow-up: ' + m.title.replace(/,.*$/,'') + ', ' + nice(m.date), body:b};
+}
+function draftIntroFor(fromP, toP){
+  const rec = S.pipeline.find(p => p.founder === fromP.id);
+  const line = rec ? rec.pitch : (fromP.role + ' at ' + fromP.company + '.');
+  return {
+    subject:'Would you take an intro to ' + fromP.name + ' (' + fromP.company + ')?',
+    body:'Hi ' + first(toP.name) + ',\n\nI met ' + fromP.name + ', ' + fromP.role.replace(' (portfolio)','') + ' of ' + fromP.company + ', and thought of you.\n\nOne line: ' + line + '\n\nBefore connecting you two I wanted to check interest first, double opt-in as always. If yes, I will send a short note both ways. If it is not a fit, no explanation needed.\n\nBest,\nIsaac'
+  };
+}
+function draftIntro(m){
+  const c = commitmentsOf(m.id).find(x => x.intro);
+  if (c){ const f = personById(c.intro.from), t = personById(c.intro.to); if (f && t) return draftIntroFor(f, t); }
+  const cp = (m.attendees||[]).map(personById).filter(Boolean)[0];
+  if (cp && m.type === 'intro'){ return draftIntroFor(cp, personById('camille')); }
+  return null;
+}
+function draftMaterials(m){
+  const items = [];
+  for (const c of commitmentsOf(m.id).filter(x => x.who === 'mine' && x.status !== 'done')) items.push(c.text + ' (due ' + nice(c.due) + ')');
+  const defaults = {
+    intro:['Fund overview, one-pager','Diligence questionnaire','What our process looks like, timeline note'],
+    diligence:['Reference call shortlist','Data request list, round two'],
+    portfolio:['Portfolio GTM benchmarks','Hiring playbook excerpt'],
+    lp:['Anonymised pipeline snapshot','Quarterly letter excerpt'],
+    partner:['IC memo skeleton','Pipeline export'],
+    imported:['Follow-up materials from the call']
+  };
+  for (const d of (defaults[m.type]||[])) if (!items.some(i => i.toLowerCase().includes(d.split(',')[0].toLowerCase()))) items.push(d);
+  return {subject:'Materials to send: ' + counterpartName(m), body: items.map(i => '[ ] ' + i).join('\n')};
+}
+function draftNudge(c){
+  const m = meetingById(c.meetingId);
+  const late = -diffDays(today(), c.due);
+  const stageLine = (() => { const r = m ? plRec(m.company) : null; return r ? 'it unblocks the next step on our side (' + r.company + ' is in ' + r.stage + ')' : 'it unblocks our next step'; })();
+  return {
+    subject:'Quick nudge: ' + c.text.toLowerCase(),
+    body:'Hi ' + first(c.owner) + ',\n\n' + (m ? 'When we spoke on ' + niceFull(m.date) + ' you mentioned:\n\n  "' + c.quote + '"\n\n' : '') +
+      'Just a light nudge, this was pencilled for ' + nice(c.due) + (late > 0 ? ' (' + late + ' day' + (late === 1 ? '' : 's') + ' ago)' : '') + ' and ' + stageLine + '. Anything I can do to make it easier, shout.\n\nBest,\nIsaac'
+  };
+}
+function draftReminder(c){
+  const m = meetingById(c.meetingId);
+  const to = m ? counterpartName(m) : (c.owner === 'Isaac' ? '' : c.owner);
+  return {
+    subject: c.text,
+    body:'Hi ' + (to ? first(to) : 'there') + ',\n\nAs promised' + (m ? ' on ' + niceFull(m.date) : '') + ': ' + c.text.toLowerCase() + '.\n\n[attach: the thing]\n\nBest,\nIsaac'
+  };
+}
+function draftRewarm(pid){
+  const p = personById(pid);
+  const lt = lastTouch(pid);
+  const m = S.meetings.filter(x => (x.attendees||[]).includes(pid) && diffDays(x.date, today()) >= 0).sort((a,b) => diffDays(a.date, b.date))[0];
+  const open = nextActionFor(p);
+  const wks = lt ? Math.round(diffDays(lt, today()) / 7) : null;
+  return {
+    subject:'Keeping the thread warm',
+    body:'Hi ' + first(p.name) + ',\n\nIt has been about ' + (wks || '?') + ' weeks since ' + (m ? m.title.replace(/,.*$/,'') : 'we last spoke') + ' and I did not want the thread to go quiet.\n\n' + (open ? 'Open on our list: ' + open.text.toLowerCase() + '.' : 'No open items between us, this is purely a hello.') + ' Worth a 20 minute catch-up next week?\n\nBest,\nIsaac'
+  };
+}
+function draftFromRef(ref){
+  if (!ref) return null;
+  if (ref.type === 'followup'){ const m = meetingById(ref.mId); return m ? draftFollowup(m) : null; }
+  if (ref.type === 'nudge'){ const c = S.commitments.find(x => x.id === ref.cId); return c ? draftNudge(c) : null; }
+  if (ref.type === 'reminder'){ const c = S.commitments.find(x => x.id === ref.cId); return c ? draftReminder(c) : null; }
+  if (ref.type === 'rewarm'){ return draftRewarm(ref.pId); }
+  if (ref.type === 'intro'){
+    const c = S.commitments.find(x => x.id === ref.cId);
+    if (c && c.intro){ const f = personById(c.intro.from), t = personById(c.intro.to); if (f && t) return draftIntroFor(f, t); }
+    if (ref.fromId && ref.toId){ const f = personById(ref.fromId), t = personById(ref.toId); if (f && t) return draftIntroFor(f, t); }
+  }
+  return null;
+}
+
+// ---------- activity ----------
+function logActivity(kind, title, ref){
+  S.activity.push({id: uid(), date: today(), time: new Date().toTimeString().slice(0,5), kind, title, ref: ref || null});
+  save();
+}
+
+// ---------- agent sweep (escalation engine, pure code) ----------
+function agentSweep(){
+  const t = today();
+  let n = 0;
+  for (const c of S.commitments){
+    if (c.status !== 'open') continue;
+    if (c.snoozeUntil && diffDays(t, c.snoozeUntil) > 0) continue;
+    if (diffDays(t, c.due) < 0 && (!c.lastEscalation || diffDays(c.lastEscalation, c.due) > 0 || diffDays(c.lastEscalation, t) > 6)){
+      c.lastEscalation = t; n++;
+      const late = -diffDays(t, c.due);
+      if (c.who === 'theirs'){
+        logActivity('nudge', c.text + ' from ' + c.owner + ' now ' + late + 'd overdue. Nudge drafted.', {type:'nudge', cId:c.id});
+      } else {
+        logActivity('draft', 'Mine and overdue: ' + c.text.toLowerCase() + ' (' + late + 'd). Deliverable draft ready.', {type:'reminder', cId:c.id});
+      }
+    }
+  }
+  for (const p of S.people){
+    const w = warmth(p.id);
+    if (w.k === 'cold'){
+      const key = p.id + ':' + w.lt;
+      if (!S.rewarmed[key]){
+        S.rewarmed[key] = t; n++;
+        logActivity('rewarm', p.name + ' is going cold: ' + w.days + ' days since last touch. Re-warm note drafted.', {type:'rewarm', pId:p.id});
+      }
+    }
+  }
+  save();
+  return n;
+}
+function purgeFuture(){
+  S.activity = S.activity.filter(a => diffDays(a.date, REAL_TODAY) >= 0);
+  for (const c of S.commitments){ if (c.lastEscalation && diffDays(c.lastEscalation, REAL_TODAY) < 0) c.lastEscalation = null; }
+  for (const k of Object.keys(S.rewarmed)){ if (diffDays(S.rewarmed[k], REAL_TODAY) < 0) delete S.rewarmed[k]; }
+  save();
+}
+
+// ---------- rendering: chrome ----------
+const TABS = [
+  {id:'meetings', label:'Meetings', n: () => S.meetings.length},
+  {id:'relationships', label:'Relationships', n: () => S.people.length},
+  {id:'pipeline', label:'Pipeline', n: () => S.pipeline.filter(p => p.stage !== 'Passed').length},
+  {id:'brief', label:'Monday brief', n: () => null}
+];
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(t => {
+    const n = t.n();
+    return '<button class="tab' + (UI.tab === t.id ? ' on' : '') + '" data-tab="' + t.id + '">' + t.label + (n != null ? '<span class="n">' + n + '</span>' : '') + '</button>';
+  }).join('');
+}
+function renderChrome(){
+  renderTabs();
+  $('#todayTxt').textContent = niceFull(today()) + ' ' + pd(today()).getFullYear();
+  const sim = S.simDays > 0;
+  $('#simNote').style.display = sim ? '' : 'none';
+  if (sim) $('#simNote').textContent = 'SIM +' + S.simDays + 'd';
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  $('#view-' + UI.tab).classList.add('on');
+}
+
+// ---------- rendering: meetings ----------
+function sortedMeetings(){ return [...S.meetings].filter(m => diffDays(m.date, today()) >= 0).sort((a,b) => diffDays(a.date, b.date)); }
+function renderMeetingList(){
+  const ms = sortedMeetings();
+  $('#mCount').textContent = ms.length;
+  $('#mRows').innerHTML = ms.map(m => {
+    const cs = commitmentsOf(m.id);
+    const open = cs.filter(c => c.status !== 'done').length;
+    const od = cs.filter(c => cState(c) === 'overdue').length;
+    return '<div class="mrow' + (UI.sel === m.id ? ' on' : '') + '" data-m="' + m.id + '">' +
+      '<div class="r1"><span class="who">' + esc(counterpartName(m)) + '</span><span class="dt">' + nice(m.date) + '</span></div>' +
+      '<div class="r2"><span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span><span class="co">' + esc(m.company) + '</span>' +
+      '<span class="cnum">' + (od ? '<span class="od">' + od + ' overdue</span>' : (open ? open + ' open' : (cs.length ? 'all closed' : 'no items'))) + '</span></div></div>';
+  }).join('') || '<div class="empty-sm" style="padding:14px">No meetings yet.</div>';
+}
+function commitCard(c){
+  const st = cState(c);
+  const ops = [];
+  if (c.status !== 'done'){
+    ops.push('<button class="mini good" data-act="cdone" data-c="' + c.id + '">mark done</button>');
+    ops.push('<button class="mini" data-act="csnooze" data-c="' + c.id + '">snooze 3d</button>');
+    if (c.who === 'theirs') ops.push('<button class="mini" data-act="cnudge" data-c="' + c.id + '">draft nudge</button>');
+  }
+  ops.push('<button class="mini" data-act="cquote" data-c="' + c.id + '">view in transcript</button>');
+  const m = meetingById(c.meetingId);
+  return '<div class="cc' + (st === 'overdue' ? ' overdue' : '') + '">' +
+    '<div class="r1"><div class="txt' + (st === 'done' ? ' done' : '') + '">' + esc(c.text) + '</div>' + dueChip(c) + '</div>' +
+    '<div class="quote">&ldquo;' + esc(c.quote) + '&rdquo;<span class="attr">' + esc(c.who === 'mine' ? 'Isaac' : c.owner) + (m ? ', ' + nice(m.date) : '') + (c.duePhrase ? ' &middot; due computed from "' + esc(c.duePhrase) + '"' : ' &middot; no date given, default applied') + '</span></div>' +
+    (c.context ? '<div class="ctx" data-act="cctx" data-c="' + c.id + '" title="view in transcript"><span class="cl">context</span>' + esc(c.context.reason) + ' &middot; <span class="cq">&ldquo;' + esc(c.context.quote) + '&rdquo;</span></div>' : '') +
+    '<div class="ops">' + ops.join('') + '</div></div>';
+}
+function linkedMeetings(m){
+  const out = [];
+  for (const o of S.meetings){
+    if (o.id === m.id) continue;
+    const gap = diffDays(o.date, m.date);
+    if (gap <= 0) continue;
+    const shared = (o.attendees||[]).filter(a => (m.attendees||[]).includes(a)).map(personById).filter(Boolean);
+    const sameCo = o.company && m.company && o.company === m.company;
+    if (!sameCo && !shared.length) continue;
+    const when = gap >= 14 ? Math.round(gap / 7) + ' weeks earlier' : gap + ' day' + (gap === 1 ? '' : 's') + ' earlier';
+    const rel = shared.length ? 'same founder' : 'same company';
+    const cs = commitmentsOf(o.id);
+    const open = cs.find(c => c.status === 'open');
+    const hook = open ? (open.who === 'theirs' ? first(open.owner) + ' still owes: ' + open.text.toLowerCase() : 'still open: ' + open.text.toLowerCase())
+      : (cs.length ? 'everything from that call is closed' : TYPE_LABEL[o.type]);
+    out.push({o, when, rel, hook, gap});
+  }
+  out.sort((a,b) => a.gap - b.gap);
+  return out.slice(0, 4);
+}
+function renderMeetingDetail(){
+  const m = meetingById(UI.sel);
+  if (!m){ $('#mDetail').innerHTML = '<div class="m-empty">Select a meeting.</div>'; return; }
+  const cs = commitmentsOf(m.id);
+  const mine = cs.filter(c => c.who === 'mine');
+  const theirs = cs.filter(c => c.who === 'theirs');
+  const who = (m.attendees||[]).map(personById).filter(Boolean).map(p => p.name).join(', ') || counterpartName(m);
+  const drafts = {followup: draftFollowup(m), intro: draftIntro(m), materials: draftMaterials(m)};
+  const cur = drafts[UI.draftTab] || drafts.followup;
+  const copyId = 'dm_' + m.id + '_' + UI.draftTab;
+  if (cur) window.__COPY[copyId] = cur.subject ? 'Subject: ' + cur.subject + '\n\n' + cur.body : cur.body;
+  let html = '<div class="md-h"><div class="t">' + esc(m.title) + '</div>' +
+    '<div class="meta"><span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span>' +
+    '<span class="d mono">' + niceFull(m.date) + '</span><span class="p">with ' + esc(who) + '</span>' +
+    (m.granola ? '<span class="tag imported">real, via granola</span>' : '') + '</div>' +
+    '<div class="md-actions">' +
+      '<button class="btn" data-act="toggletx">' + (UI.showTranscript ? 'Hide transcript' : 'Show transcript') + '</button>' +
+      '<button class="btn' + (m.logged ? '' : ' pri') + '" data-act="logpipe"' + (m.logged ? ' disabled' : '') + '>' + (m.logged ? 'Logged to pipeline' : 'Log to pipeline') + '</button>' +
+    '</div></div>';
+  if (UI.showTranscript){
+    html += '<div class="sect"><div class="sect-h"><span class="t">Transcript</span><span class="ln"></span></div><div class="transcript" id="txBox">' +
+      m.transcript.map(l => {
+        const hl = UI.hlQuote && l.text === UI.hlQuote;
+        return '<div class="tl' + (/^isaac/i.test(l.sp) ? ' me' : '') + (hl ? ' hl' : '') + '"' + (hl ? ' id="hlLine"' : '') + '><span class="sp">' + esc(l.sp) + '</span><span class="tx">' + esc(l.text) + '</span></div>';
+      }).join('') + '</div></div>';
+  }
+  const links = linkedMeetings(m);
+  if (links.length){
+    html += '<div class="sect"><div class="sect-h"><span class="t">Prior context</span><span class="ln"></span></div><div class="linkrow">' +
+      links.map(l => '<div class="lc" data-m="' + l.o.id + '"><div class="t">' + esc(l.o.title) + '</div><div class="why"><b>' + l.rel + ', ' + l.when + '.</b> ' + esc(l.hook) + '</div></div>').join('') +
+      '</div></div>';
+  }
+  html += '<div class="sect"><div class="sect-h"><span class="t">Commitments</span><span class="ln"></span></div>' +
+    '<div class="cgrid">' +
+    '<div class="cgroup"><div class="gh"><span class="t">Mine</span><span class="n">' + mine.length + '</span></div>' + (mine.map(commitCard).join('') || '<div class="empty-sm">Nothing promised on my side.</div>') + '</div>' +
+    '<div class="cgroup"><div class="gh"><span class="t">Waiting on them</span><span class="n">' + theirs.length + '</span></div>' + (theirs.map(commitCard).join('') || '<div class="empty-sm">They owe nothing. Rare.</div>') + '</div>' +
+    '</div></div>';
+  html += '<div class="sect"><div class="sect-h"><span class="t">Drafts</span><span class="ln"></span></div>' +
+    '<div class="dtabs">' +
+      ['followup','intro','materials'].map(k => '<button class="dtab' + (UI.draftTab === k ? ' on' : '') + '" data-dtab="' + k + '">' + ({followup:'Follow-up email', intro:'Intro (double opt-in)', materials:'Materials checklist'})[k] + '</button>').join('') +
+    '</div>' +
+    (cur ? '<div class="draftbox">' + (cur.subject ? '<div class="sub">' + esc(cur.subject) + '</div>' : '') + '<div class="body">' + esc(cur.body) + '</div><button class="copybtn" data-copy="' + copyId + '">copy</button></div>'
+         : '<div class="empty-sm">No intro came out of this meeting.</div>') +
+    '</div>';
+  $('#mDetail').innerHTML = html;
+  if (UI.hlQuote){ const el = $('#hlLine'); if (el) el.scrollIntoView({block:'center'}); }
+}
+
+// ---------- rendering: relationships ----------
+function renderRelationships(){
+  const rows = S.people.filter(p => p.id !== 'isaac').map(p => ({p, w: warmth(p.id)}));
+  rows.sort((a,b) => {
+    const rank = {cold:0, cooling:1, warm:2, none:3};
+    if (rank[a.w.k] !== rank[b.w.k]) return rank[a.w.k] - rank[b.w.k];
+    return (b.w.days||0) - (a.w.days||0);
+  });
+  $('#rBody').innerHTML = rows.map(({p, w}) => {
+    const na = nextActionFor(p);
+    let reach;
+    if (w.lt){ reach = '<span class="lt">direct</span>'; }
+    else {
+      const chain = pathTo(p.id);
+      reach = chain && chain.length > 1 ? '<span class="via">via ' + esc(personById(chain[chain.length-2].id).name) + '</span>' : '<span class="lt">none</span>';
+    }
+    return '<tr>' +
+      '<td><div class="pcell">' + avatar(p.name) + '<span class="nm">' + esc(p.name) + '</span></div></td>' +
+      '<td><div class="co">' + esc(p.company) + '</div><div class="rl">' + esc(p.role) + '</div></td>' +
+      '<td>' + (w.lt ? '<span class="lt">' + nice(w.lt) + ' <span class="ago">(' + w.days + 'd)</span></span>' : '<span class="lt ago">no direct touch</span>') + '</td>' +
+      '<td><span class="warmth ' + w.k + '"><span class="wd"></span>' + (w.k === 'none' ? 'unmet' : w.k) + '</span></td>' +
+      '<td class="nact">' + (na ? esc(na.text) + ' ' + dueChip(na) : '<span style="color:var(--muted)">none open</span>') + '</td>' +
+      '<td>' + reach + '</td></tr>';
+  }).join('');
+  // path-to-X selector: interesting targets are the unmet ones first
+  const sel = $('#pathTarget');
+  const targets = S.people.filter(p => !lastTouch(p.id)).concat(S.people.filter(p => lastTouch(p.id)));
+  const keep = sel.value;
+  sel.innerHTML = targets.map(p => '<option value="' + p.id + '">' + esc(p.name) + ' (' + esc(p.company) + ')</option>').join('');
+  if (keep && targets.some(p => p.id === keep)) sel.value = keep;
+  renderPath();
+}
+function renderPath(){
+  const tgt = $('#pathTarget').value;
+  const chain = pathTo(tgt);
+  const box = $('#pathViz');
+  if (!chain){ box.innerHTML = '<div class="empty-sm">No path inside the current network.</div>'; return; }
+  let html = '<div class="pnode you"><div class="nm">Isaac</div><div class="co">Northgate Capital</div></div>';
+  for (let i = 0; i < chain.length; i++){
+    const p = personById(chain[i].id);
+    html += '<div class="pedge"><span class="arrow">&#8594;</span><span class="how">' + esc(chain[i].how) + '</span></div>';
+    html += '<div class="pnode' + (i === chain.length-1 ? ' tgt' : '') + '"><div class="nm">' + esc(p.name) + '</div><div class="co">' + esc(p.company) + '</div></div>';
+  }
+  if (chain.length > 1){
+    const viaP = personById(chain[chain.length-2].id);
+    const tgtP = personById(tgt);
+    html += '<div style="flex-basis:100%"></div><button class="mini" data-act="pathdraft" data-from="' + viaP.id + '" data-to="' + tgt + '" style="margin-top:4px">draft the ask to ' + esc(first(viaP.name)) + ' for ' + esc(first(tgtP.name)) + '</button>';
+  }
+  box.innerHTML = html;
+}
+
+// ---------- rendering: pipeline ----------
+function renderPipeline(){
+  $('#board').innerHTML = STAGES.map(st => {
+    const cards = S.pipeline.filter(p => p.stage === st);
+    return '<div class="col"><div class="col-h"><span class="t">' + st + '</span><span class="n">' + cards.length + '</span></div><div class="col-b">' +
+      (cards.map(p => {
+        const f = personById(p.founder);
+        const entered = [...p.history].reverse().find(h => h.to === p.stage);
+        const din = entered ? diffDays(entered.date, today()) : 0;
+        const idx = STAGES.indexOf(p.stage);
+        const passNote = p.stage === 'Passed' ? (entered && entered.note ? '<div class="why">' + esc(entered.note) + '</div>' : '') : '';
+        const ops = [];
+        if (idx > 0) ops.push('<button class="mini" data-act="stmove" data-p="' + p.id + '" data-dir="-1">&#8592; ' + esc(STAGES[idx-1]) + '</button>');
+        if (idx < STAGES.length-1) ops.push('<button class="mini" data-act="stmove" data-p="' + p.id + '" data-dir="1">' + esc(STAGES[idx+1]) + ' &#8594;</button>');
+        return '<div class="card"><div class="co">' + esc(p.company) + '</div><div class="fo">' + esc(f ? f.name : '') + '</div>' +
+          '<div class="sec">' + esc(p.sector) + '</div>' +
+          '<div class="dstage">' + din + 'd in stage &middot; since ' + (entered ? nice(entered.date) : '?') + '</div>' +
+          passNote + '<div class="ops">' + ops.join('') + '</div></div>';
+      }).join('') || '<div class="empty-sm">Empty.</div>') + '</div></div>';
+  }).join('');
+}
+function moveStage(plId, toStage, reason){
+  const p = S.pipeline.find(x => x.id === plId);
+  if (!p || p.stage === toStage) return false;
+  const from = p.stage;
+  p.stage = toStage;
+  const note = toStage === 'Passed' ? (reason || 'No reason logged') : (reason || '');
+  p.history.push({date: today(), from, to: toStage, note});
+  logActivity('move', p.company + ' moved ' + from + ' to ' + toStage + (toStage === 'Passed' && note ? '. Reason: ' + note : ''), null);
+  save(); renderAll();
+  return true;
+}
+
+// ---------- rendering: brief ----------
+function briefFacts(){
+  const t = today();
+  const wkStart = addDays(t, -7);
+  const inWin = d => diffDays(wkStart, d) > 0 && diffDays(d, t) >= 0;
+  const held = S.meetings.filter(m => inWin(m.date)).sort((a,b) => diffDays(b.date, a.date));
+  const closed = S.commitments.filter(c => c.status === 'done' && inWin(c.doneOn));
+  const open = S.commitments.filter(c => c.status === 'open');
+  const overdue = open.filter(c => cState(c) === 'overdue').sort((a,b) => diffDays(b.due, a.due));
+  const cooling = S.people.map(p => ({p, w: warmth(p.id)})).filter(x => x.w.k === 'cooling' || x.w.k === 'cold');
+  const moves = [];
+  for (const p of S.pipeline) for (const h of p.history) if (h.from && inWin(h.date)) moves.push({p, h});
+  const actions = [];
+  for (const c of overdue.filter(x => x.who === 'mine')) actions.push('Clear my overdue item: ' + c.text.toLowerCase() + ' (was due ' + nice(c.due) + '). Draft ready.');
+  for (const c of overdue.filter(x => x.who === 'theirs')) actions.push('Send the nudge to ' + c.owner + ': ' + c.text.toLowerCase() + ' (' + (-diffDays(t, c.due)) + 'd late). Draft ready.');
+  for (const c of open.filter(x => x.who === 'mine' && cState(x) === 'soon')) actions.push('Due next: ' + c.text.toLowerCase() + ' by ' + nice(c.due) + '.');
+  for (const x of cooling.filter(x => x.w.k === 'cold')) actions.push('Re-warm ' + x.p.name + ' (' + x.w.days + 'd quiet). Note drafted.');
+  return {t, wkStart, held, closed, open, overdue, cooling, moves, top3: actions.slice(0,3)};
+}
+function briefMarkdown(f){
+  let md = '';
+  md += f.held.length + ' meetings held, ' + f.closed.length + ' commitments closed, ' + f.open.length + ' open of which ' + f.overdue.length + ' overdue. ' +
+        f.cooling.length + ' relationship' + (f.cooling.length === 1 ? '' : 's') + ' need' + (f.cooling.length === 1 ? 's' : '') + ' warmth. ' + f.moves.length + ' pipeline move' + (f.moves.length === 1 ? '' : 's') + '.\n';
+  md += '\n## Meetings held\n' + (f.held.map(m => '- ' + counterpartName(m) + ', ' + m.company + ' (' + TYPE_LABEL[m.type] + ', ' + nice(m.date) + ')').join('\n') || '- None this week') + '\n';
+  md += '\n## Commitments\n- Closed this week: ' + f.closed.length + (f.closed.length ? ' (' + f.closed.map(c => c.text.toLowerCase()).slice(0,4).join('; ') + (f.closed.length > 4 ? '; and more' : '') + ')' : '') + '\n- Open: ' + f.open.length + '. **Overdue: ' + f.overdue.length + '.**\n' +
+    f.overdue.map(c => '  - ' + (c.who === 'mine' ? '**Mine**: ' : '**Waiting on ' + c.owner + '**: ') + c.text.toLowerCase() + ', ' + (-diffDays(f.t, c.due)) + 'd late. Draft ready.').join('\n') + '\n';
+  md += '\n## Relationships\n' + (f.cooling.map(x => '- ' + x.p.name + ' (' + x.p.company + ') is ' + x.w.k + ': ' + x.w.days + ' days since last touch.').join('\n') || '- Everyone within reach is warm.') + '\n';
+  md += '\n## Pipeline\n' + (f.moves.map(x => '- ' + x.p.company + ': ' + x.h.from + ' to ' + x.h.to + ' (' + nice(x.h.date) + ')' + (x.h.note ? '. ' + x.h.note : '')).join('\n') || '- No stage moves this week.') + '\n';
+  md += '\n## Top 3 this week\n' + (f.top3.map((a,i) => (i+1) + '. ' + a).join('\n') || 'Nothing urgent. Go find new founders.') + '\n';
+  return md;
+}
+function mdToHtml(md){
+  const lines = md.split('\n');
+  let html = '', inUl = false, firstPara = true;
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\b(\d+d late|overdue: \d+|Overdue: \d+)/gi, '<span class="odue">$1</span>');
+  for (const ln of lines){
+    if (/^## /.test(ln)){ if (inUl){ html += '</ul>'; inUl = false; } html += '<h3>' + esc(ln.slice(3)) + '</h3>'; continue; }
+    if (/^\s*[-*] /.test(ln) || /^\s*\d+\. /.test(ln)){ if (!inUl){ html += '<ul>'; inUl = true; } html += '<li>' + inline(ln.replace(/^\s*([-*]|\d+\.) /,'')) + '</li>'; continue; }
+    if (ln.trim() === ''){ if (inUl){ html += '</ul>'; inUl = false; } continue; }
+    if (firstPara){ html += '<div class="lede">' + inline(ln) + '</div>'; firstPara = false; }
+    else html += '<p>' + inline(ln) + '</p>';
+  }
+  if (inUl) html += '</ul>';
+  return html;
+}
+function briefSig(){ return today() + '|' + S.commitments.map(c => c.id + cState(c)).join('') + '|' + S.pipeline.map(p => p.stage).join(''); }
+function renderBrief(){
+  const f = briefFacts();
+  $('#briefWk').textContent = 'week of ' + nice(f.wkStart) + ' to ' + nice(f.t) + ' ' + pd(f.t).getFullYear();
+  const md = briefMarkdown(f);
+  window.__COPY['brief'] = md;
+  const chip = $('#briefChip');
+  if (S.briefCache && S.briefCache.sig === briefSig()){
+    chip.textContent = 'LIVE, ' + S.briefCache.model; chip.className = 'bchip live';
+    $('#briefBody').innerHTML = mdToHtml(S.briefCache.text);
+    window.__COPY['brief'] = S.briefCache.text;
+  } else if (UI.briefBusy){
+    chip.textContent = 'LIVE'; chip.className = 'bchip live';
+    $('#briefBody').innerHTML = '<div class="bthink">The agent is rewriting this week in its own words...</div>';
+  } else {
+    chip.textContent = window.AOS_LOCAL_ONLY ? 'LOCAL' : (window.AOS_LIVE ? 'DETERMINISTIC' : 'SIM'); chip.className = 'bchip sim';
+    $('#briefBody').innerHTML = mdToHtml(md);
+  }
+  $('#briefAI').style.display = window.AOS_LIVE ? '' : 'none';
+}
+async function aiBrief(){
+  if (!window.AOS_LIVE || UI.briefBusy) return;
+  const sig = briefSig();
+  if (S.briefCache && S.briefCache.sig === sig) return;
+  UI.briefBusy = true; renderBrief();
+  try{
+    const f = briefFacts();
+    const r = await api('/api/brief', {today: niceFull(today()), facts: briefMarkdown(f)});
+    S.briefCache = {sig, text: r.answer, model: window.AOS_MODEL || 'llm'}; save();
+  }catch(e){ toast('Rewrite unavailable.', 'warn'); }
+  UI.briefBusy = false; renderBrief();
+}
+
+// ---------- rendering: feed ----------
+function renderFeed(){
+  const evs = S.activity.filter(a => diffDays(a.date, today()) >= 0);
+  evs.sort((a,b) => { const dd = diffDays(a.date, b.date); if (dd !== 0) return dd; return (b.time||'').localeCompare(a.time||''); });
+  $('#feed').innerHTML = evs.map(ev => {
+    let inner = '';
+    const d = draftFromRef(ev.ref);
+    if (d){
+      const cid = 'ev_' + ev.id;
+      window.__COPY[cid] = (d.subject ? 'Subject: ' + d.subject + '\n\n' : '') + d.body;
+      inner = '<details><summary>view draft</summary><div class="draftbox">' + (d.subject ? '<div class="sub">' + esc(d.subject) + '</div>' : '') + '<div class="body">' + esc(d.body) + '</div><button class="copybtn" data-copy="' + cid + '">copy</button></div></details>';
+    }
+    return '<div class="ev"><div class="top"><span class="k ' + ev.kind + '">' + ev.kind + '</span><span class="ts">' + nice(ev.date) + ' ' + (ev.time||'') + '</span></div><div class="tt">' + esc(ev.title) + '</div>' + inner + '</div>';
+  }).join('') || '<div class="empty-sm" style="padding:12px">Quiet. The agent has nothing pending.</div>';
+}
+
+function renderAll(){
+  renderChrome();
+  if (UI.tab === 'meetings'){ renderMeetingList(); renderMeetingDetail(); }
+  if (UI.tab === 'relationships') renderRelationships();
+  if (UI.tab === 'pipeline') renderPipeline();
+  if (UI.tab === 'brief'){ renderBrief(); aiBrief(); }
+  renderFeed();
+}
+
+// ---------- ask the agent ----------
+const ASK_SUGGEST = ['what is overdue?', 'who is going cold?', 'move Veridian Grid to Partner intro', 'draft intro Elena to Marcus', 'snooze snapshot 3 days'];
+function askContext(){
+  return {
+    companies: S.pipeline.map(p => ({company: p.company, stage: p.stage})),
+    stages: STAGES,
+    people: S.people.map(p => p.name),
+    open_commitments: S.commitments.filter(c => c.status === 'open').map(c => ({text: c.text, owner: c.owner, who: c.who, due: c.due, state: cState(c)}))
+  };
+}
+function parseCommand(q){
+  let m;
+  if ((m = q.match(/^move\s+(.+?)\s+to\s+(.+?)(?:\s+because\s+(.+))?$/i))) return {action:'move_stage', company:m[1], stage:m[2], reason:m[3]||''};
+  if ((m = q.match(/^snooze\s+(.+?)\s+(?:for\s+)?(\d+)\s*d(?:ays?)?$/i))) return {action:'snooze', commitment:m[1], days:+m[2]};
+  if ((m = q.match(/^(?:draft\s+)?intro(?:duce)?\s+(.+?)\s+to\s+(.+)$/i))) return {action:'draft_intro', from:m[1], to:m[2]};
+  if ((m = q.match(/^add\s+commitment(?:\s+for\s+(.+?))?[:,]?\s+(.+?)(?:\s+by\s+(.+))?$/i))){
+    const owner = m[1] || 'Isaac';
+    return {action:'add_commitment', who: /isaac|me|my/i.test(owner) ? 'mine' : 'theirs', owner, text:m[2], due:m[3]||''};
+  }
+  return {action:'answer'};
+}
+function fuzzyStage(s){ const q = (s||'').toLowerCase().trim(); return STAGES.find(x => x.toLowerCase() === q) || STAGES.find(x => x.toLowerCase().startsWith(q) || q.startsWith(x.toLowerCase())); }
+function fuzzyCommitment(kw){
+  const words = (kw||'').toLowerCase().split(/\s+/).filter(w => w.length > 2);
+  let best = null, bestN = 0;
+  for (const c of S.commitments.filter(x => x.status === 'open')){
+    const t = c.text.toLowerCase();
+    const n = words.filter(w => t.includes(w)).length;
+    if (n > bestN){ best = c; bestN = n; }
+  }
+  return bestN ? best : null;
+}
+function answerQuestion(q){
+  const t = today(); const ql = q.toLowerCase();
+  if (/overdue|late|slip/.test(ql)){
+    const od = S.commitments.filter(c => cState(c) === 'overdue');
+    if (!od.length) return 'Nothing is overdue. Enjoy it while it lasts.';
+    return 'Overdue right now:<br>' + od.map(c => '&middot; <b>' + esc(c.text) + '</b> (' + (c.who === 'mine' ? 'mine' : esc(c.owner)) + ', ' + (-diffDays(t, c.due)) + 'd late, draft ready in the rail)').join('<br>');
+  }
+  if (/cold|warm|quiet|touch/.test(ql)){
+    const cc = S.people.map(p => ({p, w: warmth(p.id)})).filter(x => x.w.k === 'cooling' || x.w.k === 'cold');
+    if (!cc.length) return 'Everyone you have met is still warm.';
+    return cc.map(x => '&middot; <b>' + esc(x.p.name) + '</b> is ' + x.w.k + ', ' + x.w.days + ' days since last touch' + (x.w.k === 'cold' ? '. Re-warm note drafted.' : '.')).join('<br>');
+  }
+  if (/pipeline|stage|screening|ic\b/.test(ql)){
+    return S.pipeline.map(p => '&middot; <b>' + esc(p.company) + '</b>: ' + p.stage).join('<br>');
+  }
+  if (/meeting|week|held/.test(ql)){
+    const f = briefFacts();
+    return f.held.length + ' meetings in the last 7 days: ' + f.held.map(m => esc(counterpartName(m))).join(', ') + '. Full picture is in the Monday brief.';
+  }
+  if (/due|next|todo|to do/.test(ql)){
+    const soon = S.commitments.filter(c => c.status === 'open' && cState(c) !== 'overdue').sort((a,b) => diffDays(b.due, a.due)).slice(0,4);
+    return 'Coming up:<br>' + soon.map(c => '&middot; ' + esc(c.text) + ' (' + (c.who === 'mine' ? 'mine' : esc(c.owner)) + ', due ' + nice(c.due) + ')').join('<br>');
+  }
+  return 'I can answer about overdue items, warmth, the pipeline, or this week. I can also act: <i>move, snooze, draft intro, add commitment</i>.';
+}
+function execAction(a, rawQ){
+  switch (a.action){
+    case 'move_stage': {
+      const p = S.pipeline.find(x => x.company.toLowerCase().includes((a.company||'').toLowerCase())) || S.pipeline.find(x => (a.company||'').toLowerCase().includes(x.company.toLowerCase().split(' ')[0]));
+      const st = fuzzyStage(a.stage);
+      if (!p) return 'I do not have a company matching "' + esc(a.company) + '" in the pipeline.';
+      if (!st) return 'Stages are: ' + STAGES.join(', ') + '.';
+      if (st === 'Passed' && !a.reason){ openPass(p.id); return 'A pass needs a reason. Logging it in the dialog.'; }
+      moveStage(p.id, st, a.reason || '');
+      return 'Done. <b>' + esc(p.company) + '</b> moved to <b>' + esc(st) + '</b>, logged with a timestamp in the rail.';
+    }
+    case 'snooze': {
+      const c = fuzzyCommitment(a.commitment);
+      if (!c) return 'No open commitment matches "' + esc(a.commitment) + '".';
+      c.snoozeUntil = addDays(today(), a.days || 3);
+      logActivity('action', 'Snoozed: ' + c.text + ' until ' + nice(c.snoozeUntil), null);
+      save(); renderAll();
+      return 'Snoozed <b>' + esc(c.text) + '</b> until <b>' + nice(c.snoozeUntil) + '</b>. It will resurface then.';
+    }
+    case 'draft_intro': {
+      const f = personByName(a.from), tp = personByName(a.to);
+      if (!f || !tp) return 'I need two people I know. Try "draft intro Elena to Marcus".';
+      logActivity('draft', 'Double opt-in drafted: ' + f.name + ' x ' + tp.name + '. Waiting on Isaac.', {type:'intro', fromId:f.id, toId:tp.id});
+      save(); renderAll();
+      return 'Drafted the double opt-in for <b>' + esc(f.name) + '</b> to <b>' + esc(tp.name) + '</b>. It is in the rail, copy it when ready. You send it.';
+    }
+    case 'add_commitment': {
+      const who = a.who === 'theirs' ? 'theirs' : 'mine';
+      const owner = who === 'mine' ? 'Isaac' : ((personByName(a.owner) || {}).name || a.owner || 'Them');
+      const due = parseDatePhrase(a.due || '', today());
+      S.commitments.push({id: uid(), meetingId: null, who, owner, text: a.text, quote: rawQ || a.text, duePhrase: a.due || '', due, status:'open', doneOn:null, snoozeUntil:null, lastEscalation:null, intro:null});
+      logActivity('action', 'Commitment added via ask: ' + a.text + ' (due ' + nice(due) + ')', null);
+      save(); renderAll();
+      return 'Added. <b>' + esc(a.text) + '</b>, ' + (who === 'mine' ? 'mine' : 'waiting on ' + esc(owner)) + ', due <b>' + nice(due) + '</b> (computed by code, not the model).';
+    }
+    default:
+      return (a.text && String(a.text).trim()) ? esc(String(a.text)).replace(/\n/g,'<br>') : answerQuestion(rawQ || '');
+  }
+}
+function addQA(q, aHtml){
+  $('#qaLog').insertAdjacentHTML('afterbegin', '<div class="qa"><div class="q">' + esc(q) + '</div><div class="a">' + aHtml + '</div></div>');
+}
+async function doAsk(q){
+  if (!q.trim()) return;
+  $('#askPanel').classList.add('open');
+  if (window.AOS_LIVE){
+    addQA(q, '<span style="color:var(--muted);font-style:italic">thinking...</span>');
+    const slot = $('#qaLog .qa .a');
+    try{
+      const r = await api('/api/ask', {q, today: niceFull(today()), context: askContext()});
+      let j = null;
+      try{ const s = r.answer; j = JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1)); }catch(e){}
+      slot.innerHTML = j ? execAction(j, q) : esc(r.answer);
+      return;
+    }catch(e){ slot.innerHTML = execAction(parseCommand(q), q) + ' <span style="color:var(--muted)">(offline fallback)</span>'; return; }
+  }
+  addQA(q, execAction(parseCommand(q), q));
+}
+
+// ---------- server bridge ----------
+const API_BASE = location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8766';
+window.AOS_LIVE = false; window.AOS_SERVER = false; window.AOS_MODEL = ''; window.AOS_LOCAL_ONLY = false;
+async function api(path, body){
+  const ctl = new AbortController();
+  const to = setTimeout(() => ctl.abort(), body ? 45000 : 3500);
+  try{
+    const r = await fetch(API_BASE + path, body ? {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body), signal: ctl.signal} : {signal: ctl.signal});
+    if (!r.ok) throw new Error('http ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(to); }
+}
+async function healthCheck(){
+  try{
+    const j = await api('/api/health');
+    window.AOS_SERVER = true;
+    window.AOS_LIVE = !!(j.key && j.live);
+    window.AOS_MODEL = j.model || '';
+    window.AOS_LOCAL_ONLY = !!j.local_only;
+    const chip = $('#liveChip');
+    if (window.AOS_LOCAL_ONLY){ chip.className = 'livechip'; $('#liveTxt').textContent = 'LOCAL'; chip.title = 'Interview-safe local mode. Granola bridge available; deterministic extraction; no transcript leaves this machine.'; }
+    else if (window.AOS_LIVE){ chip.className = 'livechip live'; $('#liveTxt').textContent = 'LIVE'; chip.title = 'LLM live: ' + j.provider + ' / ' + j.model + '. Server up, Granola bridge available.'; }
+    else { chip.className = 'livechip'; $('#liveTxt').textContent = 'SIM'; chip.title = 'Server up (Granola available), LLM ' + (j.key ? 'unreachable' : 'not configured') + '. All features run deterministically.'; }
+  }catch(e){
+    window.AOS_SERVER = false; window.AOS_LIVE = false;
+    const chip = $('#liveChip'); chip.className = 'livechip'; $('#liveTxt').textContent = 'SIM';
+    chip.title = 'Local connector unavailable.';
+  }
+  if (UI.tab === 'brief') renderBrief();
+}
+
+// ---------- granola import ----------
+function openModal(id){ $('#scrim').classList.add('show'); $(id).classList.add('show'); }
+function closeModals(){ $('#scrim').classList.remove('show'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('show')); }
+function openGranola(){
+  openModal('#modalGranola');
+  $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px"><b>Private.</b> The next step reveals real meeting titles.</div>';
+  $('#gStatus').textContent = '';
+  $('#gReveal').style.display = '';
+  $('#gImport').style.display = 'none';
+}
+async function loadGranolaList(){
+  $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px">Reading the local Granola cache...</div>';
+  $('#gReveal').disabled = true;
+  try{
+    const j = await api('/api/granola/meetings');
+    if (!j.ok) throw new Error(j.error || 'granola error');
+    UI.granolaList = j.meetings || [];
+    UI.granolaSel = {};
+    $('#gList').innerHTML = UI.granolaList.map(m =>
+      '<label class="gmrow"><input type="checkbox" data-gsel="' + esc(m.id) + '"' + (S.meetings.some(x => x.id === 'g_' + m.id) ? ' disabled checked' : '') + '>' +
+      '<span class="t">' + esc(m.title) + '</span>' +
+      '<span class="p">' + (m.participants && m.participants.length ? m.participants.length + ' people' : '') + '</span>' +
+      '<span class="d">' + esc(m.date) + '</span></label>').join('') || '<div class="empty-sm" style="padding:12px">No meetings found in the cache.</div>';
+    $('#gReveal').style.display = 'none';
+    $('#gImport').style.display = '';
+  }catch(e){
+    closeModals();
+    toast('Granola offline. Synthetic data unchanged.', 'warn');
+  }finally{
+    $('#gReveal').disabled = false;
+  }
+}
+function extractLocal(lines){
+  const out = [];
+  const commitRe = /\b(i'?ll|i will|we'?ll|we will|let me|i can (?:forward|send|share|get|pull|put|set|line|export|write|map|book|schedule|connect)|happy to send)\b/i;
+  const cueRe = /\b(send|share|forward|book|schedule|intro|connect|follow up|put together|draft|pull|prepare|get you|export|write up|line up|map out|set up|check with)\b/i;
+  const dueRe = /\b(by (?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|by end of (?:the |next )?week|end of next week|early next week|next week or so|next week|tomorrow|this afternoon|this week|today|in (?:a )?few days|in \d+ days?|ten days|by \d{4}-\d{2}-\d{2})\b/i;
+  for (const l of lines){
+    if (out.length >= 6) break;
+    if (!commitRe.test(l.text) || !cueRe.test(l.text)) continue;
+    const who = /isaac/i.test(l.sp) ? 'mine' : 'theirs';
+    const dm = l.text.match(dueRe);
+    let text = l.text;
+    const seg = text.split(/(?<=[.!?])\s+/).find(s => commitRe.test(s) && cueRe.test(s)) || text;
+    text = seg.replace(/^(and|but|so|then|also|perfect|great|sure)[,.]?\s+/i,'').trim();
+    if (text.length > 110) text = text.slice(0, 107) + '...';
+    out.push({who, owner: l.sp, text, quote: l.text, due_phrase: dm ? dm[1] : ''});
+  }
+  return out;
+}
+async function importGranola(){
+  const ids = Object.keys(UI.granolaSel).filter(k => UI.granolaSel[k]);
+  if (!ids.length){ $('#gStatus').textContent = 'Nothing selected.'; return; }
+  const btn = $('#gImport'); btn.disabled = true;
+  let done = 0;
+  for (const id of ids){
+    const meta = UI.granolaList.find(m => m.id === id);
+    $('#gStatus').textContent = 'Importing "' + (meta ? meta.title : id) + '"...';
+    try{
+      const tj = await api('/api/granola/transcript?id=' + encodeURIComponent(id));
+      const lines = (tj.lines || []);
+      let ext = null;
+      if (window.AOS_LIVE){
+        $('#gStatus').textContent = 'Extracting commitments with ' + (window.AOS_MODEL || 'the LLM') + '...';
+        try{ const ej = await api('/api/extract', {title: meta ? meta.title : '', date: meta ? meta.date : '', lines}); ext = ej.commitments; }catch(e){ ext = null; }
+      }
+      if (!ext) ext = extractLocal(lines);
+      const mDate = (meta && meta.date) ? meta.date : today();
+      const mid = 'g_' + id;
+      const cp = (lines.find(l => !/isaac/i.test(l.sp)) || {}).sp || ((meta && meta.participants && meta.participants[0]) || 'Counterpart');
+      S.meetings.push({id: mid, date: mDate, type:'imported', company: (meta ? meta.title : 'Imported meeting').split(/[,|]/)[0].slice(0, 40), title: (meta ? meta.title : 'Imported meeting'), attendees: [], counterpart: cp, granola: true, logged: false, transcript: lines});
+      for (const e of (ext || [])){
+        S.commitments.push({id: uid(), meetingId: mid, who: e.who === 'mine' ? 'mine' : 'theirs', owner: e.who === 'mine' ? 'Isaac' : (e.owner || cp), text: e.text, quote: e.quote || e.text, duePhrase: e.due_phrase || '', due: parseDatePhrase(e.due_phrase || '', mDate), status:'open', doneOn:null, snoozeUntil:null, lastEscalation:null, intro:null});
+      }
+      logActivity('import', 'Imported from Granola: ' + (meta ? meta.title : id) + '. ' + (ext ? ext.length : 0) + ' commitments extracted' + (window.AOS_LIVE ? ' (LLM)' : ' (deterministic)') + '.', null);
+      done++;
+      UI.sel = mid; UI.tab = 'meetings'; UI.showTranscript = false;
+    }catch(e){
+      $('#gStatus').textContent = 'Failed on "' + (meta ? meta.title : id) + '": ' + e.message;
+    }
+  }
+  save(); btn.disabled = false;
+  if (done){ closeModals(); toast(done + ' meeting' + (done === 1 ? '' : 's') + ' imported.', 'ok'); renderAll(); }
+}
+
+// ---------- pass modal ----------
+function openPass(plId){ UI.passTarget = plId; const p = S.pipeline.find(x => x.id === plId); $('#passCo').textContent = p ? p.company : ''; $('#passReason').value = ''; openModal('#modalPass'); setTimeout(() => $('#passReason').focus(), 40); }
+
+// ---------- toast ----------
+function toast(msg, kind){
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .35s'; setTimeout(() => el.remove(), 400); }, 3600);
+}
+
+// ---------- copy ----------
+function copyText(t){
+  if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).catch(() => fallbackCopy(t)); }
+  else fallbackCopy(t);
+  toast('Copied.', 'ok');
+}
+function fallbackCopy(t){
+  const ta = document.createElement('textarea');
+  ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  ta.remove();
+}
+
+// ---------- events ----------
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-m],[data-act],[data-dtab],[data-copy],[data-close],.chip[data-ask]');
+  if (!t) {
+    return;
+  }
+  if (t.dataset.tab){ UI.tab = t.dataset.tab; renderAll(); return; }
+  if (t.dataset.m){ UI.sel = t.dataset.m; UI.showTranscript = false; UI.hlQuote = null; UI.draftTab = 'followup'; renderMeetingList(); renderMeetingDetail(); return; }
+  if (t.dataset.dtab){ UI.draftTab = t.dataset.dtab; renderMeetingDetail(); return; }
+  if (t.dataset.copy){ copyText(window.__COPY[t.dataset.copy] || ''); return; }
+  if (t.hasAttribute('data-close')){ closeModals(); return; }
+  const act = t.dataset.act;
+  if (!act) return;
+  if (act === 'toggletx'){ UI.showTranscript = !UI.showTranscript; if (!UI.showTranscript) UI.hlQuote = null; renderMeetingDetail(); }
+  if (act === 'logpipe'){
+    const m = meetingById(UI.sel); if (!m || m.logged) return;
+    m.logged = true;
+    let rec = plRec(m.company);
+    if (!rec){
+      rec = {id: uid(), company: m.company, founder: null, sector: 'Imported', pitch: m.title, stage: 'Met', history: [{date: today(), from: null, to: 'Met', note: 'Created from meeting log'}], notes: []};
+      S.pipeline.push(rec);
+      logActivity('log', m.company + ' added to pipeline at Met, from meeting log.', null);
+    } else {
+      rec.notes.push({date: today(), text: 'Meeting logged: ' + m.title});
+      logActivity('log', 'Meeting logged to pipeline: ' + m.company + ' (' + m.title + ')', null);
+    }
+    save(); renderAll();
+  }
+  if (act === 'cdone'){
+    const c = S.commitments.find(x => x.id === t.dataset.c); if (!c) return;
+    c.status = 'done'; c.doneOn = today();
+    logActivity('log', 'Commitment closed: ' + c.text, null);
+    save(); renderAll();
+  }
+  if (act === 'csnooze'){
+    const c = S.commitments.find(x => x.id === t.dataset.c); if (!c) return;
+    c.snoozeUntil = addDays(today(), 3);
+    logActivity('action', 'Snoozed: ' + c.text + ' until ' + nice(c.snoozeUntil), null);
+    save(); renderAll();
+  }
+  if (act === 'cnudge'){
+    const c = S.commitments.find(x => x.id === t.dataset.c); if (!c) return;
+    logActivity('nudge', 'Nudge drafted on request: ' + c.text + ' (' + c.owner + ')', {type:'nudge', cId:c.id});
+    save(); renderFeed(); toast('Draft ready.', 'ok');
+  }
+  if (act === 'cquote'){
+    const c = S.commitments.find(x => x.id === t.dataset.c); if (!c) return;
+    UI.showTranscript = true; UI.hlQuote = c.quote; renderMeetingDetail();
+  }
+  if (act === 'cctx'){
+    const c = S.commitments.find(x => x.id === t.dataset.c); if (!c || !c.context) return;
+    UI.showTranscript = true; UI.hlQuote = c.context.quote; renderMeetingDetail();
+  }
+  if (act === 'stmove'){
+    const p = S.pipeline.find(x => x.id === t.dataset.p); if (!p) return;
+    const idx = STAGES.indexOf(p.stage) + (+t.dataset.dir);
+    const to = STAGES[idx]; if (!to) return;
+    if (to === 'Passed'){ openPass(p.id); return; }
+    moveStage(p.id, to, '');
+  }
+  if (act === 'pathdraft'){
+    const f = personById(t.dataset.from), tp = personById(t.dataset.to);
+    if (!f || !tp) return;
+    logActivity('draft', 'Path ask drafted: ' + f.name + ' asked to open a door to ' + tp.name + '.', {type:'intro', fromId:t.dataset.to === 'camille' ? f.id : tp.id, toId:t.dataset.to === 'camille' ? tp.id : f.id});
+    // the ask is TO the connector about the target; render as intro from target's perspective handled in feed
+    S.activity[S.activity.length - 1].ref = {type:'pathask', viaId:f.id, tgtId:tp.id};
+    save(); renderFeed(); toast('Draft ready.', 'ok');
+  }
+});
+// path-ask draft rendering support
+const _origDraftFromRef = draftFromRef;
+draftFromRef = function(ref){
+  if (ref && ref.type === 'pathask'){
+    const via = personById(ref.viaId), tgt = personById(ref.tgtId);
+    if (!via || !tgt) return null;
+    return {subject:'Small ask: a door to ' + tgt.name,
+      body:'Hi ' + first(via.name) + ',\n\nQuick one. I am trying to reach ' + tgt.name + ' (' + tgt.company + ') and you are my warmest path. Would you be comfortable making the connection, or should I go direct and mention we know each other?\n\nHappy to send a two-line blurb you can forward.\n\nBest,\nIsaac'};
+  }
+  return _origDraftFromRef(ref);
+};
+
+document.addEventListener('change', e => {
+  if (e.target.matches('[data-gsel]')){ UI.granolaSel[e.target.getAttribute('data-gsel')] = e.target.checked; }
+  if (e.target.id === 'pathTarget') renderPath();
+});
+$('#btnGranola').addEventListener('click', () => {
+  if (!window.AOS_SERVER){ toast('Granola offline.', 'warn'); return; }
+  openGranola();
+});
+$('#gReveal').addEventListener('click', loadGranolaList);
+$('#gImport').addEventListener('click', importGranola);
+$('#btnReset').addEventListener('click', () => { localStorage.removeItem(LS_KEY); location.reload(); });
+$('#scrim').addEventListener('click', closeModals);
+$('#passGo').addEventListener('click', () => {
+  const reason = $('#passReason').value.trim() || 'No reason logged';
+  if (UI.passTarget) moveStage(UI.passTarget, 'Passed', reason);
+  closeModals();
+});
+$('#passReason').addEventListener('keydown', e => { if (e.key === 'Enter') $('#passGo').click(); });
+$('#btnSkip').addEventListener('click', () => {
+  S.simDays = (S.simDays || 0) + 7; save();
+  const n = agentSweep();
+  S.briefCache = null; save();
+  renderAll();
+  toast(n + ' item' + (n === 1 ? '' : 's') + ' escalated · drafts ready.', n ? 'warn' : undefined);
+});
+$('#btnToday').addEventListener('click', () => {
+  if (!S.simDays) return;
+  S.simDays = 0; purgeFuture(); S.briefCache = null; save(); renderAll();
+  toast('Today.');
+});
+$('#briefCopy').addEventListener('click', () => copyText(window.__COPY['brief'] || ''));
+$('#briefAI').addEventListener('click', () => { S.briefCache = null; save(); aiBrief(); });
+
+document.addEventListener('keydown', e => {
+  const el = e.target;
+  if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable)) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'Escape'){ closeModals(); return; }
+  if (e.key >= '1' && e.key <= '4'){ UI.tab = TABS[+e.key - 1].id; renderAll(); return; }
+  if (e.key === 'w' || e.key === 'W'){ $('#btnSkip').click(); return; }
+  if (e.key === 't' || e.key === 'T'){ $('#btnToday').click(); return; }
+});
+
+// ---------- boot ----------
+UI.sel = sortedMeetings()[0] ? sortedMeetings()[0].id : null;
+renderAll();
+healthCheck();
+setInterval(healthCheck, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Breakout Radar</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --bg:#0a0c11;
+    --panel:#10131b;
+    --panel-2:#141826;
+    --panel-3:#181d2b;
+    --line:#1e2432;
+    --line-2:#262d3e;
+    --ink:#e9ecf4;
+    --ink-2:#c3c9d8;
+    --muted:#8a93a8;
+    --faint:#5c6478;
+    --accent:#ff6a54;         /* coral: brand + breakout moments only */
+    --accent-soft:rgba(255,106,84,.10);
+    --accent-line:rgba(255,106,84,.35);
+    --up:#3fd598;
+    --up-soft:rgba(63,213,152,.10);
+    --down:#ff7b72;
+    --amber:#f0b83e;
+    --amber-soft:rgba(240,184,62,.10);
+    --mono:"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --r-sm:7px; --r-md:10px; --r-lg:13px;
+    --shadow:0 8px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:
+      radial-gradient(1100px 420px at 78% -12%, rgba(255,106,84,.055), transparent 60%),
+      radial-gradient(900px 380px at 8% -8%, rgba(63,213,152,.035), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font:13px/1.5 var(--sans);
+    letter-spacing:.005em;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(255,106,84,.30)}
+  .tnum{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  button{
+    font:inherit;cursor:pointer;
+    border:1px solid var(--line-2);
+    background:var(--panel-2);color:var(--ink-2);
+    border-radius:var(--r-sm);
+    padding:0 12px;height:30px;
+    font-weight:600;font-size:12.5px;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:border-color .12s,background .12s,color .12s;
+  }
+  button:hover{border-color:#39415a;color:var(--ink);background:var(--panel-3)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#14100f}
+  button.primary:hover{background:#ff7d69;border-color:#ff7d69;color:#14100f}
+  button.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+  button.ghost:hover{background:var(--panel-2);color:var(--ink)}
+  button.peec{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft)}
+  button.peec:hover{border-color:var(--accent);background:rgba(255,106,84,.16);color:#ff8a77}
+  button:disabled{opacity:.45;cursor:default}
+  input{
+    font:inherit;color:var(--ink);
+    background:var(--panel-2);
+    border:1px solid var(--line-2);border-radius:var(--r-sm);
+    padding:0 11px;height:30px;width:230px;
+    transition:border-color .12s;
+  }
+  input::placeholder{color:var(--faint)}
+  input:focus{outline:none;border-color:#414b6b}
+
+  /* ------- header ------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:10px;
+    flex-wrap:wrap;row-gap:7px;
+    min-height:54px;padding:8px 18px;
+    background:rgba(10,12,17,.86);
+    backdrop-filter:blur(10px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:1360px){header input{width:170px}}
+  @media (max-width:900px){.wm i{display:none}}
+  .brand{display:flex;align-items:center;gap:10px;flex:none}
+  .logo{
+    width:26px;height:26px;border-radius:8px;position:relative;overflow:hidden;
+    background:#151a26;border:1px solid var(--line-2);
+  }
+  .logo:before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(255,106,84,.85), transparent 70deg, transparent 360deg);
+    animation:sweep 3.2s linear infinite;
+    margin:3px;
+  }
+  .logo:after{
+    content:"";position:absolute;width:4px;height:4px;border-radius:50%;
+    background:var(--accent);top:7px;right:8px;
+    box-shadow:0 0 6px var(--accent);
+  }
+  @keyframes sweep{to{transform:rotate(360deg)}}
+  .wm{line-height:1.15;white-space:nowrap}
+  .wm b{font-size:14.5px;font-weight:700;letter-spacing:-.01em;display:block}
+  .wm i{font-style:normal;font-size:10px;color:var(--faint);letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+  .spacer{flex:1}
+
+  .tabs{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px;flex:none}
+  .tabs button{border:0;background:transparent;color:var(--muted);height:26px;padding:0 11px;border-radius:6px;font-weight:600}
+  .tabs button:hover{color:var(--ink);background:var(--panel-2)}
+  .tabs button.on{background:var(--panel-3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+  .tabs button .n{color:var(--faint);font-family:var(--mono);font-size:10.5px;margin-left:5px}
+  .tabs button.on .n{color:var(--accent)}
+
+  .clock{
+    display:inline-flex;align-items:center;gap:8px;height:30px;
+    border:1px solid var(--line-2);border-radius:999px;
+    padding:0 12px;background:var(--panel);
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap;
+  }
+  .clock .simtag{color:var(--amber);font-weight:700;font-size:10px;letter-spacing:.06em}
+  .live-chip{
+    display:inline-flex;align-items:center;gap:7px;height:30px;
+    border:1px solid var(--line-2);border-radius:999px;padding:0 12px;
+    background:var(--panel);font-size:10.5px;font-weight:700;letter-spacing:.1em;
+    color:var(--muted);font-family:var(--mono);
+  }
+  .live-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--faint)}
+  .live-chip.live{color:var(--up)}
+  .live-chip.live .dot{background:var(--up);box-shadow:0 0 7px rgba(63,213,152,.8)}
+
+  /* ------- stat bar ------- */
+  .statbar{
+    display:flex;gap:28px;flex-wrap:wrap;
+    padding:12px 20px;border-bottom:1px solid var(--line);
+    background:rgba(16,19,27,.5);
+  }
+  .stat{min-width:110px}
+  .stat .k{font-size:9.5px;color:var(--faint);letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .stat .v{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);margin-top:1px}
+  .stat .v small{font-size:10.5px;color:var(--muted);font-weight:500;margin-left:5px}
+  .stat .v .pos{color:var(--up)}
+
+  /* ------- layout ------- */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 356px;gap:14px;padding:14px 18px 40px;align-items:start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}}
+
+  /* ------- company grid ------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+  .co{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:12px 13px 11px;cursor:pointer;position:relative;
+    transition:border-color .12s, transform .12s, background .12s;
+    animation:rise .4s ease both;
+  }
+  .co:hover{border-color:var(--line-2);background:var(--panel-2);transform:translateY(-1px)}
+  .co.brk{border-color:var(--accent-line)}
+  .co.brk:hover{border-color:var(--accent)}
+  @keyframes rise{from{transform:translateY(7px)}to{transform:none}}
+  .co-top{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+  .arch{
+    font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);background:var(--panel-3);border:1px solid var(--line-2);
+    border-radius:4px;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;
+  }
+  .star{
+    margin-left:auto;border:0;background:none;color:var(--faint);
+    font-size:14px;height:20px;width:22px;padding:0;justify-content:center;border-radius:5px;
+  }
+  .star:hover{color:var(--amber);background:var(--panel-3)}
+  .star.on{color:var(--amber)}
+  .co-name{font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+  .co-one{font-size:11.5px;color:var(--muted);line-height:1.4;margin:3px 0 8px;min-height:31px}
+  .co-meta{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--faint);margin-bottom:9px}
+  .stagechip{
+    font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.07em;
+    border:1px solid var(--line-2);border-radius:4px;padding:1.5px 5px;color:var(--ink-2);
+  }
+  .co-bot{display:flex;align-items:flex-end;gap:10px}
+  .idx{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;letter-spacing:-.02em}
+  .idx .brklbl{
+    display:block;font-size:8.5px;letter-spacing:.14em;color:var(--accent);
+    font-weight:700;margin-top:3px;
+  }
+  .co.brk .idx{color:var(--accent)}
+  .sparkwrap{flex:1;display:flex;justify-content:center}
+  .delta{font-family:var(--mono);font-size:11.5px;font-weight:700;white-space:nowrap}
+  .delta.up{color:var(--up)} .delta.dn{color:var(--down)} .delta.fl{color:var(--faint)}
+  .empty{
+    grid-column:1/-1;text-align:center;color:var(--faint);
+    padding:60px 20px;border:1px dashed var(--line-2);border-radius:var(--r-md);
+  }
+
+  /* ------- rail ------- */
+  .rail{display:flex;flex-direction:column;gap:14px;position:sticky;top:68px}
+  @media (max-width:1080px){.rail{position:static}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
+  .card-h{display:flex;align-items:center;gap:8px;padding:11px 15px;border-bottom:1px solid var(--line)}
+  .card-h h2{margin:0;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .card-h .r{margin-left:auto;font-size:10.5px;color:var(--faint);font-family:var(--mono)}
+  .brief-card{position:relative;overflow:hidden}
+  .brief-card:before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 70%)}
+  .brief-body{padding:13px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.55;max-height:390px;overflow:auto}
+  .brief-body h4{margin:10px 0 3px;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .brief-body h4:first-child{margin-top:0}
+  .brief-body ul{margin:2px 0;padding-left:16px}
+  .brief-body li{margin:2.5px 0}
+  .brief-body b{color:var(--ink)}
+  .brief-foot{display:flex;align-items:center;gap:8px;padding:10px 15px;border-top:1px solid var(--line)}
+  .brief-foot .src{font-size:10px;color:var(--faint);margin-left:auto;font-family:var(--mono)}
+  .llmtag{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--up);border:1px solid rgba(63,213,152,.4);border-radius:4px;padding:1px 5px}
+
+  .actlist{max-height:430px;overflow:auto;padding:6px 0}
+  .act{padding:9px 15px;border-bottom:1px solid var(--line);animation:rise .3s ease both}
+  .act:last-child{border-bottom:0}
+  .act-t{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.05em;margin-bottom:3px}
+  .act-b{font-size:12px;color:var(--ink-2);line-height:1.5}
+  .act-b b{color:var(--ink)}
+  .act-b .pos{color:var(--up);font-family:var(--mono);font-weight:700}
+  .act.flag{border-left:2px solid var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 60%)}
+  .ping{
+    font-family:var(--mono);font-size:10.5px;line-height:1.55;color:var(--ink-2);
+    background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r-sm);
+    padding:8px 10px;margin:7px 0 6px;white-space:pre-wrap;word-break:break-word;
+  }
+  .copybtn{height:24px;font-size:11px;padding:0 9px}
+  .copybtn.done{color:var(--up);border-color:rgba(63,213,152,.4)}
+
+  /* ------- detail pane ------- */
+  .scrim{position:fixed;inset:0;background:rgba(4,5,8,.6);opacity:0;pointer-events:none;transition:opacity .18s;z-index:50}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .detail{
+    position:fixed;top:0;right:0;bottom:0;width:min(520px,94vw);z-index:60;
+    background:var(--panel);border-left:1px solid var(--line-2);
+    transform:translateX(102%);transition:transform .22s ease;
+    overflow-y:auto;box-shadow:var(--shadow);
+  }
+  .detail.on{transform:none}
+  .d-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+  .d-close{position:absolute;top:14px;right:14px;width:28px;height:28px;padding:0;justify-content:center;border-radius:7px}
+  .d-name{font-size:19px;font-weight:700;letter-spacing:-.015em;margin:6px 0 2px}
+  .d-one{color:var(--muted);font-size:12.5px}
+  .d-idxrow{display:flex;align-items:center;gap:16px;margin-top:12px}
+  .d-idx{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1}
+  .d-idx.hot{color:var(--accent)}
+  .d-idxmeta{font-size:11px;color:var(--muted);line-height:1.5}
+  .d-sec{padding:14px 20px;border-bottom:1px solid var(--line)}
+  .d-sec h3{margin:0 0 9px;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .falsy{
+    font-size:12px;color:var(--ink-2);line-height:1.6;
+    background:var(--amber-soft);border:1px solid rgba(240,184,62,.28);
+    border-left:3px solid var(--amber);border-radius:var(--r-sm);padding:10px 12px;
+  }
+  .falsy b{color:var(--amber)}
+  table.bd{width:100%;border-collapse:collapse;font-size:11px}
+  table.bd th{
+    text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);font-weight:700;padding:4px 6px;border-bottom:1px solid var(--line-2);
+  }
+  table.bd td{padding:5px 6px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+  table.bd td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+  table.bd tr.total td{border-bottom:0;color:var(--ink);font-weight:700;font-family:var(--mono)}
+  .bd-note{font-size:10px;color:var(--faint);margin-top:8px;line-height:1.6;font-family:var(--mono)}
+  .tl{list-style:none;margin:0;padding:0}
+  .tl li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+  .tl li:last-child{border-bottom:0}
+  .tl .d{font-family:var(--mono);font-size:10px;color:var(--faint);white-space:nowrap;width:46px;flex:none;padding-top:2px}
+  .tl .sig{
+    flex:none;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.05em;
+    color:var(--muted);border:1px solid var(--line-2);border-radius:4px;
+    padding:2px 5px;height:fit-content;margin-top:1px;white-space:nowrap;
+  }
+  .tl .tx{font-size:11.5px;color:var(--ink-2);line-height:1.45}
+  .tl li.future{opacity:.35}
+
+  /* ------- replay overlay ------- */
+  .replay{position:fixed;inset:0;z-index:80;background:rgba(4,5,8,.78);backdrop-filter:blur(4px);display:none;overflow:auto;padding:26px 18px}
+  .replay.on{display:block}
+  .rp{
+    max-width:1120px;margin:0 auto;background:var(--panel);
+    border:1px solid var(--accent-line);border-radius:14px;box-shadow:var(--shadow);
+    animation:rise .25s ease both;overflow:hidden;
+  }
+  .rp-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .rp-head .t{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .rp-tag{
+    font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
+    color:var(--accent);border:1px solid var(--accent-line);background:var(--accent-soft);
+    border-radius:4px;padding:2.5px 7px;
+  }
+  .rp-head .disc{font-size:10.5px;color:var(--faint);width:100%;font-family:var(--mono)}
+  .rp-body{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:0}
+  @media (max-width:900px){.rp-body{grid-template-columns:1fr}}
+  .rp-left{padding:16px 20px;border-right:1px solid var(--line)}
+  @media (max-width:900px){.rp-left{border-right:0;border-bottom:1px solid var(--line)}}
+  .rp-chart svg{width:100%;height:auto;display:block}
+  .rp-feed{margin-top:10px;max-height:250px;overflow:auto}
+  .rp-ev{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+  .rp-ev:last-child{border-bottom:0}
+  .rp-ev .m{font-family:var(--mono);font-size:10px;color:var(--faint);width:56px;flex:none;padding-top:2px}
+  .rp-ev .tx{font-size:12px;color:var(--ink-2);line-height:1.5}
+  .rp-ev .src{display:block;font-size:9.5px;color:var(--faint);font-family:var(--mono);margin-top:2px}
+  .rp-ev .src.real{color:#7fa8d9}
+  .rp-ev.now .tx{color:var(--ink)}
+  .rp-right{padding:16px 20px}
+  .rp-score{font-family:var(--mono);font-size:52px;font-weight:700;line-height:1;letter-spacing:-.02em}
+  .rp-score.hot{color:var(--accent)}
+  .rp-score-meta{font-size:11px;color:var(--muted);margin:4px 0 14px;line-height:1.5}
+  .leadbox{
+    border:1px solid var(--accent-line);background:var(--accent-soft);
+    border-radius:var(--r-md);padding:11px 13px;margin:12px 0;font-size:12px;line-height:1.6;color:var(--ink-2);
+  }
+  .leadbox b{color:var(--accent)}
+  .rp-foot{display:flex;align-items:center;gap:9px;padding:13px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .rp-foot .note{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--mono)}
+  .kbd{
+    font-family:var(--mono);font-size:9.5px;color:var(--muted);
+    border:1px solid var(--line-2);border-bottom-width:2px;border-radius:4px;padding:1px 5px;
+  }
+
+  footer{padding:14px 20px 26px;font-size:10.5px;color:var(--faint);border-top:1px solid var(--line);line-height:1.6}
+  footer b{color:var(--muted)}
+
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:6px;border:2px solid var(--panel)}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <div class="wm"><b>Breakout Radar</b><i>portfolio breakout watch</i></div>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+  <input id="search" placeholder="Filter name, sector, geo" aria-label="Filter companies"/>
+  <div class="spacer"></div>
+  <div class="clock tnum" id="clock"></div>
+  <button id="skipBtn" class="primary">Skip 2 weeks</button>
+  <button id="resetBtn" class="ghost">Today</button>
+  <button id="replayBtn" class="peec">Replay: Peec AI</button>
+  <div class="live-chip" id="liveChip"><span class="dot"></span><span id="liveTxt">SIM</span></div>
+</header>
+
+<div class="statbar" id="statbar"></div>
+
+<main class="layout">
+  <section class="grid" id="grid"></section>
+  <aside class="rail">
+    <div class="card brief-card">
+      <div class="card-h"><h2>Weekly IC brief</h2><div class="r" id="briefWhen"></div></div>
+      <div class="brief-body" id="briefBody"></div>
+      <div class="brief-foot">
+        <button id="llmBtn">Rewrite with LLM</button>
+        <button id="briefReset" class="ghost" style="display:none">Deterministic</button>
+        <div class="src" id="briefSrc">deterministic template</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>Agent activity</h2><div class="r">drafts only, human sends</div></div>
+      <div class="actlist" id="actlist"></div>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <b>Synthetic universe.</b> All 40 portfolio companies, their names, customers and numbers are fictional and generated deterministically in this file.
+  The only real data is the Peec AI replay, a public-timeline reconstruction with sources cited inline.
+  Scores are computed by code; the LLM, when connected, writes prose only and never touches a number.
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="detail" id="detail" aria-label="Company detail"></aside>
+<div class="replay" id="replay"></div>
+
+<script>
+'use strict';
+
+/* =========================================================
+   Deterministic core. Everything numeric happens here.
+   ========================================================= */
+
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=(h<<13)|(h>>>19);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+
+const BASE_DATE=new Date(2026,6,6);            /* Monday 6 Jul 2026 = week 0 */
+const EV_START=-24, HIST=12, MAX_SIM=8;
+const THRESHOLD=70, K_PORT=14, DECAY_W=5;      /* weekly half-life ~3.5 wk */
+
+const SIG={
+  hiring_velocity:{label:'Hiring velocity',tag:'HIRE',w:14},
+  customer_logos:{label:'Customer logos',tag:'LOGO',w:16},
+  arr_proxy:{label:'ARR proxy',tag:'ARR',w:22},
+  github_stars:{label:'GitHub stars',tag:'STAR',w:10},
+  press_funding:{label:'Press / funding',tag:'PRESS',w:12},
+  founder_cadence:{label:'Founder cadence',tag:'SHIP',w:8},
+  web_traffic_rank:{label:'Web traffic',tag:'WEB',w:10}
+};
+const STAGE_NORM={
+  'Pre-seed':{hiring_velocity:1.25,customer_logos:1.2,arr_proxy:1.3,github_stars:1.1,press_funding:1.0,founder_cadence:1.1,web_traffic_rank:1.0},
+  'Seed':{hiring_velocity:1.0,customer_logos:1.0,arr_proxy:1.0,github_stars:1.0,press_funding:1.0,founder_cadence:1.0,web_traffic_rank:1.0},
+  'Series A':{hiring_velocity:0.8,customer_logos:0.9,arr_proxy:0.9,github_stars:0.9,press_funding:0.7,founder_cadence:0.8,web_traffic_rank:0.9}
+};
+const FALSIFIER={
+  hiring_velocity:'the open roles are backfills or quietly get pulled rather than net new expansion',
+  customer_logos:'the new logos turn out to be unpaid pilots that do not convert within a quarter',
+  arr_proxy:'the reported revenue is one-off services work rather than recurring software',
+  github_stars:'star growth is launch-spike driven while weekly active contributors stay flat',
+  press_funding:'the round is insider-led at a flat price',
+  founder_cadence:'shipping cadence stalls for two consecutive weeks',
+  web_traffic_rank:'traffic gains come from one viral post rather than sustained search demand'
+};
+
+const ARCH={
+  aisearch:{label:'AI search analytics',customers:['Nordvik Apparel','Bluecrest Hotels','Fjordline Foods','Atlas Cosmetics','Peakform Sports','Casa Verde Home','Luma Skincare','Trailhead Outdoors']},
+  payments:{label:'B2B payments',customers:['Meridian Wholesale','Cobalt Traders','Kestrel Exports','Duneline Imports','Northgate Distribution','Ports of Iberia','Halden Chemicals','Veymar Foods']},
+  carehomes:{label:'Vertical AI, care homes',customers:['Harborview Care Group','Silverbirch Living','Oakmead Homes','Brightwater Care','St Maren Residences','Elmfield Group','Larkfield Trust','Rowanside Care']},
+  devtools:{label:'Dev tools',customers:['a top-50 fintech','a Series C data platform','an EU neobank','a devops scaleup','a US healthtech','an open-source foundation','a games studio','a gov digital agency']},
+  telco:{label:'eSIM / telco',customers:['a regional MVNO','a Pacific travel super-app','Andes Carrier Group','a logistics IoT fleet','Nord IoT Systems','a duty-free retail chain','a maritime operator','an airline loyalty arm']},
+  logistics:{label:'Vertical SaaS, logistics',customers:['NordHaul Group','Ibex Freight','Cascadia 3PL','Portside Logistics','Velten Trucking','Bluewater Customs','Kolman Depots','Transbaltic Lines']},
+  climate:{label:'Climate / energy fintech',customers:['Solaris Installers','Grupo Verde Energy','Nordic DC Alliance','Ridgeline Solar','Baltic Wind Co-op','Comunidad Bank','Ferrovolt Group','Highmoor Estates']},
+  commerce:{label:'Agentic commerce infra',customers:['a top-10 EU marketplace','Maison Deluxe','Cartline Retail','a CPG conglomerate','Urban Pantry','a sneaker resale platform','a beauty D2C group','a grocery chain']}
+};
+const ROLES=['Founding AE','ML Engineer','Platform Engineer','Customer Success Lead','GTM Lead','Product Designer','Solutions Engineer','Growth Marketer'];
+const ARR_LADDER={
+  'Pre-seed':['first paying customer','$5k MRR','$12k MRR','$25k MRR','$40k MRR'],
+  'Seed':['$50k MRR','$80k MRR','$100k MRR','$1.2M ARR run rate','$1.8M ARR run rate'],
+  'Series A':['$3M ARR','$4M ARR','$5.5M ARR','$7M ARR']
+};
+const CADENCE=['Founder build-log: 4 ships this week','Two product demos posted, strong engagement','Public changelog streak at 6 weeks','Founder demo at sector meetup, new module shown'];
+const TRAFFIC=['Traffic rank improved 12% MoM','Organic signups up 18% WoW','Docs traffic doubled MoM','Referral traffic up 25% MoM'];
+const PRESS_SMALL=['Case study published by design partner','Covered in the sector newsletter','Won an industry pitch award','Named in an analyst vendor landscape'];
+
+/* name, one-liner, stage, geo, archetype, trajectory, dev?, beats? */
+const SPEC=[
+ {n:'Serplume',o:'Answer-engine visibility analytics for consumer brands',s:'Seed',g:'Berlin',a:'aisearch',t:'surge',
+   beats:[{wk:-2,type:'customer_logos',mag:.7,txt:'Signed Nordvik Apparel and Bluecrest Hotels (annual)'},{wk:-1,type:'arr_proxy',mag:.65,txt:'Revenue update: $85k MRR, up 40% in six weeks'}]},
+ {n:'Askribe',o:'Monitors how AI assistants describe and cite your product',s:'Pre-seed',g:'London',a:'aisearch',t:'riser',
+   beats:[{wk:5,type:'arr_proxy',mag:.7,txt:'Revenue update: $30k MRR, tripled in nine weeks'},{wk:6,type:'customer_logos',mag:.6,txt:'Signed Atlas Cosmetics and Luma Skincare (annual)'}]},
+ {n:'Rankfathom',o:'Share-of-voice benchmarks across LLM search surfaces',s:'Seed',g:'New York',a:'aisearch',t:'steady'},
+ {n:'Promptglass',o:'Prompt-level SEO diagnostics for marketing teams',s:'Pre-seed',g:'Amsterdam',a:'aisearch',t:'quiet'},
+ {n:'Citeloop',o:'Citation tracking for brands inside generated answers',s:'Pre-seed',g:'Stockholm',a:'aisearch',t:'spike'},
+ {n:'Ledgerfox',o:'Reconciliation copilot for multi-entity finance teams',s:'Series A',g:'London',a:'payments',t:'steady'},
+ {n:'Paystriva',o:'Cross-border B2B payouts with built-in FX hedging',s:'Seed',g:'Singapore',a:'payments',t:'riser',
+   beats:[{wk:6,type:'customer_logos',mag:.65,txt:'Signed Ports of Iberia, first multi-country rollout'}]},
+ {n:'Clearvane',o:'Real-time clearing rails for marketplace sellers',s:'Seed',g:'Amsterdam',a:'payments',t:'fade'},
+ {n:'Remitbloc',o:'Treasury-grade stablecoin settlement for exporters',s:'Pre-seed',g:'Nairobi',a:'payments',t:'surge',
+   beats:[{wk:1,type:'arr_proxy',mag:.75,txt:'Revenue update: $40k MRR, 3x in eight weeks'},{wk:3,type:'customer_logos',mag:.6,txt:'Signed Kestrel Exports (annual, 4 corridors)'}]},
+ {n:'Invoxa',o:'Invoice-to-cash automation for mid-market wholesalers',s:'Seed',g:'Madrid',a:'payments',t:'steady'},
+ {n:'Elderbright',o:'Vertical AI for care-home compliance and rostering',s:'Seed',g:'London',a:'carehomes',t:'surge',
+   beats:[{wk:1,type:'customer_logos',mag:.75,txt:'Signed Harborview Care Group, 54 homes, multi-year'},{wk:2,type:'hiring_velocity',mag:.6,txt:'+4 open roles (2x AE, implementation, support lead), 13 total'}]},
+ {n:'Wardenly',o:'Incident detection and reporting for residential care',s:'Pre-seed',g:'Oslo',a:'carehomes',t:'riser'},
+ {n:'Rostercare',o:'AI staffing planner for nursing groups',s:'Seed',g:'Berlin',a:'carehomes',t:'steady'},
+ {n:'Vigilhome',o:'Ambient monitoring copilot for dementia wards',s:'Pre-seed',g:'Toronto',a:'carehomes',t:'quiet'},
+ {n:'Kindrelay',o:'Family communication layer for care operators',s:'Pre-seed',g:'Sydney',a:'carehomes',t:'fade'},
+ {n:'Forkbeam',o:'Ephemeral preview environments from any monorepo',s:'Seed',g:'Berlin',a:'devtools',t:'riser',dev:1},
+ {n:'Tracewick',o:'LLM-native distributed tracing for agent pipelines',s:'Pre-seed',g:'London',a:'devtools',t:'surge',dev:1,
+   beats:[{wk:2,type:'github_stars',mag:.85,txt:'+2,100 GitHub stars after HN front page (7.4k total)'},{wk:4,type:'customer_logos',mag:.6,txt:'Signed a Series C data platform (paid pilot)'}]},
+ {n:'Snapyard',o:'Snapshot testing infrastructure for data pipelines',s:'Seed',g:'Austin',a:'devtools',t:'steady',dev:1},
+ {n:'Mergelet',o:'AI merge-conflict resolution inside CI',s:'Pre-seed',g:'Bangalore',a:'devtools',t:'spike',dev:1},
+ {n:'Depthrun',o:'Load-testing agents that learn your traffic',s:'Seed',g:'Stockholm',a:'devtools',t:'quiet',dev:1},
+ {n:'Simweave',o:'Programmable eSIM infrastructure for IoT fleets',s:'Series A',g:'London',a:'telco',t:'steady'},
+ {n:'Roamloft',o:'Wholesale roaming marketplace for regional carriers',s:'Seed',g:'Singapore',a:'telco',t:'riser'},
+ {n:'Cellstitch',o:'eSIM orchestration for travel platforms',s:'Seed',g:'Seoul',a:'telco',t:'fade'},
+ {n:'Datamast',o:'Private 5G provisioning for industrial sites',s:'Pre-seed',g:'Munich',a:'telco',t:'quiet'},
+ {n:'Fonora',o:'Number portability APIs for challenger telcos',s:'Pre-seed',g:'Sao Paulo',a:'telco',t:'steady'},
+ {n:'Freightlace',o:'Vertical SaaS for cross-dock freight operators',s:'Seed',g:'Amsterdam',a:'logistics',t:'surge',
+   beats:[{wk:4,type:'customer_logos',mag:.7,txt:'Signed NordHaul Group and Ibex Freight in one week'}]},
+ {n:'Dockform',o:'Yard management OS for mid-size 3PLs',s:'Seed',g:'Berlin',a:'logistics',t:'steady'},
+ {n:'Haulinx',o:'Dispatch automation for regional trucking fleets',s:'Series A',g:'Austin',a:'logistics',t:'riser'},
+ {n:'Cartonpath',o:'Packaging spend intelligence for e-commerce ops',s:'Pre-seed',g:'London',a:'logistics',t:'quiet'},
+ {n:'Loadquill',o:'Digital paperwork rails for customs brokers',s:'Pre-seed',g:'Singapore',a:'logistics',t:'riser'},
+ {n:'Voltgrove',o:'Financing rails for commercial solar installers',s:'Seed',g:'Madrid',a:'climate',t:'riser',
+   beats:[{wk:8,type:'hiring_velocity',mag:.65,txt:'+5 open roles across risk and partnerships, 19 total'}]},
+ {n:'Gridmint',o:'Carbon-aware energy procurement for data centers',s:'Series A',g:'Stockholm',a:'climate',t:'steady'},
+ {n:'Carbonvale',o:'Verified carbon-removal marketplace for SMEs',s:'Seed',g:'Berlin',a:'climate',t:'fade'},
+ {n:'Wattfolio',o:'Portfolio analytics for distributed energy assets',s:'Pre-seed',g:'Nairobi',a:'climate',t:'surge',
+   beats:[{wk:7,type:'arr_proxy',mag:.7,txt:'Revenue update: $25k MRR, all inbound'},{wk:8,type:'press_funding',mag:.6,txt:'Seed round conversations reported by regional press'}]},
+ {n:'Tidebank',o:'Green deposits platform for community banks',s:'Pre-seed',g:'New York',a:'climate',t:'quiet'},
+ {n:'Basketwire',o:'Checkout APIs built for AI shopping agents',s:'Seed',g:'London',a:'commerce',t:'surge',
+   beats:[{wk:3,type:'press_funding',mag:.65,txt:'Named launch partner by a top-10 EU marketplace'},{wk:4,type:'arr_proxy',mag:.7,txt:'Revenue update: $95k MRR, agent-driven volume doubling monthly'}]},
+ {n:'Checkoutry',o:'Agent-readable product feeds and offer rails',s:'Pre-seed',g:'Berlin',a:'commerce',t:'riser'},
+ {n:'Merchbotics',o:'Autonomous merchandising for marketplace sellers',s:'Seed',g:'New York',a:'commerce',t:'steady'},
+ {n:'Ordermuse',o:'Conversational reorder infrastructure for CPG brands',s:'Pre-seed',g:'Paris',a:'commerce',t:'quiet'},
+ {n:'Skulark',o:'Machine-readable SKU graph for agentic commerce',s:'Pre-seed',g:'Singapore',a:'commerce',t:'spike'}
+];
+
+function intensity(traj,wk){
+  const t=(wk-EV_START)/(MAX_SIM-EV_START);           /* 0..1 across the timeline */
+  switch(traj){
+    case 'surge': return 0.14+0.72*Math.pow(t,2.1);
+    case 'riser': return 0.26+0.38*t;
+    case 'steady':return 0.40;
+    case 'quiet': return 0.17;
+    case 'fade':  return Math.max(0.08,0.62-0.52*t);
+    case 'spike': return (wk>=-3&&wk<=0)?0.95:0.16;
+  }
+  return 0.3;
+}
+function pickWeighted(pairs,rnd){
+  let tot=0;for(const p of pairs)tot+=p[1];
+  let x=rnd()*tot;
+  for(const p of pairs){x-=p[1];if(x<=0)return p[0];}
+  return pairs[0][0];
+}
+function sample(arr,rnd){return arr[Math.floor(rnd()*arr.length)];}
+function fmtK(n){return n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':''+n;}
+
+const MIX_STD=[['hiring_velocity',.18],['customer_logos',.20],['arr_proxy',.12],['press_funding',.06],['founder_cadence',.22],['web_traffic_rank',.22]];
+const MIX_DEV=[['hiring_velocity',.14],['customer_logos',.14],['arr_proxy',.09],['github_stars',.25],['press_funding',.05],['founder_cadence',.19],['web_traffic_rank',.14]];
+
+function genEvents(c){
+  const rnd=mulberry32(hashStr(c.n));
+  const evs=[];
+  let roles=2+Math.floor(rnd()*4);
+  let stars=c.dev?200+Math.floor(rnd()*900):0;
+  let arrIdx=0;
+  const ladder=ARR_LADDER[c.s], pool=ARCH[c.a].customers, mix=c.dev?MIX_DEV:MIX_STD;
+  for(let wk=EV_START;wk<=MAX_SIM;wk++){
+    const inten=intensity(c.t,wk);
+    let n=0;
+    if(rnd()<inten)n=1;
+    if(rnd()<inten*0.45)n++;
+    for(let i=0;i<n;i++){
+      const type=pickWeighted(mix,rnd);
+      let txt='',mag=0.3;
+      if(type==='hiring_velocity'){
+        const d=1+Math.floor(rnd()*3);roles+=d;
+        const names=[];for(let k=0;k<Math.min(d,2);k++)names.push(sample(ROLES,rnd));
+        txt='+'+d+' open role'+(d>1?'s':'')+' ('+names.join(', ')+'), '+roles+' total';
+        mag=0.2+0.13*d;
+      }else if(type==='customer_logos'){
+        const two=rnd()<0.3;
+        const c1=sample(pool,rnd);let nm=c1;
+        if(two){let c2=sample(pool,rnd);if(c2===c1)c2=pool[(pool.indexOf(c1)+1)%pool.length];nm=c1+' and '+c2;}
+        const flavor=sample(['pilot','paid pilot','annual contract','expansion deal','multi-site rollout'],rnd);
+        txt='Signed '+nm+' ('+flavor+')';
+        mag=0.32+(two?0.22:0)+0.12*rnd();
+      }else if(type==='arr_proxy'){
+        const step=ladder[Math.min(arrIdx,ladder.length-1)];
+        txt='Revenue update: '+step+(arrIdx>=ladder.length?' held':'');
+        mag=Math.min(0.95,0.45+0.09*arrIdx);arrIdx++;
+      }else if(type==='github_stars'){
+        const d=80+Math.floor(rnd()*rnd()*1500);stars+=d;
+        txt='+'+d+' GitHub stars ('+fmtK(stars)+' total)';
+        mag=Math.min(0.85,0.2+d/1400);
+      }else if(type==='press_funding'){
+        txt=sample(PRESS_SMALL,rnd);mag=0.3+0.2*rnd();
+      }else if(type==='founder_cadence'){
+        txt=sample(CADENCE,rnd);mag=0.18+0.2*rnd();
+      }else{
+        txt=sample(TRAFFIC,rnd);mag=0.24+0.24*rnd();
+      }
+      evs.push({wk,type,txt,mag});
+    }
+  }
+  if(c.beats)for(const b of c.beats)evs.push({wk:b.wk,type:b.type,txt:b.txt,mag:b.mag});
+  evs.sort((a,b)=>a.wk-b.wk);
+  return evs;
+}
+
+const COMPANIES=SPEC.map((c,i)=>({id:i,...c,arch:ARCH[c.a].label,events:genEvents(c)}));
+
+function contribAt(c,week){
+  const rows=[];
+  for(const ev of c.events){
+    if(ev.wk>week||ev.wk<week-18)continue;
+    const age=week-ev.wk;
+    const decay=Math.exp(-age/DECAY_W);
+    const sf=STAGE_NORM[c.s][ev.type];
+    rows.push({ev,w:SIG[ev.type].w,decay,sf,pts:SIG[ev.type].w*ev.mag*decay*sf});
+  }
+  rows.sort((a,b)=>b.pts-a.pts);
+  return rows;
+}
+function rawAt(c,week){let r=0;for(const row of contribAt(c,week))r+=row.pts;return r;}
+function scoreAt(c,week){const raw=rawAt(c,week);return Math.round(99*raw/(raw+K_PORT));}
+function sparkVals(c,week){const v=[];for(let w=week-HIST+1;w<=week;w++)v.push(scoreAt(c,w));return v;}
+function deltaOf(c,week){return scoreAt(c,week)-scoreAt(c,week-2);}
+function topDrivers(c,week,sinceWk){
+  return contribAt(c,week).filter(r=>r.ev.wk>sinceWk).slice(0,2).map(r=>r.ev.txt);
+}
+function falsifierLine(c,week){
+  const rows=contribAt(c,week);
+  const seen=[],types=[];
+  for(const r of rows){if(!seen.includes(r.ev.type)){seen.push(r.ev.type);types.push(r.ev.type);}if(types.length===2)break;}
+  if(!types.length)return 'No live signals; the score is running on decay alone.';
+  const parts=types.map(t=>FALSIFIER[t]);
+  return 'If '+parts.join(', or if ')+'.';
+}
+
+/* =========================================================
+   Peec AI replay. Real public timeline, sourced inline.
+   Interpolated months are labeled as such.
+   ========================================================= */
+const K_PEEC=12, DECAY_M=3;
+const PEEC_MONTHS=[
+ {lab:'Nov 2024',events:[{type:'press_funding',mag:.35,txt:'Peec AI forms in the Antler Berlin residency (Winter 2024) with pre-seed backing from Antler.',src:'Source: Antler / company announcements',real:true}]},
+ {lab:'Dec 2024',events:[{type:'founder_cadence',mag:.3,txt:'Residency build sprint; early prototype demos in public.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Jan 2025',events:[{type:'customer_logos',mag:.35,txt:'First pilot brands testing AI search visibility tracking.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Feb 2025',events:[{type:'founder_cadence',mag:.6,txt:'Public product launch.',src:'Source: company launch, press coverage (Feb 2025)',real:true},
+                         {type:'customer_logos',mag:.5,txt:'Launch-week signups convert to first paying brands.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Mar 2025',events:[{type:'customer_logos',mag:.8,txt:'Post-launch adoption ramp: inbound brand signups accelerating.',src:'Interpolated, no public datapoint'},
+                         {type:'hiring_velocity',mag:.6,txt:'First GTM and engineering roles posted.',src:'Interpolated, no public datapoint'},
+                         {type:'web_traffic_rank',mag:.5,txt:'Site and docs traffic climbing month over month.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Apr 2025',events:[{type:'arr_proxy',mag:.6,txt:'Early recurring revenue: paid plans converting.',src:'Interpolated, no public datapoint'}]},
+ {lab:'May 2025',events:[{type:'customer_logos',mag:.55,txt:'Brand count compounding; early agency partnerships.',src:'Interpolated, no public datapoint'},
+                         {type:'web_traffic_rank',mag:.45,txt:'Category search interest rising with AI-search adoption.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Jun 2025',events:[{type:'hiring_velocity',mag:.55,txt:'Team expanding ahead of a seed round.',src:'Interpolated, no public datapoint'},
+                         {type:'founder_cadence',mag:.4,txt:'Steady public shipping cadence.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Jul 2025',events:[{type:'press_funding',mag:.9,txt:'EUR 7M seed round led by 20VC.',src:'Source: TechCrunch, Sifted, 20VC announcement (Jul 2025)',real:true}]},
+ {lab:'Aug 2025',events:[{type:'hiring_velocity',mag:.6,txt:'Post-seed hiring wave across GTM and product.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Sep 2025',events:[{type:'customer_logos',mag:.6,txt:'Enterprise brands joining; usage broadening across markets.',src:'Interpolated, no public datapoint'},
+                         {type:'arr_proxy',mag:.65,txt:'Revenue compounding toward the year-end figures.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Oct 2025',events:[{type:'web_traffic_rank',mag:.5,txt:'Category leadership in AI search analytics consolidating.',src:'Interpolated, no public datapoint'},
+                         {type:'founder_cadence',mag:.45,txt:'Sustained shipping and public presence.',src:'Interpolated, no public datapoint'}]},
+ {lab:'Nov 2025',events:[{type:'arr_proxy',mag:1,txt:'1,300+ brands and $4M+ ARR.',src:'Source: founder LinkedIn post figures (Nov 2025)',real:true},
+                         {type:'press_funding',mag:1,txt:'$21M Series A led by Singular, with Antler Elevate participating.',src:'Source: TechCrunch (Nov 2025)',real:true}]}
+];
+const SERIES_A_MONTH=12;
+function peecRawAt(mi){
+  let raw=0;
+  for(let m=0;m<=mi;m++)for(const ev of PEEC_MONTHS[m].events)
+    raw+=SIG[ev.type].w*ev.mag*Math.exp(-(mi-m)/DECAY_M);
+  return raw;
+}
+function peecScoreAt(mi){const raw=peecRawAt(mi);return Math.round(99*raw/(raw+K_PEEC));}
+function peecFlagMonth(){for(let m=0;m<PEEC_MONTHS.length;m++)if(peecScoreAt(m)>=THRESHOLD)return m;return -1;}
+
+/* =========================================================
+   UI state and helpers
+   ========================================================= */
+const state={
+  view:'portfolio',
+  simWeek:0,
+  search:'',
+  watch:new Set(),
+  detailId:null,
+  briefLLM:false,
+  replay:{open:false,m:-1,timer:null},
+  live:{on:false,provider:'sim',model:''},
+  acts:[],
+  pingSeq:0
+};
+const DEFAULT_WATCH=['Askribe','Remitbloc','Tracewick','Basketwire','Wattfolio'];
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function dateOfWeek(wk){const d=new Date(BASE_DATE.getTime());d.setDate(d.getDate()+wk*7);return d;}
+function fmtDate(d){return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];}
+function fmtDateY(d){return fmtDate(d)+' '+d.getFullYear();}
+function el(id){return document.getElementById(id);}
+
+function sparkSvg(vals,delta){
+  const w=104,h=30;
+  const min=Math.min(...vals),max=Math.max(...vals),rng=Math.max(2,max-min);
+  const pts=vals.map((v,i)=>[(i/(vals.length-1))*(w-4)+2, h-4-((v-min)/rng)*(h-10)]);
+  const line=pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const col=delta>=3?'var(--up)':delta<=-3?'var(--down)':'var(--faint)';
+  const area='M'+pts[0][0].toFixed(1)+','+(h-2)+' L'+line.replace(/ /g,' L')+' L'+pts[pts.length-1][0].toFixed(1)+','+(h-2)+' Z';
+  const last=pts[pts.length-1];
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'
+    +'<path d="'+area+'" fill="'+col+'" opacity="0.10"></path>'
+    +'<polyline points="'+line+'" fill="none" stroke="'+col+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"></polyline>'
+    +'<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="2" fill="'+col+'"></circle></svg>';
+}
+
+/* =========================================================
+   Views
+   ========================================================= */
+const VIEWS=[
+  {id:'portfolio',label:'Portfolio'},
+  {id:'breakouts',label:'Breakouts'},
+  {id:'watchlist',label:'Watchlist'},
+  {id:'movers',label:'Movers'}
+];
+function rowsForView(){
+  const w=state.simWeek;
+  let list=COMPANIES.map(c=>({c,idx:scoreAt(c,w),d:deltaOf(c,w)}));
+  const q=state.search.trim().toLowerCase();
+  if(q)list=list.filter(r=>(r.c.n+' '+r.c.arch+' '+r.c.g+' '+r.c.s).toLowerCase().includes(q));
+  if(state.view==='breakouts')list=list.filter(r=>r.idx>=THRESHOLD);
+  if(state.view==='watchlist')list=list.filter(r=>state.watch.has(r.c.n));
+  if(state.view==='movers')list.sort((a,b)=>b.d-a.d||b.idx-a.idx);
+  else list.sort((a,b)=>b.idx-a.idx||b.d-a.d);
+  return list;
+}
+function counts(){
+  const w=state.simWeek;
+  let brk=0;for(const c of COMPANIES)if(scoreAt(c,w)>=THRESHOLD)brk++;
+  return {portfolio:COMPANIES.length,breakouts:brk,watchlist:state.watch.size,movers:COMPANIES.length};
+}
+
+function renderTabs(){
+  const cts=counts();
+  el('tabs').innerHTML=VIEWS.map(v=>
+    '<button data-view="'+v.id+'" class="'+(state.view===v.id?'on':'')+'">'+v.label+'<span class="n">'+cts[v.id]+'</span></button>'
+  ).join('');
+}
+function renderClock(){
+  const d=dateOfWeek(state.simWeek);
+  el('clock').innerHTML='Week of '+fmtDateY(d)+(state.simWeek>0?' <span class="simtag">SIM +'+state.simWeek+'wk</span>':'');
+  el('skipBtn').disabled=state.simWeek>=MAX_SIM;
+  el('resetBtn').style.display=state.simWeek>0?'':'none';
+}
+function renderStats(){
+  const w=state.simWeek;
+  const rows=COMPANIES.map(c=>({c,idx:scoreAt(c,w),d:deltaOf(c,w)}));
+  const sorted=[...rows].sort((a,b)=>b.idx-a.idx);
+  const med=sorted[Math.floor(sorted.length/2)].idx;
+  const brk=rows.filter(r=>r.idx>=THRESHOLD).length;
+  const sigs=COMPANIES.reduce((n,c)=>n+c.events.filter(e=>e.wk<=w).length,0);
+  const mover=[...rows].sort((a,b)=>b.d-a.d)[0];
+  el('statbar').innerHTML=
+    stat('Companies',COMPANIES.length,'8 sectors')+
+    stat('Signals ingested',sigs,'7 signal types')+
+    stat('Above threshold',brk,'index '+THRESHOLD+'+')+
+    stat('Median index',med,'0 to 99')+
+    stat('Top 2-wk mover','<span class="pos">'+(mover.d>=0?'+':'')+mover.d+'</span>',esc(mover.c.n));
+  function stat(k,v,s){return '<div class="stat"><div class="k">'+k+'</div><div class="v tnum">'+v+'<small>'+s+'</small></div></div>';}
+}
+function renderGrid(){
+  const list=rowsForView();
+  if(!list.length){
+    const msg=state.view==='watchlist'?'Watchlist is empty. Star a company to track it here.':'No companies match this filter.';
+    el('grid').innerHTML='<div class="empty">'+msg+'</div>';
+    return;
+  }
+  const w=state.simWeek;
+  el('grid').innerHTML=list.map((r,i)=>{
+    const {c,idx,d}=r;
+    const arrow=d>=3?'&#9650;':d<=-3?'&#9660;':'&#9642;';
+    const dcls=d>=3?'up':d<=-3?'dn':'fl';
+    const dtx=(d>0?'+':'')+d;
+    return '<div class="co'+(idx>=THRESHOLD?' brk':'')+'" data-id="'+c.id+'" style="animation-delay:'+Math.min(i*18,380)+'ms">'
+      +'<div class="co-top"><span class="arch">'+esc(c.arch)+'</span>'
+      +'<button class="star'+(state.watch.has(c.n)?' on':'')+'" data-star="'+c.id+'" title="Toggle watchlist">'+(state.watch.has(c.n)?'&#9733;':'&#9734;')+'</button></div>'
+      +'<div class="co-name">'+esc(c.n)+'</div>'
+      +'<div class="co-one">'+esc(c.o)+'</div>'
+      +'<div class="co-meta"><span class="stagechip">'+esc(c.s.toUpperCase())+'</span><span>'+esc(c.g)+'</span></div>'
+      +'<div class="co-bot"><div class="idx tnum">'+idx+(idx>=THRESHOLD?'<span class="brklbl">BREAKOUT</span>':'')+'</div>'
+      +'<div class="sparkwrap">'+sparkSvg(sparkVals(c,w),d)+'</div>'
+      +'<div class="delta '+dcls+'">'+arrow+' '+dtx+'</div></div></div>';
+  }).join('');
+}
+
+/* ------- IC brief ------- */
+function briefData(){
+  const w=state.simWeek;
+  const rows=COMPANIES.map(c=>({name:c.n,stage:c.s,geo:c.g,sector:c.arch,index:scoreAt(c,w),delta:deltaOf(c,w)}));
+  const risers=[...rows].sort((a,b)=>b.delta-a.delta).slice(0,3).filter(r=>r.delta>0);
+  const newBrk=rows.filter(r=>r.index>=THRESHOLD&&(r.index-r.delta)<THRESHOLD);
+  const alerts=[];
+  for(const c of COMPANIES){
+    const idx=scoreAt(c,w);
+    if(idx>=58&&!c.events.some(e=>e.wk>w-3&&e.wk<=w))
+      alerts.push({name:c.n,index:idx,why:'no fresh signal in 3+ weeks, score is coasting on decay'});
+  }
+  for(const r of risers){
+    const c=COMPANIES.find(x=>x.n===r.name);
+    r.driver=(topDrivers(c,w,w-2)[0]||'broad signal accumulation');
+  }
+  return {weekOf:fmtDateY(dateOfWeek(w)),risers,newBreakouts:newBrk,falsifierAlerts:alerts.slice(0,3),
+          breakouts:rows.filter(r=>r.index>=THRESHOLD).map(r=>r.name)};
+}
+function renderBriefDeterministic(){
+  const d=briefData();
+  let h='<h4>Top risers</h4><ul>';
+  h+=d.risers.length?d.risers.map(r=>'<li><b>'+esc(r.name)+'</b> +'+r.delta+' to '+r.index+'. '+esc(r.driver)+'</li>').join(''):'<li>No positive movement this window.</li>';
+  h+='</ul><h4>New breakouts</h4><ul>';
+  h+=d.newBreakouts.length?d.newBreakouts.map(r=>'<li><b>'+esc(r.name)+'</b> crossed '+THRESHOLD+' (now '+r.index+'). '+esc(r.sector)+', '+esc(r.stage)+'.</li>').join(''):'<li>None crossed the threshold in the last two weeks.</li>';
+  h+='</ul><h4>Falsifier alerts</h4><ul>';
+  h+=d.falsifierAlerts.length?d.falsifierAlerts.map(a=>'<li><b>'+esc(a.name)+'</b> at '+a.index+': '+esc(a.why)+'.</li>').join(''):'<li>No stale-score alerts.</li>';
+  h+='</ul>';
+  el('briefBody').innerHTML=h;
+  el('briefWhen').textContent=d.weekOf;
+  el('briefSrc').textContent='deterministic template';
+  el('briefReset').style.display='none';
+  state.briefLLM=false;
+}
+function mdLite(s){
+  const lines=esc(s).split(/\r?\n/);let out='',inUl=false;
+  for(let ln of lines){
+    ln=ln.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+    if(/^\s*[-*]\s+/.test(ln)){if(!inUl){out+='<ul>';inUl=true;}out+='<li>'+ln.replace(/^\s*[-*]\s+/,'')+'</li>';}
+    else{if(inUl){out+='</ul>';inUl=false;}if(ln.trim())out+='<p style="margin:6px 0">'+ln+'</p>';}
+  }
+  if(inUl)out+='</ul>';
+  return out;
+}
+async function llmRewrite(){
+  const btn=el('llmBtn');
+  if(!state.live.on){
+    pushAct('brief','Local rewrite connector unavailable.');
+    return;
+  }
+  btn.disabled=true;btn.textContent='Rewriting...';
+  try{
+    const res=await fetch('/api/brief',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({today:fmtDateY(dateOfWeek(state.simWeek)),data:briefData()})});
+    const j=await res.json();
+    if(!res.ok||!j.brief)throw new Error(j.error||'no brief');
+    el('briefBody').innerHTML=mdLite(j.brief);
+    el('briefSrc').innerHTML='<span class="llmtag">LLM PROSE</span>';
+    el('briefReset').style.display='';
+    state.briefLLM=true;
+    pushAct('brief','IC brief rewritten by '+esc(state.live.provider)+' ('+esc(state.live.model)+'). Numbers unchanged, computed by code.');
+  }catch(err){
+    pushAct('brief','LLM rewrite failed ('+esc(err.message)+'). Kept the deterministic brief.');
+  }
+  btn.disabled=false;btn.textContent='Rewrite with LLM';
+}
+
+/* ------- activity rail ------- */
+function pushAct(kind,html,ping){
+  state.acts.unshift({t:fmtDateY(dateOfWeek(state.simWeek))+(state.simWeek>0?' &middot; wk +'+state.simWeek:''),kind,html,ping,id:++state.pingSeq});
+  renderRail();
+}
+function renderRail(){
+  el('actlist').innerHTML=state.acts.map(a=>
+    '<div class="act'+(a.kind==='flag'?' flag':'')+'">'
+    +'<div class="act-t">'+a.t+'</div>'
+    +'<div class="act-b">'+a.html+'</div>'
+    +(a.ping?'<pre class="ping">'+esc(a.ping)+'</pre><button class="copybtn" data-copy="'+a.id+'">Copy ping</button>':'')
+    +'</div>'
+  ).join('');
+}
+function suggestedAction(c,idx){
+  if(c.s==='Pre-seed')return 'Suggested action: 20-min founder catch-up this week, get ahead of their seed timing.';
+  if(c.s==='Seed')return 'Suggested action: partner intro call this week, ask for ARR detail and pipeline before they run a process.';
+  return 'Suggested action: refresh the growth-round file and pre-empt before bankers are hired.';
+}
+function buildPing(c,idx,d){
+  const w=state.simWeek;
+  const drivers=topDrivers(c,w,w-2);
+  const why=drivers.length?drivers.join('; '):'broad accumulation across signals';
+  return c.n+' ('+c.s+', '+c.g+'). Breakout Index '+idx+', +'+d+' in 2 weeks.\n'
+    +'Why now: '+why+'.\n'
+    +suggestedAction(c,idx);
+}
+function skipTwoWeeks(){
+  if(state.simWeek>=MAX_SIM)return;
+  const before={};for(const c of COMPANIES)before[c.n]=scoreAt(c,state.simWeek);
+  state.simWeek+=2;
+  const w=state.simWeek;
+  const newSigs=COMPANIES.reduce((n,c)=>n+c.events.filter(e=>e.wk>w-2&&e.wk<=w).length,0);
+  const flags=COMPANIES.map(c=>({c,idx:scoreAt(c,w),d:scoreAt(c,w)-before[c.n]}))
+    .filter(r=>(r.d>=8&&r.idx>=60)||(r.idx>=THRESHOLD&&before[r.c.n]<THRESHOLD))
+    .sort((a,b)=>b.d-a.d).slice(0,3);
+  pushAct('scan','Signal sweep complete: <b>'+newSigs+'</b> new signals in 2 weeks, portfolio re-ranked. '+flags.length+' compan'+(flags.length===1?'y':'ies')+' flagged for partner review.');
+  for(const f of [...flags].reverse()){
+    pushAct('flag','Flag for partner: <b>'+esc(f.c.n)+'</b> <span class="pos">+'+f.d+'</span> to '+f.idx+'. Draft ping ready below, nothing sent.',buildPing(f.c,f.idx,f.d));
+  }
+  refresh();
+}
+function resetToday(){
+  state.simWeek=0;
+  pushAct('scan','Reset to today. Simulated signals cleared, live baseline restored.');
+  refresh();
+}
+
+/* ------- detail pane ------- */
+function openDetail(id){
+  const c=COMPANIES.find(x=>x.id===id);if(!c)return;
+  state.detailId=id;
+  const w=state.simWeek;
+  const idx=scoreAt(c,w),d=deltaOf(c,w),raw=rawAt(c,w);
+  const rows=contribAt(c,w).slice(0,8);
+  let bd='<table class="bd"><tr><th>Signal</th><th>Event</th><th style="text-align:right">W</th><th style="text-align:right">x decay</th><th style="text-align:right">x stage</th><th style="text-align:right">= pts</th></tr>';
+  for(const r of rows){
+    bd+='<tr><td><span class="tl-sig sig" style="font-family:var(--mono);font-size:8.5px;border:1px solid var(--line-2);border-radius:4px;padding:1px 4px;color:var(--muted)">'+SIG[r.ev.type].tag+'</span></td>'
+      +'<td>'+esc(r.ev.txt)+'<span style="color:var(--faint);font-size:9.5px"> &middot; '+fmtDate(dateOfWeek(r.ev.wk))+'</span></td>'
+      +'<td class="num">'+r.w+'</td><td class="num">'+r.decay.toFixed(2)+'</td><td class="num">'+r.sf.toFixed(2)+'</td><td class="num">'+r.pts.toFixed(1)+'</td></tr>';
+  }
+  bd+='<tr class="total"><td colspan="5">Raw total (all '+contribAt(c,w).length+' live signals)</td><td class="num">'+raw.toFixed(1)+'</td></tr></table>'
+    +'<div class="bd-note">index = round(99 x raw / (raw + '+K_PORT+')) = <b>'+idx+'</b>. Decay half-life ~3.5 weeks. Stage factor normalizes expectations by round ('+esc(c.s)+').</div>';
+
+  const evs=[...c.events].filter(e=>e.wk<=w).reverse().slice(0,18);
+  let tl='<ul class="tl">'+evs.map(e=>
+    '<li><span class="d">'+fmtDate(dateOfWeek(e.wk))+'</span><span class="sig">'+SIG[e.type].tag+'</span><span class="tx">'+esc(e.txt)+'</span></li>'
+  ).join('')+'</ul>';
+
+  el('detail').innerHTML=
+    '<div class="d-head"><button class="d-close ghost" id="dClose" title="Close (Esc)">&#10005;</button>'
+    +'<span class="arch">'+esc(c.arch)+'</span>'
+    +'<div class="d-name">'+esc(c.n)+'</div><div class="d-one">'+esc(c.o)+'</div>'
+    +'<div class="d-idxrow"><div class="d-idx tnum'+(idx>=THRESHOLD?' hot':'')+'">'+idx+'</div>'
+    +'<div class="d-idxmeta">Breakout Index &middot; '+(d>0?'+':'')+d+' over 2 weeks<br>'+esc(c.s)+' &middot; '+esc(c.g)+(idx>=THRESHOLD?'<br><b style="color:var(--accent)">Above breakout threshold ('+THRESHOLD+')</b>':'')+'</div></div></div>'
+    +'<div class="d-sec"><h3>What would change my mind</h3><div class="falsy"><b>Falsifiers:</b> '+esc(falsifierLine(c,w))+'</div></div>'
+    +'<div class="d-sec"><h3>Score breakdown, top contributions</h3>'+bd+'</div>'
+    +'<div class="d-sec"><h3>Signal timeline</h3>'+tl+'</div>';
+  el('detail').classList.add('on');
+  el('scrim').classList.add('on');
+  el('detail').scrollTop=0;
+  el('dClose').addEventListener('click',closeDetail);
+}
+function closeDetail(){
+  state.detailId=null;
+  el('detail').classList.remove('on');
+  el('scrim').classList.remove('on');
+}
+
+/* ------- Peec replay ------- */
+function openReplay(){
+  state.replay.open=true;state.replay.m=0;
+  el('replay').classList.add('on');
+  document.body.style.overflow='hidden';
+  renderReplay();
+}
+function closeReplay(){
+  state.replay.open=false;
+  if(state.replay.timer){clearInterval(state.replay.timer);state.replay.timer=null;}
+  el('replay').classList.remove('on');
+  document.body.style.overflow='';
+}
+function replayAdvance(){
+  if(state.replay.m<PEEC_MONTHS.length-1){state.replay.m++;renderReplay();}
+  else if(state.replay.timer){clearInterval(state.replay.timer);state.replay.timer=null;renderReplay();}
+}
+function toggleAuto(){
+  if(state.replay.timer){clearInterval(state.replay.timer);state.replay.timer=null;}
+  else state.replay.timer=setInterval(replayAdvance,1300);
+  renderReplay();
+}
+function peecChart(mi,flagM){
+  const W=740,H=300,L=44,R=16,T=22,B=44;
+  const xw=(W-L-R)/(PEEC_MONTHS.length-1);
+  const x=i=>L+i*xw, y=v=>T+(H-T-B)*(1-v/99);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Peec AI Breakout Index by month">';
+  for(const g of [0,25,50,75,99]){
+    s+='<line x1="'+L+'" y1="'+y(g)+'" x2="'+(W-R)+'" y2="'+y(g)+'" stroke="var(--line)" stroke-width="1"></line>'
+     +'<text x="'+(L-8)+'" y="'+(y(g)+3)+'" fill="var(--faint)" font-size="9" font-family="var(--mono)" text-anchor="end">'+g+'</text>';
+  }
+  s+='<line x1="'+L+'" y1="'+y(THRESHOLD)+'" x2="'+(W-R)+'" y2="'+y(THRESHOLD)+'" stroke="var(--amber)" stroke-width="1" stroke-dasharray="4 4" opacity=".7"></line>'
+   +'<text x="'+(W-R)+'" y="'+(y(THRESHOLD)-5)+'" fill="var(--amber)" font-size="9" font-family="var(--mono)" text-anchor="end">breakout threshold '+THRESHOLD+'</text>';
+  PEEC_MONTHS.forEach((m,i)=>{
+    s+='<text x="'+x(i)+'" y="'+(H-B+16)+'" fill="'+(i<=mi?'var(--muted)':'var(--line-2)')+'" font-size="8.5" font-family="var(--mono)" text-anchor="middle">'+m.lab.replace(' 20'," '")+'</text>';
+  });
+  const pts=[];for(let i=0;i<=mi;i++)pts.push([x(i),y(peecScoreAt(i))]);
+  if(pts.length>1)s+='<polyline points="'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>';
+  if(flagM>=0&&mi>=flagM){
+    s+='<line x1="'+x(flagM)+'" y1="'+T+'" x2="'+x(flagM)+'" y2="'+(H-B)+'" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"></line>'
+     +'<text x="'+(x(flagM)+6)+'" y="'+(T+10)+'" fill="var(--accent)" font-size="9.5" font-family="var(--mono)">model flags breakout here ('+PEEC_MONTHS[flagM].lab+')</text>';
+  }
+  if(mi>=SERIES_A_MONTH){
+    s+='<line x1="'+x(SERIES_A_MONTH)+'" y1="'+T+'" x2="'+x(SERIES_A_MONTH)+'" y2="'+(H-B)+'" stroke="#7fa8d9" stroke-width="1" stroke-dasharray="3 3"></line>'
+     +'<text x="'+(x(SERIES_A_MONTH)-6)+'" y="'+(T+10)+'" fill="#7fa8d9" font-size="9.5" font-family="var(--mono)" text-anchor="end">Series A announced (Nov 2025)</text>';
+  }
+  for(let i=0;i<=mi;i++){
+    const real=PEEC_MONTHS[i].events.some(e=>e.real);
+    s+=real
+      ?'<circle cx="'+x(i)+'" cy="'+y(peecScoreAt(i))+'" r="4" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"></circle>'
+      :'<circle cx="'+x(i)+'" cy="'+y(peecScoreAt(i))+'" r="3" fill="var(--panel)" stroke="var(--muted)" stroke-width="1.2"></circle>';
+  }
+  s+='</svg>';
+  return s;
+}
+function renderReplay(){
+  const mi=state.replay.m, flagM=peecFlagMonth();
+  const idx=peecScoreAt(mi), prev=mi>0?peecScoreAt(mi-1):0, d=idx-prev;
+  const raw=peecRawAt(mi);
+  const atEnd=mi>=PEEC_MONTHS.length-1;
+  let feed='';
+  for(let i=mi;i>=0;i--){
+    for(const ev of PEEC_MONTHS[i].events){
+      feed+='<div class="rp-ev'+(i===mi?' now':'')+'"><span class="m">'+PEEC_MONTHS[i].lab+'</span>'
+        +'<span class="tx">'+esc(ev.txt)+'<span class="src'+(ev.real?' real':'')+'">'+esc(ev.src)+'</span></span></div>';
+    }
+  }
+  let bd='';
+  const contribs=[];
+  for(let m=0;m<=mi;m++)for(const ev of PEEC_MONTHS[m].events){
+    contribs.push({tag:SIG[ev.type].tag,pts:SIG[ev.type].w*ev.mag*Math.exp(-(mi-m)/DECAY_M)});
+  }
+  const byTag={};for(const c of contribs)byTag[c.tag]=(byTag[c.tag]||0)+c.pts;
+  const tags=Object.entries(byTag).sort((a,b)=>b[1]-a[1]);
+  bd='<table class="bd"><tr><th>Signal</th><th style="text-align:right">pts live</th></tr>'
+    +tags.map(t=>'<tr><td>'+t[0]+'</td><td class="num">'+t[1].toFixed(1)+'</td></tr>').join('')
+    +'<tr class="total"><td>Raw</td><td class="num">'+raw.toFixed(1)+'</td></tr></table>'
+    +'<div class="bd-note">index = round(99 x raw / (raw + '+K_PEEC+')) = '+idx+'</div>';
+  const lead=(flagM>=0&&mi>=flagM)
+    ?'<div class="leadbox"><b>Model flags breakout at month '+flagM+' ('+PEEC_MONTHS[flagM].lab+').</b> '
+      +(mi>=SERIES_A_MONTH
+        ?'Series A announced month '+SERIES_A_MONTH+' (Nov 2025). <b>'+(SERIES_A_MONTH-flagM)+' months of lead time.</b> Post-window: roughly $10M ARR reported by May 2026 (press).'
+        :'The Series A came at month '+SERIES_A_MONTH+' (Nov 2025). That gap is the window to build conviction and a relationship.')+'</div>'
+    :'';
+  el('replay').innerHTML=
+    '<div class="rp">'
+    +'<div class="rp-head"><span class="t">Replay: Peec AI</span><span class="rp-tag">REAL PUBLIC TIMELINE</span>'
+    +'<button class="ghost" id="rpClose" style="margin-left:auto">Close &nbsp;<span class="kbd">Esc</span></button>'
+    +'<span class="disc">Public-timeline reconstruction, illustrative weights. Solid dots are sourced datapoints; hollow dots are interpolated months. Stage factor held at 1.0.</span></div>'
+    +'<div class="rp-body"><div class="rp-left"><div class="rp-chart">'+peecChart(mi,flagM)+'</div>'
+    +'<div class="rp-feed">'+feed+'</div></div>'
+    +'<div class="rp-right">'
+    +'<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px">'+PEEC_MONTHS[mi].lab+' &middot; month '+mi+' of '+SERIES_A_MONTH+'</div>'
+    +'<div class="rp-score tnum'+(idx>=THRESHOLD?' hot':'')+'">'+idx+'</div>'
+    +'<div class="rp-score-meta">Breakout Index'+(mi>0?' &middot; '+(d>=0?'+':'')+d+' vs last month':'')+(idx>=THRESHOLD?'<br><b style="color:var(--accent)">Above threshold '+THRESHOLD+'</b>':'')+'</div>'
+    +lead+bd
+    +'</div></div>'
+    +'<div class="rp-foot">'
+    +'<button class="primary" id="rpNext"'+(atEnd?' disabled':'')+'>Advance month &nbsp;<span class="kbd" style="border-color:rgba(0,0,0,.3);color:#14100f">Space</span></button>'
+    +'<button id="rpAuto">'+(state.replay.timer?'Pause auto-play':'Auto-play')+'</button>'
+    +'<button class="ghost" id="rpRestart">Restart</button>'
+    +'<span class="note">Sources cited inline: Antler, TechCrunch, Sifted, 20VC announcement, founder LinkedIn post.</span>'
+    +'</div></div>';
+  el('rpClose').addEventListener('click',closeReplay);
+  el('rpNext').addEventListener('click',replayAdvance);
+  el('rpAuto').addEventListener('click',toggleAuto);
+  el('rpRestart').addEventListener('click',()=>{state.replay.m=0;if(state.replay.timer){clearInterval(state.replay.timer);state.replay.timer=null;}renderReplay();});
+}
+
+/* ------- clipboard ------- */
+function copyText(txt,btn){
+  const done=()=>{btn.classList.add('done');btn.textContent='Copied';setTimeout(()=>{btn.classList.remove('done');btn.textContent='Copy ping';},1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallback());
+  }else fallback();
+  function fallback(){
+    const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+
+/* ------- health / LIVE-SIM ------- */
+function checkHealth(){
+  if(!/^https?:$/.test(location.protocol)){setChip(false,'sim','');return;}
+  fetch('/api/health').then(r=>r.json()).then(j=>{
+    setChip(!!j.live,j.provider||'sim',j.model||'');
+  }).catch(()=>setChip(false,'sim',''));
+}
+function setChip(live,provider,model){
+  state.live={on:live,provider,model};
+  const chip=el('liveChip');
+  chip.classList.toggle('live',live);
+  el('liveTxt').textContent=live?('LIVE '+provider.toUpperCase()):'SIM';
+  chip.title=live?('LLM proxy reachable: '+provider+' / '+model):'No LLM connected. All prose falls back to deterministic templates. Scores are always computed locally.';
+}
+
+/* ------- refresh + init ------- */
+function refresh(){
+  renderTabs();renderClock();renderStats();renderGrid();
+  renderBriefDeterministic();               /* data changed: facts win over prose */
+  if(state.detailId!=null)openDetail(state.detailId);
+}
+function init(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('br_watch')||'null');
+    (Array.isArray(saved)&&saved.length?saved:DEFAULT_WATCH).forEach(n=>state.watch.add(n));
+  }catch(e){DEFAULT_WATCH.forEach(n=>state.watch.add(n));}
+
+  el('tabs').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-view]');if(!b)return;
+    state.view=b.dataset.view;renderTabs();renderGrid();
+  });
+  el('search').addEventListener('input',e=>{state.search=e.target.value;renderGrid();});
+  el('grid').addEventListener('click',e=>{
+    const star=e.target.closest('[data-star]');
+    if(star){
+      const c=COMPANIES.find(x=>x.id===+star.dataset.star);
+      if(state.watch.has(c.n))state.watch.delete(c.n);else state.watch.add(c.n);
+      try{localStorage.setItem('br_watch',JSON.stringify([...state.watch]));}catch(err){}
+      renderTabs();renderGrid();
+      return;
+    }
+    const card=e.target.closest('.co');
+    if(card)openDetail(+card.dataset.id);
+  });
+  el('actlist').addEventListener('click',e=>{
+    const b=e.target.closest('[data-copy]');if(!b)return;
+    const a=state.acts.find(x=>x.id===+b.dataset.copy);
+    if(a&&a.ping)copyText(a.ping,b);
+  });
+  el('skipBtn').addEventListener('click',skipTwoWeeks);
+  el('resetBtn').addEventListener('click',resetToday);
+  el('replayBtn').addEventListener('click',openReplay);
+  el('llmBtn').addEventListener('click',llmRewrite);
+  el('briefReset').addEventListener('click',renderBriefDeterministic);
+  el('scrim').addEventListener('click',closeDetail);
+
+  document.addEventListener('keydown',e=>{
+    const t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;
+    if(state.replay.open){
+      if(e.code==='Space'){e.preventDefault();replayAdvance();}
+      else if(e.key==='Escape')closeReplay();
+      return;
+    }
+    if(e.key==='Escape'&&state.detailId!=null)closeDetail();
+  });
+
+  const w=state.simWeek;
+  const sigs=COMPANIES.reduce((n,c)=>n+c.events.filter(e=>e.wk<=w).length,0);
+  const brk=COMPANIES.filter(c=>scoreAt(c,w)>=THRESHOLD).length;
+  pushAct('scan','Next signal sweep scheduled Monday 06:30 (job boards, press RSS, GitHub, traffic ranks).');
+  pushAct('scan','Radar initialized: <b>'+COMPANIES.length+'</b> companies, <b>'+sigs+'</b> signals ingested, <b>'+brk+'</b> above the breakout threshold ('+THRESHOLD+').');
+
+  checkHealth();
+  refresh();
+}
+if(typeof document!=='undefined'&&typeof window!=='undefined')init();
+</script>
+</body>
+</html>

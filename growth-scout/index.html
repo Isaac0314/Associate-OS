@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Growth Scout</title>
+<link rel="icon" href="data:,">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e6f56'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='17' font-weight='bold' fill='%23fff' text-anchor='middle'%3EGS%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    /* Warm paper surfaces */
+    --bg:#f6f5f1;
+    --panel:#ffffff;
+    --panel-2:#fbfaf8;
+
+    /* Ink */
+    --ink:#151713;
+    --ink2:#3a3d38;
+    --muted:#6e716a;
+    --faint:#9b9e96;
+
+    /* Hairlines */
+    --line:#e8e6df;
+    --line2:#f1efe9;
+
+    /* Brand: evergreen */
+    --accent:#0e6f56;
+    --accent-2:#0a5c47;
+    --accent-soft:#e7f2ed;
+    --accent-line:#cfe4db;
+
+    /* Warm-network signal */
+    --network:#c8402b;
+    --network-bg:#fbeae6;
+    --network-line:#f2cfc6;
+
+    /* Status */
+    --green:#0e6f56;  --green-bg:#e7f2ed;  --green-line:#cfe4db;
+    --amber:#9a6a1e;  --amber-bg:#f9f0df;  --amber-line:#eeddb8;
+    --red:#b03a2e;    --red-bg:#fbeae7;    --red-line:#f1cdc6;
+    --slate:#57604f;  --slate-bg:#eef0ea;  --slate-line:#dee2d7;
+
+    --shadow-sm:0 1px 0 rgba(21,23,19,.02), 0 1px 2px rgba(21,23,19,.05);
+    --shadow-md:0 2px 4px rgba(21,23,19,.05), 0 14px 32px rgba(21,23,19,.07);
+
+    --serif:Georgia,"Times New Roman",serif;
+    --r-sm:8px; --r-md:10px; --r-lg:12px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.004em;
+  }
+  .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  button{
+    font:inherit;cursor:pointer;
+    border:1px solid var(--line);
+    background:#fff;color:var(--ink2);
+    border-radius:var(--r-sm);
+    padding:6px 11px;height:30px;
+    font-weight:550;font-size:12.5px;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    transition:background .12s,border-color .12s,color .12s;
+  }
+  button:hover{border-color:#d8d5cc;background:var(--panel-2);color:var(--ink)}
+  button:active{background:#f1efe9}
+  button.primary{
+    background:var(--accent);border-color:var(--accent);color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 1px 2px rgba(14,111,86,.28);
+  }
+  button.primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+  button.primary:disabled{opacity:.65;cursor:default}
+  button.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+  button.ghost:hover{background:var(--line2);color:var(--ink)}
+  button.mini{height:24px;padding:2px 8px;font-size:11.5px;border-radius:6px}
+  input[type=text]{
+    font:inherit;border:1px solid var(--line);border-radius:var(--r-sm);
+    padding:6px 10px;height:30px;color:var(--ink);background:#fff;
+    transition:border-color .12s, box-shadow .12s;
+  }
+  input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+  /* header */
+  header{
+    background:rgba(255,255,255,.86);
+    backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--line);
+    height:54px;display:flex;align-items:center;gap:12px;
+    padding:0 18px;position:sticky;top:0;z-index:40;
+  }
+  .brand{display:flex;align-items:center;gap:10px;flex:none}
+  .logo{
+    width:26px;height:26px;border-radius:7px;flex:none;
+    background:linear-gradient(140deg,#12a37c 0%,#0a5c47 90%);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font:700 11px/1 var(--serif);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 1px 2px rgba(10,92,71,.3);
+  }
+  .brand .nm{font:600 17px/1.1 var(--serif);letter-spacing:-.01em;white-space:nowrap}
+  .brand .sub{font-size:11px;color:var(--muted);font-weight:500;margin-top:1px;white-space:nowrap}
+  .spacer{flex:1}
+  .hchip{
+    display:inline-flex;align-items:center;gap:7px;height:28px;
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:0 11px;font-weight:550;font-size:11.5px;color:var(--ink2);white-space:nowrap;
+  }
+  .hchip .dot{width:6px;height:6px;border-radius:50%;flex:none}
+  .hchip.live .dot{background:var(--green);box-shadow:0 0 0 3px rgba(14,111,86,.14)}
+  .hchip.sim .dot{background:var(--amber);box-shadow:0 0 0 3px rgba(154,106,30,.16)}
+  .hchip small{color:var(--faint);font-weight:650;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase}
+
+  /* toolbar */
+  .toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px 10px;flex-wrap:wrap}
+  .tabs{display:inline-flex;background:#efede7;border:1px solid var(--line);border-radius:9px;padding:3px}
+  .tabs button{border:0;background:transparent;color:var(--muted);height:26px;padding:2px 12px;border-radius:6px;box-shadow:none}
+  .tabs button:hover{background:rgba(255,255,255,.55);color:var(--ink)}
+  .tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04)}
+  .tabs button .n{color:var(--faint);margin-left:4px;font-size:11px}
+  .chip{
+    font-size:11.5px;height:26px;padding:0 10px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;color:var(--ink2);
+    cursor:pointer;font-weight:550;display:inline-flex;align-items:center;
+    transition:.12s;
+  }
+  .chip:hover{border-color:#d8d5cc}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .stamps{font-size:11px;color:var(--faint);padding:0 18px 8px;font-variant-numeric:tabular-nums}
+  .stamps b{color:var(--muted);font-weight:600}
+
+  /* layout */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 428px;gap:14px;padding:0 18px 54px;align-items:start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+  .card-h{display:flex;align-items:center;gap:9px;padding:11px 16px;border-bottom:1px solid var(--line2)}
+  .card-h h2{margin:0;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);white-space:nowrap}
+  .card-h .r{margin-left:auto;font-size:11px;color:var(--faint);font-weight:550;font-variant-numeric:tabular-nums}
+
+  /* list */
+  .lrow{
+    display:grid;
+    grid-template-columns:30px minmax(0,1.5fr) 74px minmax(0,1.05fr) minmax(0,1fr) 92px;
+    gap:10px;align-items:center;
+    padding:9px 16px;border-bottom:1px solid var(--line2);
+    cursor:pointer;transition:background .1s;
+  }
+  .lrow:hover{background:var(--panel-2)}
+  .lrow.sel{background:var(--accent-soft)}
+  .lrow:last-child{border-bottom:0}
+  .lhead{
+    display:grid;grid-template-columns:30px minmax(0,1.5fr) 74px minmax(0,1.05fr) minmax(0,1fr) 92px;gap:10px;
+    padding:7px 16px;border-bottom:1px solid var(--line2);
+    font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);
+  }
+  .rk{font-variant-numeric:tabular-nums;color:var(--faint);font-weight:600;font-size:12px}
+  .cname{min-width:0}
+  .cname .n{font:600 13.5px/1.25 var(--serif);letter-spacing:-.005em;color:var(--ink);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cname .m{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+  .badge{
+    font-size:9px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+    padding:1.5px 6px;border-radius:5px;flex:none;
+  }
+  .badge.network{background:var(--network-bg);color:var(--network);border:1px solid var(--network-line)}
+  .badge.watch{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+  .stage{font-size:11.5px;color:var(--ink2);font-weight:550;white-space:nowrap}
+  .round{min-width:0}
+  .round .a{font-size:12px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+  .round .s{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .round .u{font-size:11.5px;color:var(--faint);font-style:italic}
+  .sigs{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+  .sig{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:10.5px;font-weight:600;color:var(--ink2);
+    background:var(--panel-2);border:1px solid var(--line);
+    border-radius:6px;padding:2px 6px;white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .sig .lab{color:var(--faint);font-weight:650;font-size:9px;letter-spacing:.04em}
+  .sig .up{color:var(--green);font-weight:700}
+  .sig .dn{color:var(--red);font-weight:700}
+  .sig.fresh{border-color:var(--accent-line);background:var(--accent-soft)}
+  .sig.none{color:var(--faint);font-weight:500;font-style:italic;border-style:dashed}
+  .scorec{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+  .scoren{font:650 16px/1 var(--serif);font-variant-numeric:lining-nums tabular-nums;width:26px;text-align:right}
+  .s-hi{color:var(--green)} .s-mid{color:var(--amber)} .s-lo{color:var(--faint)}
+  .sbar{width:44px;height:4px;border-radius:99px;background:var(--line2);overflow:hidden;flex:none}
+  .sbar i{display:block;height:100%;border-radius:99px}
+  .s-hi + .sbar i, .sbar i.hi{background:var(--green)}
+  .sbar i.mid{background:var(--amber)} .sbar i.lo{background:#c2c5bc}
+
+  /* detail pane */
+  .det{position:sticky;top:68px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 84px);overflow:auto;padding-bottom:2px}
+  @media (max-width:1080px){.det{position:static;max-height:none}}
+  .dhead{padding:16px 18px 13px;border-bottom:1px solid var(--line2);position:relative;overflow:hidden}
+  .dhead:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,#12a37c,#0a5c47)}
+  .dhead .t{display:flex;align-items:flex-start;gap:10px}
+  .dhead h3{margin:0;font:600 19px/1.15 var(--serif);letter-spacing:-.01em}
+  .dhead .meta{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .dhead .big{margin-left:auto;text-align:right;flex:none}
+  .dhead .big .v{font:650 30px/1 var(--serif);font-variant-numeric:lining-nums tabular-nums}
+  .dhead .big .l{font-size:9px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+  .whynow{
+    margin:10px 0 0;padding:8px 11px;border-radius:8px;
+    background:var(--accent-soft);border:1px solid var(--accent-line);
+    color:#0b4636;font-size:12px;line-height:1.45;
+  }
+  .whynow b{font-weight:700}
+  .dsec{padding:12px 18px}
+  .dsec + .dsec{border-top:1px solid var(--line2)}
+  .dsec h4{margin:0 0 8px;font-size:10px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .dsec h4 .r{margin-left:auto;font-weight:550;letter-spacing:0;text-transform:none;color:var(--faint);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .srcrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line2);font-size:12px}
+  .srcrow:last-child{border-bottom:0}
+  .srcrow .k{width:96px;flex:none;color:var(--muted);font-weight:600;font-size:11px}
+  .srcrow .v{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;min-width:0}
+  .srcrow .v small{color:var(--faint);font-weight:500}
+  .srcrow .d{font-weight:700}
+  .srcrow .d.up{color:var(--green)} .srcrow .d.dn{color:var(--red)}
+  .srcrow .stamp{margin-left:auto;font-size:10px;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .srcrow .na{color:var(--faint);font-style:italic;font-weight:500}
+  table.brk{width:100%;border-collapse:collapse;font-size:11.5px}
+  table.brk th{
+    text-align:left;font-size:9.5px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--faint);padding:3px 6px 5px;border-bottom:1px solid var(--line2);
+  }
+  table.brk td{padding:5px 6px;border-bottom:1px dashed var(--line2);vertical-align:top}
+  table.brk tr:last-child td{border-bottom:0}
+  table.brk td.n{font-variant-numeric:tabular-nums;text-align:right;font-weight:650;white-space:nowrap}
+  table.brk td.inp{color:var(--muted);font-size:11px;line-height:1.4}
+  table.brk tr.tot td{border-top:1px solid var(--line);font-weight:700;border-bottom:0}
+  .ev{display:flex;gap:9px;padding:6px 0;border-bottom:1px dashed var(--line2)}
+  .ev:last-child{border-bottom:0}
+  .ev .dt{width:62px;flex:none;font-size:10.5px;color:var(--faint);font-weight:600;font-variant-numeric:tabular-nums;padding-top:1px}
+  .ev .tx{font-size:12px;line-height:1.45;color:var(--ink2);min-width:0}
+  .ev .src{display:inline-block;margin-left:6px;font-size:10px;color:var(--faint);font-weight:600;white-space:nowrap}
+  .ev .src:before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent-line);margin-right:4px;vertical-align:1px}
+  .ev.kreported .tx:before, .ev.krisk .tx:before{
+    content:attr(data-k);font-size:8.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;
+    padding:1px 5px;border-radius:4px;margin-right:6px;vertical-align:1px;
+  }
+  .ev.kreported .tx:before{background:var(--amber-bg);color:var(--amber)}
+  .ev.krisk .tx:before{background:var(--red-bg);color:var(--red)}
+  .factcard{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:12px}
+  .factcard .a{font-weight:650;font-variant-numeric:tabular-nums}
+  .factcard .s{color:var(--faint);font-size:10.5px;margin-top:2px}
+
+  /* founder cadence note */
+  .xnote{
+    margin-top:6px;padding:7px 10px;border:1px solid var(--amber-line);
+    background:var(--amber-bg);color:var(--amber);border-radius:8px;
+    font-size:11px;line-height:1.5;
+  }
+
+  /* discovery feed */
+  .disc-item{padding:9px 0;border-bottom:1px dashed var(--line2)}
+  .disc-item:last-child{border-bottom:0}
+  .disc-item .dn{font:600 13px/1.3 var(--serif);color:var(--ink);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .disc-item .dstage{
+    font-size:9px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+    padding:1.5px 6px;border-radius:5px;background:var(--slate-bg);color:var(--slate);border:1px solid var(--slate-line);
+  }
+  .disc-item .dh2{display:block;font-size:12px;line-height:1.4;color:var(--ink2);text-decoration:none;font-weight:550;margin-top:2px}
+  .disc-item .dh2:hover{color:var(--accent);text-decoration:underline}
+  .disc-item .dm{font-size:10.5px;color:var(--faint);margin-top:2px}
+  .disc-item .da{margin-top:6px}
+  .dadded{font-size:11px;font-weight:650;color:var(--green)}
+  .badge.disc{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+
+  /* press wire */
+  .wire-item{padding:7px 0;border-bottom:1px dashed var(--line2);font-size:12px;line-height:1.4}
+  .wire-item:last-child{border-bottom:0}
+  .wire-item a{color:var(--ink2);text-decoration:none;font-weight:550}
+  .wire-item a:hover{color:var(--accent);text-decoration:underline}
+  .wire-item .m{font-size:10.5px;color:var(--faint);margin-top:1px}
+  .wire-item .hit{color:var(--accent);font-weight:700}
+
+  /* modals */
+  .mback{
+    position:fixed;inset:0;background:rgba(21,23,19,.4);z-index:60;
+    display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;
+    backdrop-filter:blur(2px);
+  }
+  .mback.open{display:flex}
+  .modal{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow-md);width:min(760px,100%);max-height:86vh;
+    display:flex;flex-direction:column;overflow:hidden;
+    animation:mpop .16s ease-out;
+  }
+  @keyframes mpop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+  .modal .mh{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line2)}
+  .modal .mh h3{margin:0;font:600 16px/1.2 var(--serif)}
+  .modal .mh .x{margin-left:auto}
+  .modal .mb{padding:16px 18px;overflow:auto}
+  pre.brief{
+    margin:0;white-space:pre-wrap;word-wrap:break-word;
+    font:12px/1.62 ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
+    color:var(--ink2);background:var(--panel-2);
+    border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  }
+  .mfoot{display:flex;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line2)}
+  .mfoot .note{font-size:11px;color:var(--faint);margin-left:auto}
+
+  /* agent modal tree */
+  .tree{font:12px/1.9 ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;color:var(--ink2)}
+  .tree .dir{font-weight:700;color:var(--ink)}
+  .tree .c{color:var(--faint);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11.5px}
+  .agent-thesis{
+    margin-top:14px;padding:11px 14px;border-radius:10px;
+    background:var(--accent-soft);border:1px solid var(--accent-line);
+    font:italic 500 13px/1.6 var(--serif);color:#0b4636;
+  }
+  .agent-thesis b{font-style:normal}
+
+  /* toasts */
+  #toasts{position:fixed;right:16px;bottom:16px;z-index:80;display:flex;flex-direction:column;gap:8px;max-width:360px}
+  .toast{
+    background:var(--ink);color:#f2f2ee;border-radius:10px;
+    padding:9px 13px;font-size:12px;line-height:1.45;
+    box-shadow:var(--shadow-md);
+    animation:tin .18s ease-out;
+  }
+  .toast.err{background:#7c2d24}
+  .toast.ok{background:var(--accent-2)}
+  @keyframes tin{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+
+  footer{
+    padding:10px 18px 26px;font-size:11px;color:var(--faint);line-height:1.55;
+    max-width:980px;
+  }
+  kbd{
+    font:600 10px/1 ui-monospace,Consolas,monospace;
+    background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;
+    border-radius:4px;padding:2px 4px;color:var(--muted);
+  }
+  .kbdhint{font-size:10.5px;color:var(--faint);margin-left:auto;white-space:nowrap}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#d7d4ca;border-radius:99px;border:2px solid var(--bg)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">GS</div>
+    <div>
+      <div class="nm">Growth Scout</div>
+      <div class="sub">European growth signals</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="hchip tnum" id="clockChip"><small>Local</small><span id="clock">--:--:--</span></div>
+  <div class="hchip sim" id="serverChip" title="Checking the server-side X connector"><span class="dot"></span><small>X API</small><span id="serverState">CHECKING</span></div>
+  <button id="btnBrief">Monday brief</button>
+  <button id="btnRefresh" class="primary">Refresh live signals</button>
+</header>
+
+<div class="toolbar">
+  <div class="tabs" id="tabs"></div>
+  <span id="sectorChips" style="display:flex;gap:5px;flex-wrap:wrap"></span>
+  <input type="text" id="q" placeholder="Search company, city, sector" style="width:220px" />
+  <button class="mini" id="btnJobs" title="Pull open-role counts from Greenhouse, Lever and Ashby boards">Pull jobs</button>
+  <button class="mini" id="btnHN" title="Pull 90-day Hacker News story mentions via Algolia">Pull HN</button>
+  <button class="mini" id="btnGH" title="Pull GitHub repo stars for open-source companies">Pull GitHub</button>
+  <button class="mini primary" id="btnX" title="Pull founder posts through the server-side X connector">Pull X</button>
+</div>
+<div class="stamps" id="stamps">No live pull yet.</div>
+
+<div class="layout">
+  <div class="card">
+    <div class="card-h">
+      <h2>Ranked watchlist</h2>
+      <span class="r" id="countLbl"></span>
+    </div>
+    <div class="lhead">
+      <span>#</span><span>Company</span><span>Stage</span><span>Last disclosed round</span><span>Live signals</span><span style="text-align:right">Momentum</span>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <div class="det">
+    <div class="card" id="detail"></div>
+    <div class="card" id="wireCard" style="display:none">
+      <div class="card-h">
+        <h2>Press wire</h2>
+        <span class="r" id="wireStamp"></span>
+        <button class="mini" id="btnTC">TechCrunch</button>
+        <button class="mini" id="btnSifted">Sifted</button>
+      </div>
+      <div class="dsec" id="wireBody"><span style="color:var(--faint);font-size:12px">Choose a feed.</span></div>
+    </div>
+    <div class="card" id="discCard">
+      <div class="card-h">
+        <h2>Discovered this week</h2>
+        <span class="r" id="discStamp"></span>
+        <button class="mini primary" id="btnScan" title="Scan TechCrunch, Sifted and EU-Startups for funding-round headlines and surface companies not yet on the watchlist">Scan press feeds</button>
+      </div>
+      <div class="dsec" id="discBody"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Public sources and pull times are preserved. Scores are deterministic.
+</footer>
+
+<!-- Monday brief modal -->
+<div class="mback" id="briefBack">
+  <div class="modal">
+    <div class="mh">
+      <h3>Monday pipeline brief</h3>
+      <span class="hchip sim" id="polishChip" style="height:24px"><span class="dot"></span><small>Polish</small><span id="polishState">SIM</span></span>
+      <button class="ghost x mini" data-close>Close</button>
+    </div>
+    <div class="mb">
+      <pre class="brief" id="briefText"></pre>
+    </div>
+    <div class="mfoot">
+      <button class="primary" id="btnCopyBrief">Copy markdown</button>
+      <button id="btnPolish">Polish language (LLM)</button>
+      <button class="ghost" id="btnRevert" style="display:none">Back to deterministic draft</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   Growth Scout - deterministic scoring over live + curated signals.
+   Design rule: code owns the facts, the LLM owns the language.
+   ===================================================================== */
+
+/* ---------- curated watchlist (facts verified 11 Jul 2026; see tools.md) ---------- */
+/* ev(date, kind, text, source). date 'YYYY-MM-DD' or 'YYYY-MM' or null (undated
+   items are displayed but excluded from recency scoring). */
+function ev(d,k,t,s,l){return {d:d,k:k,t:t,s:s,l:l||null};}
+
+const COMPANIES=[
+ {id:'legora',name:'Legora',hq:'Stockholm / London',sector:'ai',tags:['Legal AI','B2B SaaS'],stage:'Series D',
+  line:'Collaborative AI workspace for law firms; 40 to 400 employees in about a year.',
+  round:{label:'$550M Series D at $5.55B',lead:'Accel',date:'2026-03-10',src:'TechCrunch, 10 Mar 2026',amt:550},
+  ats:{k:'ashby',slug:'legora'},gh:null,hn:'"Legora"',
+  events:[
+    ev('2026-03-10','funding','$550M Series D at a $5.55B valuation led by Accel, with Benchmark, Bessemer, General Catalyst, ICONIQ, Redpoint.','TechCrunch, 10 Mar 2026'),
+    ev('2026-04-30','funding','$50M extension adding NVIDIA\'s NVentures at $5.6B.','TechCrunch, 30 Apr 2026'),
+  ]},
+ {id:'lawhive',name:'Lawhive',hq:'London',sector:'ai',tags:['Legal AI','Consumer'],stage:'Series B',
+  line:'Consumer legal platform pairing regulated lawyers with AI case handling.',
+  round:{label:'$60M Series B',lead:'Mitch Rales',date:'2026-02-05',src:'Fortune, 5 Feb 2026',amt:60},
+  ats:{k:'ashby',slug:'lawhive'},gh:null,hn:'"Lawhive"',
+  events:[
+    ev('2026-02-05','funding','$60M Series B led by Mitch Rales with TQ Ventures, GV, Balderton, Jigsaw; total raised past $100M. Targeting the ~$200B US consumer legal market.','Fortune, 5 Feb 2026'),
+  ]},
+ {id:'parloa',name:'Parloa',hq:'Berlin',sector:'ai',tags:['Agentic AI','Customer ops'],stage:'Series C',
+  line:'Agentic AI for enterprise customer service and contact-center automation.',
+  round:{label:'$120M Series C at $1B',lead:'Durable, Altimeter, General Catalyst',date:'2025-05',src:'Parloa announcement, May 2025',amt:120},
+  ats:{k:'greenhouse',slug:'parloa'},gh:null,hn:'"Parloa"',
+  events:[
+    ev('2025-05','funding','$120M Series C at a $1B valuation (Durable, Altimeter, General Catalyst).','Parloa announcement, May 2025'),
+    ev(null,'reported','Reported $350M raise tripling valuation to about $3B; date and lead not confirmed.','Vestbee (reported)'),
+  ]},
+ {id:'peec',name:'Peec AI',hq:'Berlin',sector:'ai',tags:['AI search analytics','GEO'],stage:'Series A',network:true,
+  line:'Shows brands how they appear inside ChatGPT and other AI answers.',
+  round:{label:'$21M Series A at >$100M',lead:'Singular',date:'2025-11-17',src:'TechCrunch, 17 Nov 2025',amt:21},
+  ats:{k:'ashby',slug:'peec'},gh:null,hn:'"Peec"',
+  events:[
+    ev('2025-07','funding','€7M seed led by 20VC, reportedly closed in 24 hours, the fastest seed in 20VC history. Founders met in the Antler Berlin Winter 2024 cohort.','Tech Funding News, Jul 2025'),
+    ev('2025-11-17','funding','$21M Series A led by Singular, with Antler, Combination VC, identity.vc; valuation tripled to over $100M.','TechCrunch, 17 Nov 2025'),
+    ev('2026-05-23','traction','ARR passed $10M sixteen months after launch, more than doubling in about six months. Customers include Axel Springer, Chanel, ElevenLabs, n8n, TUI.','TechCrunch, 23 May 2026'),
+    ev('2026-06-26','reported','Reportedly negotiating a new round at about $200M pre-money, roughly double the Series A valuation in seven months.','Sifted, 26 Jun 2026'),
+  ]},
+ {id:'elevenlabs',name:'ElevenLabs',hq:'London / New York',sector:'ai',tags:['Voice AI'],stage:'Series D',
+  line:'AI voice synthesis and audio platform.',
+  round:{label:'$500M Series D at $11B',lead:'Sequoia',date:'2026-02-04',src:'CNBC, 4 Feb 2026',amt:500},
+  ats:{k:'ashby',slug:'elevenlabs'},gh:'elevenlabs/elevenlabs-python',hn:'"ElevenLabs"',
+  events:[
+    ev('2026-02-04','funding','$500M Series D at an $11B valuation led by Sequoia; a16z quadrupled and ICONIQ tripled their positions. Company signalling an IPO path.','CNBC, 4 Feb 2026'),
+  ]},
+ {id:'synthesia',name:'Synthesia',hq:'London',sector:'ai',tags:['AI video','Enterprise'],stage:'Series D',
+  line:'AI video generation for enterprise communications and training.',
+  round:null,
+  ats:{k:'ashby',slug:'synthesia'},gh:null,hn:'"Synthesia"',events:[]},
+ {id:'lovable',name:'Lovable',hq:'Stockholm',sector:'ai',tags:['AI app building','DevTools'],stage:'Series B',
+  line:'Prompt-to-app software building; one of Europe\'s fastest-growing products.',
+  round:{label:'$330M Series B at $6.6B',lead:'CapitalG, Menlo Ventures',date:'2025-12-18',src:'TechCrunch, 18 Dec 2025',amt:330},
+  ats:{k:'greenhouse',slug:'lovable'},gh:null,hn:'"Lovable"',
+  events:[
+    ev('2025-07-17','funding','$200M Series A at $1.8B led by Accel, eight months after launch.','TechCrunch, 17 Jul 2025'),
+    ev('2025-12-18','funding','$330M Series B at a $6.6B valuation led by CapitalG and Menlo Ventures.','TechCrunch, 18 Dec 2025'),
+  ]},
+ {id:'n8n',name:'n8n',hq:'Berlin',sector:'saas',tags:['Workflow automation','AI orchestration'],stage:'Series C',
+  line:'Source-available workflow automation and AI orchestration platform.',
+  round:{label:'$180M Series C at $2.5B',lead:'Accel',date:'2025-10-09',src:'n8n announcement, Oct 2025',amt:180},
+  ats:{k:'ashby',slug:'n8n'},gh:'n8n-io/n8n',hn:'"n8n"',
+  events:[
+    ev('2025-10-09','funding','$180M Series C at a $2.5B valuation led by Accel, with Meritech, Redpoint, NVentures; ARR beyond $40M, usage up 10x year over year.','n8n announcement, Oct 2025'),
+  ]},
+ {id:'mistral',name:'Mistral AI',hq:'Paris',sector:'ai',tags:['Foundation models'],stage:'Growth',watch:true,
+  line:'Open-weight frontier model lab. On watch: scale is beyond the Series A-C mandate.',
+  round:null,
+  ats:null,gh:'mistralai/mistral-inference',hn:'"Mistral"',events:[]},
+ {id:'poolside',name:'Poolside',hq:'Paris',sector:'ai',tags:['AI for software'],stage:'Growth',
+  line:'Foundation models for software engineering.',
+  round:null,ats:{k:'ashby',slug:'poolside'},gh:null,hn:'"poolside"',events:[]},
+ {id:'dust',name:'Dust',hq:'Paris',sector:'ai',tags:['AI agents','Enterprise'],stage:'Series A',
+  line:'Enterprise AI agent workspace connecting company knowledge to custom agents.',
+  round:null,ats:{k:'ashby',slug:'dust'},gh:null,hn:'"dust.tt"',events:[]},
+ {id:'granola',name:'Granola',hq:'London',sector:'ai',tags:['AI productivity'],stage:'Series B',
+  line:'AI notepad for meetings, widely adopted by founders and investors.',
+  round:null,ats:{k:'ashby',slug:'granola'},gh:null,hn:'"Granola"',events:[]},
+ {id:'deepl',name:'DeepL',hq:'Cologne',sector:'ai',tags:['Language AI'],stage:'Growth',
+  line:'Language AI and translation for enterprises.',
+  round:null,ats:{k:'ashby',slug:'deepl'},gh:null,hn:'"DeepL"',events:[]},
+ {id:'physicsx',name:'PhysicsX',hq:'London',sector:'ai',tags:['AI engineering','Simulation'],stage:'Series B',
+  line:'AI simulation and engineering models for aerospace, automotive and energy.',
+  round:null,ats:{k:'greenhouse',slug:'physicsx'},gh:null,hn:'"PhysicsX"',events:[]},
+ {id:'weaviate',name:'Weaviate',hq:'Amsterdam',sector:'ai',tags:['Vector database','Open source'],stage:'Series B',
+  line:'Open-source vector database for AI applications.',
+  round:null,ats:{k:'ashby',slug:'weaviate'},gh:'weaviate/weaviate',hn:'"Weaviate"',events:[]},
+ {id:'qdrant',name:'Qdrant',hq:'Berlin',sector:'ai',tags:['Vector search','Open source'],stage:'Series A',
+  line:'Open-source vector search engine written in Rust.',
+  round:null,ats:null,gh:'qdrant/qdrant',hn:'"Qdrant"',events:[]},
+ {id:'tacto',name:'Tacto',hq:'Munich',sector:'saas',tags:['AI procurement','Industrial'],stage:'Series B',
+  line:'AI procurement and supply-chain intelligence for the industrial Mittelstand.',
+  round:null,ats:{k:'ashby',slug:'tacto'},gh:null,hn:'"Tacto"',events:[]},
+ {id:'pigment',name:'Pigment',hq:'Paris',sector:'saas',tags:['FP&A','Planning'],stage:'Series D',
+  line:'Business planning and FP&A platform for enterprises.',
+  round:null,ats:{k:'lever',slug:'pigment'},gh:null,hn:null,events:[]},
+ {id:'two',name:'Two',hq:'Oslo',sector:'fintech',tags:['B2B payments','Trade credit'],stage:'Series A',network:true,
+  line:'B2B payments: instant net terms and trade credit at checkout.',
+  round:{label:'€13M round',lead:'Idekapital, Shine Capital',date:'2025-07-11',src:'Tech.eu, 11 Jul 2025',amt:13},
+  ats:null,gh:null,hn:null,
+  events:[
+    ev('2025-07-11','funding','€13M round led by Idekapital and Shine Capital, with Sequoia, Antler, Investinor, LocalGlobe; total funding past €40M. Serves 200+ merchants across Europe.','Tech.eu, 11 Jul 2025'),
+    ev('2025-07-11','note','Round coverage framed B2B payments as one of fintech\'s biggest untapped opportunities.','EU-Startups / nFront, Jul 2025'),
+  ]},
+ {id:'klearly',name:'Klearly',hq:'Amsterdam',sector:'fintech',tags:['Payments'],stage:'Series A',network:true,
+  line:'Amsterdam payments company serving hospitality merchants.',
+  round:null,ats:null,gh:null,hn:'"Klearly"',events:[]},
+ {id:'qonto',name:'Qonto',hq:'Paris',sector:'fintech',tags:['SMB banking'],stage:'Growth',
+  line:'Business banking and finance workspace for European SMBs.',
+  round:null,ats:{k:'lever',slug:'qonto'},gh:null,hn:'"Qonto"',events:[]},
+ {id:'payhawk',name:'Payhawk',hq:'London / Sofia',sector:'fintech',tags:['Spend management'],stage:'Series B',
+  line:'Corporate cards and spend management for mid-market and enterprise.',
+  round:null,ats:{k:'greenhouse',slug:'payhawkio'},gh:null,hn:'"Payhawk"',events:[]},
+ {id:'pleo',name:'Pleo',hq:'Copenhagen',sector:'fintech',tags:['Spend management'],stage:'Series C',
+  line:'Smart company cards and expense management for SMBs.',
+  round:null,ats:{k:'ashby',slug:'pleo'},gh:null,hn:'"Pleo"',events:[]},
+ {id:'moss',name:'Moss',hq:'Berlin',sector:'fintech',tags:['Spend management'],stage:'Series B',
+  line:'Spend management and corporate cards for German SMEs.',
+  round:null,ats:{k:'ashby',slug:'moss'},gh:null,hn:null,events:[]},
+ {id:'pennylane',name:'Pennylane',hq:'Paris',sector:'fintech',tags:['Accounting','SMB'],stage:'Growth',
+  line:'Accounting and financial OS for European SMEs, nearing profitability.',
+  round:{label:'€175M at about €3.6B',lead:'TCV, Blackstone Growth',date:'2026-01',src:'Sifted / EU-Startups, Jan 2026',amt:175},
+  ats:{k:'ashby',slug:'pennylane'},gh:null,hn:'"Pennylane"',
+  events:[
+    ev('2025-04-06','funding','€75M co-led by Sequoia, CapitalG and Meritech at a €2B valuation.','CNBC, 6 Apr 2025'),
+    ev('2026-01','funding','€175M led by TCV and Blackstone Growth at about €3.6B; company nearing profitability, positioning for e-invoicing mandates.','Sifted / EU-Startups, Jan 2026'),
+  ]},
+ {id:'payrails',name:'Payrails',hq:'Berlin',sector:'fintech',tags:['Payment orchestration'],stage:'Series A',
+  line:'Payment operating system for enterprises and platforms.',
+  round:null,ats:{k:'ashby',slug:'payrails'},gh:null,hn:'"Payrails"',events:[]},
+ {id:'agicap',name:'Agicap',hq:'Lyon',sector:'fintech',tags:['Cash flow','Treasury'],stage:'Series B',
+  line:'Cash-flow forecasting and treasury management for SMEs.',
+  round:null,ats:{k:'lever',slug:'agicap'},gh:null,hn:'"Agicap"',events:[]},
+ {id:'swile',name:'Swile',hq:'Paris / Montpellier',sector:'fintech',tags:['Benefits','Worktech'],stage:'Growth',
+  line:'Employee benefits super-card and worktech platform.',
+  round:null,ats:{k:'lever',slug:'swile'},gh:null,hn:'"Swile"',events:[]},
+ {id:'nelly',name:'Nelly',hq:'Berlin',sector:'fintech',tags:['Healthcare payments'],stage:'Series B',
+  line:'Payments and financial OS for medical practices.',
+  round:null,ats:{k:'ashby',slug:'nelly'},gh:null,hn:null,events:[]},
+ {id:'teton',name:'Teton',hq:'Copenhagen',sector:'health',tags:['Care AI','Computer vision'],stage:'Series A',network:true,
+  line:'Computer-vision care assistant for nursing and elder care.',
+  round:{label:'$20M Series A',lead:'Plural',date:'2025-09-09',src:'BusinessWire, 9 Sep 2025',amt:20},
+  ats:{k:'ashby',slug:'teton'},gh:null,hn:'"teton.ai"',
+  events:[
+    ev('2025-09-09','funding','$20M Series A led by Plural, with Bertelsmann Investments, Antler Elevate, Nebular and PSV Tech participating.','BusinessWire, 9 Sep 2025'),
+    ev('2025-09-09','traction','ARR up 13x since seed, customers growing 300% year over year; NVIDIA partnership on a point-of-care dataset; US launch under way.','Teton announcement, Sep 2025'),
+  ]},
+ {id:'corti',name:'Corti',hq:'Copenhagen',sector:'health',tags:['Healthcare AI'],stage:'Series B',
+  line:'AI infrastructure for healthcare conversations and clinical documentation.',
+  round:null,ats:{k:'ashby',slug:'corti'},gh:null,hn:'"Corti"',events:[]},
+ {id:'ada',name:'Ada Health',hq:'Berlin',sector:'health',tags:['Symptom AI','Care navigation'],stage:'Growth',
+  line:'Clinical-grade symptom assessment and care navigation AI.',
+  round:null,ats:{k:'greenhouse',slug:'adahealth'},gh:null,hn:'"Ada Health"',events:[]},
+ {id:'isomorphic',name:'Isomorphic Labs',hq:'London',sector:'health',tags:['AI drug design'],stage:'Growth',
+  line:'AI-first drug design; Alphabet spin-out built on the AlphaFold lineage.',
+  round:{label:'$600M first external round',lead:'Thrive Capital',date:'2025-03-31',src:'PR Newswire, 31 Mar 2025',amt:600},
+  ats:{k:'greenhouse',slug:'isomorphiclabs'},gh:null,hn:'"Isomorphic Labs"',
+  events:[
+    ev('2025-03-31','funding','$600M first external round led by Thrive Capital, with GV and follow-on from Alphabet.','PR Newswire, 31 Mar 2025'),
+    ev(null,'reported','Reported $2.1B Series B led by Thrive with Alphabet, GV, MGX, Temasek, CapitalG; closing terms not fully confirmed.','Tech Funding News, Jun 2026 (reported)'),
+  ]},
+ {id:'proxima',name:'Proxima Fusion',hq:'Munich',sector:'climate',tags:['Fusion','Stellarator'],stage:'Growth',
+  line:'QI stellarator fusion; Max Planck IPP spin-out, Europe\'s best-funded fusion company.',
+  round:{label:'€411M at €2.4B',lead:'XTX Ventures, East X Ventures',date:'2026-07-07',src:'CNBC, 7 Jul 2026',amt:411},
+  ats:{k:'ashby',slug:'proxima-fusion'},gh:null,hn:'"Proxima Fusion"',
+  events:[
+    ev('2026-07-07','funding','€411M ($468M) at a €2.4B valuation, the largest European fusion round on record, led by XTX Ventures and East X Ventures with Google and RWE as strategic investors; total raised past €650M.','CNBC, 7 Jul 2026'),
+    ev('2025-06','funding','€130M Series A led by Balderton and Cherry Ventures.','Proxima Fusion announcement, Jun 2025'),
+    ev(null,'partnership','Agreement with RWE, Bavaria and Max Planck IPP to site the first commercial plant at the former Gundremmingen nuclear site.','Proxima Fusion announcement'),
+    ev('2025-02','milestone','Stellaris: first peer-reviewed integrated commercial stellarator plant concept, published in Fusion Engineering and Design.','Fusion Engineering and Design, Feb 2025'),
+  ]},
+ {id:'marvel',name:'Marvel Fusion',hq:'Munich',sector:'climate',tags:['Fusion','Laser inertial'],stage:'Series B',
+  line:'Ultra-short-pulse laser inertial fusion with a near-term laser capability line.',
+  round:{label:'€113M Series B (extended)',lead:'EQT Ventures, Siemens Energy, EIC Fund',date:'2025-03-28',src:'World Nuclear News, 28 Mar 2025',amt:113},
+  ats:{k:'greenhouse',slug:'marvelfusion'},gh:null,hn:'"Marvel Fusion"',
+  events:[
+    ev('2025-03-28','funding','Series B extended by €50M to €113M total; EQT Ventures, Siemens Energy and the EIC Fund joined. About €170M private raised, €385M including public support.','World Nuclear News, 28 Mar 2025'),
+    ev(null,'milestone','ATLAS multi-petawatt laser facility at Colorado State University on track for substantial completion in Dec 2026; ~7 PW combined at 10 Hz.','Colorado State University, 2026'),
+  ]},
+ {id:'tokamak',name:'Tokamak Energy',hq:'Oxford',sector:'climate',tags:['Fusion','HTS magnets'],stage:'Growth',
+  line:'Spherical tokamak fusion plus HTS magnet sales, a real near-term revenue line.',
+  round:{label:'$125M round',lead:'Future Planet Capital, In-Q-Tel',date:'2024-11',src:'TechCrunch, Nov 2024',amt:125},
+  ats:null,gh:null,hn:'"Tokamak Energy"',
+  events:[
+    ev('2024-11','funding','$125M round with Future Planet Capital and In-Q-Tel; about $336M raised in total.','TechCrunch, Nov 2024'),
+    ev('2026-06-19','note','Supplies HTS magnets to the UK STEP programme, giving it revenue before net energy.','TechCrunch fusion roundup, 19 Jun 2026'),
+  ]},
+ {id:'focused',name:'Focused Energy',hq:'Darmstadt / Austin',sector:'climate',tags:['Fusion','Laser inertial'],stage:'Series A',
+  line:'Laser inertial fusion; NIF-diaspora team across Darmstadt and Austin.',
+  round:{label:'$240M oversubscribed Series A',lead:'SPRIND, RWE backing',date:'2026-06',src:'TechCrunch, Jun 2026',amt:240},
+  ats:null,gh:null,hn:'"Focused Energy"',
+  events:[
+    ev('2026-06','funding','$240M oversubscribed Series A; roughly $400M private plus $200M in grants raised in total, backed by SPRIND and RWE. Hired NIF target-design leadership.','TechCrunch, Jun 2026'),
+  ]},
+ {id:'firstlight',name:'First Light Fusion',hq:'Oxford',sector:'climate',tags:['Pulsed power'],stage:'Series C',watch:true,
+  line:'Pivoted from building a power plant to selling pulsed-power capability.',
+  round:null,ats:null,gh:null,hn:'"First Light Fusion"',
+  events:[
+    ev('2025-03','risk','Pivoted away from building its own power plant to selling pulsed-power and amplifier capability for defence and science; about $108M raised.','TechCrunch, Mar 2025'),
+  ]},
+];
+
+/* ---------- founders (X layer) ----------
+   Names from public coverage. An X handle is stored ONLY where it was
+   verified against the founder's live public X profile (checked 11 Jul 2026);
+   otherwise the name is kept without a handle. No follower counts or other
+   numbers about real people are ever invented client-side. */
+const FOUNDERS={
+  legora:[{name:'Max Junestrand',x:'MaxJunestrand'}],
+  lawhive:[{name:'Pierre Proner'}],
+  parloa:[{name:'Malte Kosub'},{name:'Stefan Ostwald'}],
+  elevenlabs:[{name:'Mati Staniszewski',x:'matistanis'},{name:'Piotr Dąbkowski'}],
+  synthesia:[{name:'Victor Riparbelli',x:'vriparbelli'},{name:'Steffen Tjerrild'}],
+  lovable:[{name:'Anton Osika',x:'antonosika'},{name:'Fabian Hedin'}],
+  n8n:[{name:'Jan Oberhauser',x:'JanOberhauser'}],
+  mistral:[{name:'Arthur Mensch',x:'arthurmensch'},{name:'Guillaume Lample'},{name:'Timothée Lacroix'}],
+  poolside:[{name:'Jason Warner',x:'jasoncwarner'},{name:'Eiso Kant'}],
+  dust:[{name:'Stanislas Polu',x:'spolu'},{name:'Gabriel Hubert'}],
+  granola:[{name:'Chris Pedregal'},{name:'Sam Stephenson'}],
+  deepl:[{name:'Jarek Kutylowski'}],
+  physicsx:[{name:'Robin Tuluie'}],
+  weaviate:[{name:'Bob van Luijt',x:'bobvanluijt'}],
+  qdrant:[{name:'Andre Zayarni'}],
+  pigment:[{name:'Eléonore Crespo'},{name:'Romain Niccoli'}],
+  two:[{name:'Andreas Mjelde'}],
+  qonto:[{name:'Alexandre Prot'},{name:'Steve Anavi'}],
+  payhawk:[{name:'Hristo Borisov'}],
+  pleo:[{name:'Jeppe Rindom'},{name:'Niccolo Perra'}],
+  swile:[{name:'Loïc Soubeyrand'}],
+  corti:[{name:'Andreas Cleve'},{name:'Lars Maaløe'}],
+  ada:[{name:'Daniel Nathrath'}],
+  isomorphic:[{name:'Demis Hassabis',x:'demishassabis'}],
+  proxima:[{name:'Francesco Sciortino'}],
+  firstlight:[{name:'Nick Hawker'}],
+};
+COMPANIES.forEach(c=>{c.founders=FOUNDERS[c.id]||[];});
+
+/* ---------- constants ---------- */
+const SECTORS={ai:'AI',saas:'B2B SaaS',fintech:'Fintech',climate:'Climate & Energy',health:'Healthtech'};
+const TABS=[
+  {id:'all',label:'All'},
+  {id:'high',label:'High momentum'},
+  {id:'network',label:'Portfolio network'},
+  {id:'watch',label:'Watch'},
+];
+const STORE_KEY='growthScout.signals.v1';
+const DAY=86400000;
+const EV_W={funding:45,traction:35,partnership:30,milestone:25,note:15,reported:20,risk:0};
+const WEIGHTS={fit:.30,hiring:.25,community:.20,capital:.25};
+
+/* ---------- state ---------- */
+let SIG=loadSig();               // {jobs:{id:{count,at,prev}}, hn:{...}, gh:{...}}
+let ui={tab:'all',sector:null,q:'',sel:null,serverLive:false,provider:'sim',xConfigured:false,xProvider:null,briefIsPolished:false,detBrief:''};
+let lastStamp={jobs:null,hn:null,gh:null,x:null};
+
+function loadSig(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){const o=JSON.parse(raw); if(o&&o.jobs){if(!o.x)o.x={};return o;}}
+  }catch(e){/* private mode etc. */}
+  return {jobs:{},hn:{},gh:{},x:{}};
+}
+function saveSig(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(SIG));}catch(e){}
+}
+/* snapshot update: keep a previous baseline only if it is >20h older, so
+   repeated pulls inside one demo do not clobber the delta baseline */
+function snap(bucket,id,count,extra){
+  const now=Date.now();
+  const old=bucket[id];
+  let prev=old?old.prev:null;
+  if(old && (now-old.at)>20*3600000) prev={count:old.count,at:old.at};
+  bucket[id]=Object.assign({count:count,at:now,prev:prev},extra||{});
+}
+
+/* ---------- date helpers ---------- */
+function parseD(s){ // 'YYYY-MM-DD' | 'YYYY-MM'
+  if(!s)return null;
+  const p=s.split('-');
+  return new Date(+p[0], (+p[1]||1)-1, +p[2]||15);
+}
+function monthsSince(s){
+  const d=parseD(s); if(!d)return null;
+  return (Date.now()-d.getTime())/(30.44*DAY);
+}
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtEvDate(s){
+  if(!s)return 'undated';
+  const p=s.split('-');
+  return MONTHS[(+p[1]||1)-1]+' '+p[0];
+}
+function fmtMY(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function hhmmss(t){
+  const d=new Date(t);
+  const z=n=>String(n).padStart(2,'0');
+  return z(d.getHours())+':'+z(d.getMinutes())+':'+z(d.getSeconds());
+}
+function ago(t){
+  const s=Math.floor((Date.now()-t)/1000);
+  if(s<90)return 'just now';
+  if(s<3600)return Math.floor(s/60)+'m ago';
+  if(s<86400*2)return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+/* =====================================================================
+   Mandate Momentum score. Deterministic: same inputs, same number.
+   ===================================================================== */
+const STAGE_PTS={'Seed':40,'Series A':100,'Series B':100,'Series C':90,'Series D':55,'Growth':40};
+
+function scoreCompany(c){
+  const parts=[];
+
+  /* 1. mandate fit */
+  const stageKnown=STAGE_PTS[c.stage]!=null;
+  const stagePts=stageKnown?STAGE_PTS[c.stage]:50;
+  const classified=!!SECTORS[c.sector];
+  const sectorPts=classified?100:50, geoPts=classified?100:50;
+  let fit=Math.round(.5*stagePts+.3*sectorPts+.2*geoPts);
+  let fitNote;
+  if(!classified){
+    fitNote='stage '+c.stage+(stageKnown?'':' (not parsed from headline)')+'; sector unclassified, neutral 50 until first review';
+  }else{
+    fitNote='stage '+c.stage+(stagePts>=90?' (core mandate)':stagePts>=55?' (edge of mandate)':' (outside core A-C window)')+'; sector and geo in mandate';
+  }
+  if(c.watch){fit-=35;fitNote+='; watch flag applied';}
+  fit=clamp(fit,0,100);
+  parts.push({key:'fit',label:'Mandate fit',inputs:fitNote,pts:fit});
+
+  /* 2. hiring velocity */
+  let hire=45,hireNote;
+  const js=SIG.jobs[c.id];
+  if(!c.ats){hireNote='no public Greenhouse / Lever / Ashby board found; neutral prior';}
+  else if(!js){hireNote='board found ('+c.ats.k+':'+c.ats.slug+') but not pulled yet; neutral prior';}
+  else{
+    const base=Math.min(100,Math.round(25*Math.log(1+js.count)));
+    let bonus=0,dTxt='no prior baseline';
+    if(js.prev){
+      const d=js.count-js.prev.count;
+      bonus=clamp(d*4,-20,20);
+      dTxt=(d>=0?'+':'')+d+' roles vs '+ago(js.prev.at);
+    }
+    hire=clamp(base+bonus,0,100);
+    hireNote=js.count+' open roles ('+c.ats.k+'); '+dTxt;
+  }
+  parts.push({key:'hiring',label:'Hiring velocity',inputs:hireNote,pts:hire});
+
+  /* 3. community + press momentum */
+  const comps=[];const notes=[];
+  const h=SIG.hn[c.id];
+  if(c.hn && h){
+    const hnPts=Math.min(100,h.stories*18+Math.round(h.points/8));
+    comps.push({v:hnPts,w:.4});
+    notes.push(h.stories+' HN stories / '+h.points+' pts (90d)');
+  }else if(c.hn){notes.push('HN not pulled yet');}
+  else{notes.push('name too generic for reliable HN search, skipped');}
+  let evSum=0,dated=0;
+  for(const e of c.events){
+    if(!e.d)continue;dated++;
+    const m=monthsSince(e.d);
+    evSum+=(EV_W[e.k]||10)*Math.exp(-m/4);
+  }
+  if(dated){comps.push({v:Math.min(100,Math.round(evSum)),w:.4});notes.push(dated+' sourced events w/ recency decay');}
+  const g=SIG.gh[c.id];
+  if(c.gh && g){
+    const ghPts=Math.min(100,Math.round(13*Math.log(1+g.count/1000)));
+    comps.push({v:ghPts,w:.2});
+    notes.push((g.count>=1000?(g.count/1000).toFixed(1)+'k':g.count)+' GitHub stars');
+  }
+  const xs=SIG.x&&SIG.x[c.id];
+  if(xs&&xs.state==='live'&&xs.ppw!=null){
+    const xPts=Math.min(100,Math.round(xs.ppw*14));
+    comps.push({v:xPts,w:.25});
+    notes.push(xs.ppw+' founder posts/week on X');
+  }else if((c.founders||[]).some(f=>f.x)){
+    notes.push(xs&&xs.state==='live'?'X cadence insufficient':'X cadence not pulled yet');
+  }
+  let comm=30;
+  if(comps.length){
+    const wSum=comps.reduce((a,x)=>a+x.w,0);
+    comm=Math.round(comps.reduce((a,x)=>a+x.v*x.w,0)/wSum);
+  }
+  parts.push({key:'community',label:'Community + press',inputs:notes.join('; '),pts:clamp(comm,0,100)});
+
+  /* 4. capital momentum */
+  let cap=45,capNote='no disclosed round in the curated fact base; neutral prior',cycle='next-raise window unknown (no dated round)';
+  if(c.round && c.round.date){
+    const m=monthsSince(c.round.date);
+    if(m<3){cap=88;capNote='fresh capital: '+m.toFixed(1)+' months since '+c.round.label;}
+    else if(m<6){cap=82;capNote=m.toFixed(1)+' months since '+c.round.label+'; deployment phase';}
+    else if(m<12){cap=70;capNote=m.toFixed(1)+' months post-round; execution phase';}
+    else if(m<15){cap=62;capNote=m.toFixed(1)+' months post-round; pre-window';}
+    else if(m<27){cap=78;capNote=m.toFixed(1)+' months post-round; inside the typical 18-26 month re-raise window';}
+    else if(m<36){cap=60;capNote=m.toFixed(1)+' months post-round; window extending';}
+    else{cap=45;capNote=Math.round(m)+' months since last disclosed round; long gap';}
+    if((c.round.amt||0)>=100){cap=Math.min(99,cap+8);capNote+='; large round (>=100M) backing';}
+    const d0=parseD(c.round.date);
+    const w1=new Date(d0);w1.setMonth(w1.getMonth()+18);
+    const w2=new Date(d0);w2.setMonth(w2.getMonth()+26);
+    cycle='est. next-raise window '+fmtMY(w1)+' to '+fmtMY(w2);
+  }
+  parts.push({key:'capital',label:'Capital momentum',inputs:capNote,pts:cap});
+  parts.push({key:'cycle',label:'Capital cycle',inputs:cycle,pts:null});
+
+  const total=clamp(Math.round(
+    WEIGHTS.fit*fit + WEIGHTS.hiring*hire + WEIGHTS.community*comm + WEIGHTS.capital*cap
+  ),5,99);
+
+  return {total:total,parts:parts,whyNow:whyNow(c,{fit:fit,hire:hire,comm:comm,cap:cap})};
+}
+
+function whyNow(c,p){
+  const bits=[];
+  if(c.round && c.round.date){
+    const m=monthsSince(c.round.date);
+    const days=Math.round(m*30.44);
+    if(days<=45)bits.push(days+' day'+(days===1?'':'s')+' since '+c.round.label+' led by '+c.round.lead);
+    else if(m<3)bits.push(fmtEvDate(c.round.date)+': '+c.round.label+' ('+c.round.lead+')');
+    else if(m>=15&&m<27)bits.push(Math.round(m)+'m post '+c.round.label+', inside the typical re-raise window');
+    else bits.push(Math.round(m)+'m post '+c.round.label);
+  }else{
+    bits.push('no disclosed round tracked');
+  }
+  const js=SIG.jobs[c.id];
+  if(js){
+    let t=js.count+' open roles';
+    if(js.prev){const d=js.count-js.prev.count;if(d!==0)t+=' ('+(d>0?'+':'')+d+' vs '+ago(js.prev.at)+')';}
+    bits.push(t);
+  }
+  const h=SIG.hn[c.id];
+  if(h&&h.stories>0)bits.push(h.stories+' HN stories in 90d');
+  const g=SIG.gh[c.id];
+  if(g)bits.push((g.count>=1000?(g.count/1000).toFixed(1)+'k':g.count)+' GitHub stars');
+  if(c.watch)bits.push('held on watch');
+  return bits.slice(0,3).join('; ')+'.';
+}
+
+/* ---------- suggested next action (deterministic) ---------- */
+function nextAction(c,sc){
+  if(c.discovered)return 'Fresh from the press scan: verify the round in the linked article, classify sector and HQ, then keep or drop.';
+  if(c.watch)return 'Hold on watch; log the status change, no partner time yet.';
+  if(c.network)return 'Warm path: request context from the portfolio network before any outreach.';
+  const js=SIG.jobs[c.id];
+  if(js&&js.prev&&(js.count-js.prev.count)>=5)return 'Track the careers page weekly; hiring acceleration is the live trigger.';
+  if(c.round&&c.round.date){
+    const m=monthsSince(c.round.date);
+    if(m<4&&(c.round.amt||0)>=100)return 'Recently capitalized; monitor exec hires and expansion signals, revisit next quarter.';
+    if(m>=15&&m<27)return 'Flag to partner: entering the typical re-raise window; open a coverage file.';
+  }
+  if(sc>=75)return 'Prepare a one-pager for the Monday meeting; signals justify partner visibility.';
+  return 'Keep on the tracking sheet; re-check signals on the next Monday run.';
+}
+
+/* =====================================================================
+   Live fetchers (all client-side, CORS-open, no keys)
+   ===================================================================== */
+async function fetchJobs(c){
+  if(!c.ats)return null;
+  let n=0;
+  if(c.ats.k==='greenhouse'){
+    const r=await fetch('https://boards-api.greenhouse.io/v1/boards/'+c.ats.slug+'/jobs');
+    if(!r.ok)throw new Error('greenhouse '+r.status);
+    const j=await r.json();n=(j.jobs||[]).length;
+  }else if(c.ats.k==='lever'){
+    const r=await fetch('https://api.lever.co/v0/postings/'+c.ats.slug+'?mode=json');
+    if(!r.ok)throw new Error('lever '+r.status);
+    const j=await r.json();n=Array.isArray(j)?j.length:0;
+  }else{ /* ashby */
+    const r=await fetch('https://api.ashbyhq.com/posting-api/job-board/'+c.ats.slug);
+    if(!r.ok)throw new Error('ashby '+r.status);
+    const j=await r.json();n=(j.jobs||[]).filter(x=>x.isListed!==false).length;
+  }
+  snap(SIG.jobs,c.id,n);
+  return n;
+}
+async function fetchHN(c){
+  if(!c.hn)return null;
+  const cutoff=Math.floor((Date.now()-90*DAY)/1000);
+  const u='https://hn.algolia.com/api/v1/search?query='+encodeURIComponent(c.hn)+
+          '&tags=story&numericFilters=created_at_i%3E'+cutoff+'&hitsPerPage=30';
+  const r=await fetch(u);
+  if(!r.ok)throw new Error('hn '+r.status);
+  const j=await r.json();
+  const hits=j.hits||[];
+  const points=hits.reduce((a,h)=>a+(h.points||0),0);
+  const top=hits.length?{title:hits[0].title,url:'https://news.ycombinator.com/item?id='+hits[0].objectID}:null;
+  snap(SIG.hn,c.id,hits.length,{points:points,top:top,stories:hits.length});
+  /* stories mirrors count for readability */
+  SIG.hn[c.id].stories=hits.length;
+  return hits.length;
+}
+async function fetchGH(c){
+  if(!c.gh)return null;
+  const r=await fetch('https://api.github.com/repos/'+c.gh);
+  if(!r.ok)throw new Error('github '+r.status);
+  const j=await r.json();
+  snap(SIG.gh,c.id,j.stargazers_count||0);
+  return j.stargazers_count;
+}
+/* founder posting cadence via the server-side X connector (key stays in .env).
+   Unconfigured server answers {configured:false}; that state is stored and
+   shown honestly. No numbers about real people are ever invented. */
+async function fetchX(c){
+  const fdr=(c.founders||[]).find(f=>f.x);
+  if(!fdr)return null;
+  const r=await fetch('/api/x/tweets?handle='+encodeURIComponent(fdr.x)+'&count=10');
+  const j=await r.json();
+  if(j&&j.configured===false){
+    SIG.x[c.id]={state:'unconfigured',at:Date.now(),handle:fdr.x};
+    saveSig();
+    return 0;
+  }
+  if(!j||j.ok===false)throw new Error((j&&j.error)||'x pull failed');
+  const tweets=j.tweets||[];
+  const times=tweets.map(t=>Date.parse(t.created_at)).filter(n=>!isNaN(n)).sort((a,b)=>b-a);
+  let ppw=null;
+  if(times.length>=2){
+    const span=(times[0]-times[times.length-1])/DAY;
+    ppw=Math.round((times.length-1)/Math.max(span,0.2)*7*10)/10;
+  }else if(times.length===1)ppw=0.5;
+  SIG.x[c.id]={state:'live',at:Date.now(),handle:fdr.x,provider:j.provider||ui.xProvider,ppw:ppw,last:times[0]||null,n:tweets.length};
+  saveSig();
+  return tweets.length;
+}
+
+/* small promise pool */
+async function pool(tasks,width,onTick){
+  let i=0,done=0,fail=0;
+  const errs={};
+  async function worker(){
+    while(i<tasks.length){
+      const t=tasks[i++];
+      try{await t.fn();}
+      catch(e){fail++;errs[t.family]=(errs[t.family]||0)+1;}
+      done++;
+      if(onTick)onTick(done,tasks.length);
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(width,tasks.length)},worker));
+  return {done:done,fail:fail,errs:errs};
+}
+
+async function pullFamily(family){
+  const tasks=[];
+  for(const c of COMPANIES){
+    if(family==='jobs'&&c.ats)tasks.push({family:'jobs',fn:()=>fetchJobs(c)});
+    if(family==='hn'&&c.hn)tasks.push({family:'hn',fn:()=>fetchHN(c)});
+    if(family==='gh'&&c.gh)tasks.push({family:'gh',fn:()=>fetchGH(c)});
+    if(family==='x'&&(c.founders||[]).some(f=>f.x))tasks.push({family:'x',fn:()=>fetchX(c)});
+  }
+  const label=family==='jobs'?'job boards':family==='hn'?'Hacker News':family==='x'?'X founder cadence':'GitHub';
+  return runPulls(tasks,label,[family]);
+}
+
+async function pullAll(){
+  const tasks=[];
+  for(const c of COMPANIES){
+    if(c.ats)tasks.push({family:'jobs',fn:()=>fetchJobs(c)});
+    if(c.hn)tasks.push({family:'hn',fn:()=>fetchHN(c)});
+    if(c.gh)tasks.push({family:'gh',fn:()=>fetchGH(c)});
+    if(serverReachable&&(c.founders||[]).some(f=>f.x))tasks.push({family:'x',fn:()=>fetchX(c)});
+  }
+  return runPulls(tasks,'live signals',serverReachable?['jobs','hn','gh','x']:['jobs','hn','gh']);
+}
+
+async function pullSelectedX(){
+  const c=COMPANIES.find(x=>x.id===ui.sel);
+  const btn=document.getElementById('btnX');
+  if(!c||(c.founders||[]).every(f=>!f.x)){
+    toast('Select a company with a verified founder handle.','err');
+    return;
+  }
+  btn.disabled=true;btn.textContent='Pulling X…';
+  try{
+    await fetchX(c);
+    const x=SIG.x[c.id];
+    lastStamp.x=x&&x.state==='live'?x.at:null;
+    saveSig();render();
+    if(x&&x.state==='live')toast('X LIVE · '+(x.provider||ui.xProvider||'twitterapi')+' · @'+x.handle+' · '+x.n+' posts · '+hhmmss(x.at),'ok');
+    else toast('X not configured.','err');
+  }catch(e){
+    toast('X pull failed · '+e.message,'err');
+  }finally{
+    btn.disabled=false;btn.textContent='Pull X';
+  }
+}
+
+let pulling=false;
+async function runPulls(tasks,label,families){
+  if(pulling)return;
+  pulling=true;
+  const btn=document.getElementById('btnRefresh');
+  const orig=btn.textContent;
+  btn.disabled=true;
+  const res=await pool(tasks,6,(d,t)=>{btn.textContent='Pulling '+d+'/'+t;});
+  const now=Date.now();
+  for(const f of families){
+    if(f==='x'){
+      const pulled=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live').sort((a,b)=>b.at-a.at)[0];
+      lastStamp.x=pulled?pulled.at:null;
+    }else lastStamp[f]=now;
+  }
+  saveSig();
+  btn.disabled=false;btn.textContent=orig;
+  pulling=false;
+  render();
+  if(res.fail===0&&families.length===1&&families[0]==='x'){
+    const fresh=Object.values(SIG.x||{}).filter(x=>x&&x.state==='live'&&(now-x.at)<120000);
+    const observations=fresh.reduce((n,x)=>n+(x.n||0),0);
+    toast('X LIVE · '+(ui.xProvider||'twitterapi')+' · '+observations+' posts · '+hhmmss(lastStamp.x||now),'ok');
+  }
+  else if(res.fail===0)toast(tasks.length+' '+label+' pulls · '+hhmmss(now),'ok');
+  else toast(res.fail+' of '+tasks.length+' '+label+' pulls failed ('+Object.keys(res.errs).join(', ')+'). Cached and curated data still shown.','err');
+}
+
+/* =====================================================================
+   Rendering
+   ===================================================================== */
+function ranked(){
+  return COMPANIES
+    .map(c=>({c:c,s:scoreCompany(c)}))
+    .sort((a,b)=>b.s.total-a.s.total || a.c.name.localeCompare(b.c.name));
+}
+function visible(rows){
+  return rows.filter(({c,s})=>{
+    if(ui.tab==='high'&&s.total<70)return false;
+    if(ui.tab==='network'&&!c.network)return false;
+    if(ui.tab==='watch'&&!c.watch)return false;
+    if(ui.sector&&c.sector!==ui.sector)return false;
+    if(ui.q){
+      const hay=(c.name+' '+c.hq+' '+c.tags.join(' ')+' '+(SECTORS[c.sector]||'unclassified')).toLowerCase();
+      if(!hay.includes(ui.q))return false;
+    }
+    return true;
+  });
+}
+function band(s){return s>=70?'hi':s>=55?'mid':'lo';}
+
+function render(){
+  const rows=ranked();
+  const vis=visible(rows);
+  if(!ui.sel||!vis.some(r=>r.c.id===ui.sel))ui.sel=vis.length?vis[0].c.id:(rows[0]&&rows[0].c.id);
+  renderTabs(rows);renderChips();renderList(rows,vis);renderStamps();renderXChip();renderDetail(rows);
+}
+
+function renderTabs(rows){
+  const counts={all:rows.length,high:rows.filter(r=>r.s.total>=70).length,
+                network:rows.filter(r=>r.c.network).length,watch:rows.filter(r=>r.c.watch).length};
+  document.getElementById('tabs').innerHTML=TABS.map(t=>
+    '<button data-tab="'+t.id+'" class="'+(ui.tab===t.id?'on':'')+'">'+t.label+'<span class="n">'+counts[t.id]+'</span></button>'
+  ).join('');
+}
+function renderChips(){
+  document.getElementById('sectorChips').innerHTML=Object.keys(SECTORS).map(k=>
+    '<button class="chip '+(ui.sector===k?'on':'')+'" data-sector="'+k+'">'+SECTORS[k]+'</button>'
+  ).join('');
+}
+function renderStamps(){
+  const el=document.getElementById('stamps');
+  const parts=[];
+  if(lastStamp.jobs)parts.push('<b>Jobs</b> pulled '+hhmmss(lastStamp.jobs));
+  if(lastStamp.hn)parts.push('<b>HN</b> pulled '+hhmmss(lastStamp.hn));
+  if(lastStamp.gh)parts.push('<b>GitHub</b> pulled '+hhmmss(lastStamp.gh));
+  if(lastStamp.x)parts.push('<b>X</b> pulled '+hhmmss(lastStamp.x));
+  if(!parts.length){
+    const any=Object.values(SIG.jobs)[0];
+    el.innerHTML=any?'Cached data · last jobs pull '+ago(any.at):'No live pull yet.';
+  }else el.innerHTML=parts.join(' &nbsp;·&nbsp; ');
+}
+
+function renderXChip(){
+  const chip=document.getElementById('serverChip');
+  const state=document.getElementById('serverState');
+  const provider=ui.xProvider||'twitterapi';
+  if(!serverReachable){
+    chip.className='hchip sim';state.textContent='OFFLINE';chip.title='Local X connector is not running';return;
+  }
+  if(!ui.xConfigured){
+    chip.className='hchip sim';state.textContent='NOT CONFIGURED';chip.title='X API key is not configured';return;
+  }
+  chip.className='hchip live';
+  state.textContent=lastStamp.x?'LIVE · '+provider+' · '+hhmmss(lastStamp.x):'READY · '+provider;
+  chip.title=lastStamp.x?'Successful live X pull at '+hhmmss(lastStamp.x):'X connector ready; key remains server-side';
+}
+
+function sigPills(c){
+  const out=[];
+  const js=SIG.jobs[c.id];
+  if(c.ats){
+    if(js){
+      let d='';
+      if(js.prev){const dv=js.count-js.prev.count;
+        if(dv!==0)d=' <span class="'+(dv>0?'up':'dn')+'">'+(dv>0?'+':'')+dv+'</span>';}
+      const fresh=(Date.now()-js.at)<10*60000?' fresh':'';
+      out.push('<span class="sig'+fresh+'"><span class="lab">ROLES</span> '+js.count+d+'</span>');
+    }else out.push('<span class="sig none">roles: not pulled</span>');
+  }
+  const h=SIG.hn[c.id];
+  if(c.hn&&h)out.push('<span class="sig"><span class="lab">HN</span> '+h.stories+(h.points?' <small style="color:var(--faint)">/'+h.points+'p</small>':'')+'</span>');
+  const g=SIG.gh[c.id];
+  if(c.gh&&g)out.push('<span class="sig"><span class="lab">STARS</span> '+(g.count>=1000?(g.count/1000).toFixed(1)+'k':g.count)+'</span>');
+  const xs=SIG.x&&SIG.x[c.id];
+  if(xs&&xs.state==='live')out.push('<span class="sig"><span class="lab">X</span> '+(xs.ppw==null?'n/a':xs.ppw+'/wk')+'</span>');
+  if(!out.length)out.push('<span class="sig none">curated only</span>');
+  return out.join('');
+}
+
+function renderList(rows,vis){
+  document.getElementById('countLbl').textContent=vis.length+' of '+rows.length+' companies · sorted by Mandate Momentum';
+  const rankOf={};rows.forEach((r,i)=>rankOf[r.c.id]=i+1);
+  document.getElementById('list').innerHTML=vis.map(({c,s})=>{
+    const b=band(s.total);
+    const round=c.round
+      ?'<div class="a">'+esc(c.round.label)+'</div><div class="s">'+esc(c.round.lead)+' · '+esc(c.round.src)+'</div>'
+      :'<div class="u">undisclosed / not tracked</div>';
+    return '<div class="lrow'+(ui.sel===c.id?' sel':'')+'" data-id="'+c.id+'">'+
+      '<span class="rk tnum">'+rankOf[c.id]+'</span>'+
+      '<div class="cname"><div class="n">'+esc(c.name)+
+        (c.network?'<span class="badge network">Network</span>':'')+
+        (c.watch?'<span class="badge watch">Watch</span>':'')+
+        (c.discovered?'<span class="badge disc">Discovered</span>':'')+
+      '</div><div class="m">'+esc(c.hq)+' · '+c.tags.map(esc).join(', ')+'</div></div>'+
+      '<span class="stage">'+esc(c.stage)+'</span>'+
+      '<div class="round">'+round+'</div>'+
+      '<div class="sigs">'+sigPills(c)+'</div>'+
+      '<div class="scorec"><span class="scoren s-'+b+'">'+s.total+'</span><span class="sbar"><i class="'+b+'" style="width:'+s.total+'%"></i></span></div>'+
+    '</div>';
+  }).join('')||'<div style="padding:22px 16px;color:var(--faint);font-size:12.5px">No companies match the current filters.</div>';
+}
+
+function srcRow(label,valueHtml,stampT,pullFn){
+  return '<div class="srcrow"><span class="k">'+label+'</span><span class="v">'+valueHtml+'</span>'+
+    '<span class="stamp">'+(stampT?'pulled '+hhmmss(stampT):'')+'</span>'+
+    (pullFn?'<button class="mini ghost" data-pull="'+pullFn+'" title="Pull this source now">&#8635;</button>':'')+
+  '</div>';
+}
+
+function renderDetail(rows){
+  const row=rows.find(r=>r.c.id===ui.sel)||rows[0];
+  if(!row)return;
+  const c=row.c,s=row.s;
+  const b=band(s.total);
+
+  /* live signal rows */
+  let live='';
+  const js=SIG.jobs[c.id];
+  if(c.ats){
+    let v;
+    if(js){
+      v='<b>'+js.count+'</b> open roles <small>('+c.ats.k+':'+esc(c.ats.slug)+')</small>';
+      if(js.prev){const d=js.count-js.prev.count;
+        v+=' <span class="d '+(d>=0?'up':'dn')+'">'+(d>=0?'+':'')+d+'</span> <small>vs '+ago(js.prev.at)+'</small>';}
+      else v+=' <small>no baseline yet: pull again on a later day for the delta</small>';
+    }else v='<span class="na">not pulled yet</span> <small>('+c.ats.k+':'+esc(c.ats.slug)+')</small>';
+    live+=srcRow('Open roles',v,js?js.at:null,'jobs');
+  }else{
+    live+=srcRow('Open roles','<span class="na">no public Greenhouse / Lever / Ashby board found</span>',null,null);
+  }
+  const h=SIG.hn[c.id];
+  if(c.hn){
+    let v=h?('<b>'+h.stories+'</b> stories, <b>'+h.points+'</b> points <small>(90 days)</small>'+
+      (h.top?' · <a href="'+esc(h.top.url)+'" target="_blank" rel="noopener" style="color:var(--accent)">top story</a>':''))
+      :'<span class="na">not pulled yet</span>';
+    live+=srcRow('Hacker News',v,h?h.at:null,'hn');
+  }else{
+    live+=srcRow('Hacker News','<span class="na">name too generic for a reliable search; skipped by design</span>',null,null);
+  }
+  const g=SIG.gh[c.id];
+  if(c.gh){
+    let v=g?'<b>'+g.count.toLocaleString('en-US')+'</b> stars <small>('+esc(c.gh)+')</small>':'<span class="na">not pulled yet</span>';
+    if(g&&g.prev){const d=g.count-g.prev.count;if(d!==0)v+=' <span class="d '+(d>=0?'up':'dn')+'">'+(d>=0?'+':'')+d+'</span>';}
+    live+=srcRow('GitHub',v,g?g.at:null,'gh');
+  }
+  /* founder cadence via the server-side X connector */
+  const fdr=(c.founders||[]).find(f=>f.x);
+  const xs=SIG.x?SIG.x[c.id]:null;
+  if(fdr){
+    let v;
+    if(xs&&xs.state==='live'){
+      v=(xs.ppw==null?'<span class="na">insufficient cadence data</span>':'<b>'+xs.ppw+'</b> posts/week')+
+        ' <small>('+esc(xs.provider||ui.xProvider||'twitterapi')+' · @'+esc(xs.handle)+' · '+xs.n+' posts)</small>'+
+        (xs.last?' · last post '+ago(xs.last):' · no dated posts returned');
+    }else if(xs&&xs.state==='unconfigured'){
+      v='<span class="na">X connector not configured</span> <small>(@'+esc(fdr.x)+')</small>';
+    }else if(!serverReachable){
+      v='<span class="na">X API offline</span> <small>(@'+esc(fdr.x)+')</small>';
+    }else{
+      v='<span class="na">not pulled yet</span> <small>(@'+esc(fdr.x)+')</small>';
+    }
+    live+=srcRow('Founder cadence',v,xs&&xs.at?xs.at:null,serverReachable?'x':null);
+    if(xs&&xs.state==='unconfigured'){
+      live+='<div class="xnote">X not configured.</div>';
+    }
+  }else if(c.founders&&c.founders.length){
+    live+=srcRow('Founder cadence','<span class="na">founder tracked, no verified public X handle stored</span>',null,null);
+  }else{
+    live+=srcRow('Founder cadence','<span class="na">founder not tracked yet</span>',null,null);
+  }
+
+  /* breakdown table */
+  const brk=s.parts.map(p=>{
+    const w=WEIGHTS[p.key];
+    return '<tr>'+
+      '<td style="font-weight:650;white-space:nowrap">'+p.label+'</td>'+
+      '<td class="inp">'+esc(p.inputs)+'</td>'+
+      '<td class="n">'+(w!=null?Math.round(w*100)+'%':'info')+'</td>'+
+      '<td class="n">'+(p.pts!=null?p.pts:'-')+'</td>'+
+      '<td class="n">'+(w!=null&&p.pts!=null?(w*p.pts).toFixed(1):'-')+'</td>'+
+    '</tr>';
+  }).join('')+
+  '<tr class="tot"><td>Mandate Momentum</td><td class="inp">weighted sum, clamped 5-99</td><td class="n"></td><td class="n"></td><td class="n">'+s.total+'</td></tr>';
+
+  /* events */
+  const evs=c.events.length?c.events.map(e=>{
+    const href=safeHttpUrl(e.l);
+    const source=href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(e.s)+'</a>':esc(e.s);
+    return '<div class="ev k'+e.k+'"><span class="dt">'+fmtEvDate(e.d)+'</span>'+
+      '<div class="tx" data-k="'+(e.k==='reported'?'reported':e.k==='risk'?'risk':'')+'">'+esc(e.t)+
+      '<span class="src">'+source+'</span></div></div>';
+  }).join(''):'<div style="color:var(--faint);font-size:12px;font-style:italic">No curated events tracked; live signals only for this name.</div>';
+
+  const roundSource=safeHttpUrl(c.sourceUrl);
+  const roundCard=c.round
+    ?'<div class="factcard"><div class="a">'+esc(c.round.label)+' · led by '+esc(c.round.lead)+'</div><div class="s">Source: '+(roundSource?'<a href="'+esc(roundSource)+'" target="_blank" rel="noopener noreferrer">'+esc(c.round.src)+'</a>':esc(c.round.src))+'</div></div>'
+    :'<div class="factcard"><div class="a" style="color:var(--faint);font-style:italic;font-weight:500">No disclosed round in the curated fact base.</div><div class="s">Only sourced facts are shown; nothing is inferred.</div></div>';
+
+  document.getElementById('detail').innerHTML=
+    '<div class="dhead"><div class="t"><div>'+
+      '<h3>'+esc(c.name)+(c.network?' <span class="badge network" style="vertical-align:3px">Network</span>':'')+(c.watch?' <span class="badge watch" style="vertical-align:3px">Watch</span>':'')+(c.discovered?' <span class="badge disc" style="vertical-align:3px">Discovered</span>':'')+'</h3>'+
+      '<div class="meta">'+esc(c.hq)+' · '+esc(c.stage)+' · '+c.tags.map(esc).join(', ')+'</div>'+
+      (c.founders&&c.founders.length?'<div class="meta" style="margin-top:3px">Founders: '+c.founders.map(f=>esc(f.name)+(f.x?' <span style="color:var(--accent);font-weight:600">@'+esc(f.x)+'</span>':'')).join(', ')+'</div>':'')+
+      '<div class="meta" style="margin-top:5px;color:var(--ink2)">'+esc(c.line)+'</div>'+
+    '</div>'+
+    '<div class="big"><div class="v s-'+b+' tnum">'+s.total+'</div><div class="l">Momentum</div></div></div>'+
+    '<div class="whynow"><b>Why now:</b> '+esc(s.whyNow)+'</div>'+
+    '<div class="whynow" style="background:var(--panel-2);border-color:var(--line);color:var(--ink2)"><b>Suggested next action:</b> '+esc(nextAction(c,s.total))+'</div>'+
+    '</div>'+
+    '<div class="dsec"><h4>Live signals</h4>'+live+'</div>'+
+    '<div class="dsec"><h4>Score</h4>'+
+      '<table class="brk"><tr><th>Component</th><th>Inputs</th><th>Weight</th><th>Points</th><th>Contrib</th></tr>'+brk+'</table></div>'+
+    '<div class="dsec"><h4>Last disclosed round</h4>'+roundCard+'</div>'+
+    '<div class="dsec"><h4>Events</h4>'+evs+'</div>';
+}
+
+/* =====================================================================
+   Monday pipeline brief (deterministic; optional LLM polish)
+   ===================================================================== */
+function nextMonday(){
+  const d=new Date();
+  const add=(8-d.getDay())%7||7;
+  d.setDate(d.getDate()+add);
+  return d;
+}
+function buildBrief(){
+  const rows=ranked().filter(r=>!r.c.watch).slice(0,5);
+  const m=nextMonday();
+  const dateStr=m.getDate()+' '+MONTHS[m.getMonth()]+' '+m.getFullYear();
+  let out='# Monday pipeline brief - '+dateStr+'\n';
+  out+='Prepared by Growth Scout. Ranked by Mandate Momentum (deterministic). Signals for discussion, not recommendations.\n\n';
+  rows.forEach((r,i)=>{
+    const c=r.c;
+    out+=(i+1)+'. **'+c.name+'** ('+c.hq+' · '+c.stage+' · '+(SECTORS[c.sector]||'Unclassified')+') - momentum '+r.s.total+'\n';
+    out+='   Why now: '+r.s.whyNow+'\n';
+    if(c.round)out+='   Last round: '+c.round.label+', led by '+c.round.lead+' ('+c.round.src+')\n';
+    out+='   Next action: '+nextAction(c,r.s.total)+'\n\n';
+  });
+  const w=ranked().filter(r=>r.c.watch);
+  if(w.length){
+    out+='Watch list: '+w.map(r=>r.c.name+' ('+r.s.whyNow.replace(/\.$/,'')+')').join('; ')+'.\n\n';
+  }
+  const pulled=lastStamp.jobs||lastStamp.hn||lastStamp.gh||lastStamp.x;
+  out+='Signal freshness: '+(pulled?'live pulls at '+hhmmss(pulled)+' local':'cached / curated signals only, no live pull this session')+'. ';
+  out+='Sources: Greenhouse, Lever and Ashby boards; Hacker News (Algolia); GitHub; X founder cadence through the local sidecar; curated press facts each carry their source and date.\n';
+  return out;
+}
+
+function openBrief(){
+  ui.detBrief=buildBrief();
+  ui.briefIsPolished=false;
+  document.getElementById('briefText').textContent=ui.detBrief;
+  document.getElementById('btnRevert').style.display='none';
+  document.getElementById('briefBack').classList.add('open');
+}
+
+async function polishBrief(){
+  const btn=document.getElementById('btnPolish');
+  if(!ui.serverLive){
+    toast('Local connector unavailable.','err');
+    return;
+  }
+  btn.disabled=true;btn.textContent='Polishing...';
+  try{
+    const r=await fetch('/api/brief',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({brief:ui.detBrief})});
+    const j=await r.json();
+    if(j.answer){
+      document.getElementById('briefText').textContent=j.answer;
+      ui.briefIsPolished=true;
+      document.getElementById('btnRevert').style.display='';
+      toast('Language polished by '+(ui.provider==='anthropic'?'Claude':'Kimi')+'. Facts and ranks unchanged by contract.','ok');
+    }else if(j.sim){
+      toast('Local connector unavailable.','err');
+    }else{
+      toast('Polish failed: '+(j.error||'unknown error')+'. Deterministic draft kept.','err');
+    }
+  }catch(e){
+    toast('Polish request failed ('+e.message+'). Deterministic draft kept.','err');
+  }
+  btn.disabled=false;btn.textContent='Polish language (LLM)';
+}
+
+function copyBrief(){
+  const txt=document.getElementById('briefText').textContent;
+  const done=()=>toast('Brief copied as markdown.','ok');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
+  }else fallbackCopy(txt,done);
+}
+function fallbackCopy(txt,done){
+  const ta=document.createElement('textarea');
+  ta.value=txt;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done();}catch(e){toast('Copy failed; select the text manually.','err');}
+  document.body.removeChild(ta);
+}
+
+/* =====================================================================
+   Optional server: health + press RSS proxy
+   ===================================================================== */
+async function checkServer(){
+  try{
+    const r=await fetch('/api/health',{cache:'no-store'});
+    if(!r.ok)throw 0;
+    serverReachable=true;
+    const j=await r.json();
+    ui.serverLive=!!j.live;
+    ui.provider=j.provider||'sim';
+    ui.xConfigured=!!j.x_configured;
+    ui.xProvider=j.x_provider||null;
+  }catch(e){serverReachable=false;ui.serverLive=false;ui.provider='sim';ui.xConfigured=false;ui.xProvider=null;}
+  const pchip=document.getElementById('polishChip');
+  const label=ui.serverLive?('LIVE · '+ui.provider):'SIM';
+  pchip.className='hchip '+(ui.serverLive?'live':'sim');
+  document.getElementById('polishState').textContent=label;
+  renderXChip();
+  document.getElementById('wireCard').style.display=(location.protocol!=='file:'&&serverReachable)?'':'none';
+  if(!scanning)renderDiscovery();
+}
+let serverReachable=false;
+async function probeServer(){
+  await checkServer();
+}
+
+const FEEDS={tc:{name:'TechCrunch',url:'https://techcrunch.com/feed/'},sifted:{name:'Sifted',url:'https://sifted.eu/feed'}};
+const GENERIC=new Set(['two','moss','pigment','dust','granola','nelly']);
+async function pullWire(which){
+  const f=FEEDS[which];
+  const body=document.getElementById('wireBody');
+  body.innerHTML='<span style="color:var(--faint);font-size:12px">Fetching '+f.name+' via server proxy...</span>';
+  try{
+    const r=await fetch('/api/rss?url='+encodeURIComponent(f.url));
+    if(!r.ok)throw new Error('proxy '+r.status);
+    const xml=await r.text();
+    const doc=new DOMParser().parseFromString(xml,'text/xml');
+    const items=[...doc.querySelectorAll('item')].slice(0,40).map(it=>({
+      title:(it.querySelector('title')||{}).textContent||'',
+      link:(it.querySelector('link')||{}).textContent||'',
+      date:(it.querySelector('pubDate')||{}).textContent||'',
+    }));
+    const names=COMPANIES.filter(c=>!GENERIC.has(c.name.toLowerCase())).map(c=>c.name);
+    const hits=[],rest=[];
+    for(const it of items){
+      const hit=names.find(n=>it.title.toLowerCase().includes(n.toLowerCase()));
+      if(hit)hits.push({it:it,hit:hit});else rest.push(it);
+    }
+    document.getElementById('wireStamp').textContent=f.name+' · pulled '+hhmmss(Date.now());
+    let html='';
+    if(hits.length){
+      html+=hits.map(({it,hit})=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m"><span class="hit">watchlist: '+esc(hit)+'</span> · '+esc(it.date.slice(0,16))+'</div></div>').join('');
+    }else{
+      html+='<div style="color:var(--faint);font-size:11.5px;margin-bottom:6px">No watchlist mentions in the latest '+items.length+' items. Most recent headlines:</div>';
+      html+=rest.slice(0,5).map(it=>'<div class="wire-item"><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="m">'+esc(it.date.slice(0,16))+'</div></div>').join('');
+    }
+    body.innerHTML=html;
+  }catch(e){
+    body.innerHTML='<span style="color:var(--red);font-size:12px">Press API offline ('+esc(e.message)+').</span>';
+  }
+}
+
+/* =====================================================================
+   Discovered this week: live press-scan inflow so the watchlist is
+   visibly not hand-picked. Feeds are proxied and parsed by server.py
+   (/api/rss?parse=1); the funding filter, name extraction, dedupe and
+   the momentum score of an added company are all deterministic client
+   code. Added companies persist in localStorage.
+   ===================================================================== */
+const DISC_KEY='growthScout.discovered.v1';
+const SCAN_FEEDS=[
+  {name:'TechCrunch',url:'https://techcrunch.com/feed/'},
+  {name:'Sifted',url:'https://sifted.eu/feed'},
+  {name:'EU-Startups',url:'https://www.eu-startups.com/feed/'},
+];
+const FUND_VERB=/\b(raises|raised|lands|landed|secures|secured|closes|closed|bags|nabs|scores|banks|snags|announces|announced)\b/i;
+const FUND_HINT=/(series [a-e]\b|\bseed\b|pre-seed|\bfunding\b|\bround\b|million|billion|[€$£]\s?\d|\d+(?:\.\d+)?\s?[mb]n?\b)/i;
+const NAME_DESCRIPTOR=/^(berlin|london|paris|munich|stockholm|amsterdam|madrid|dublin|copenhagen|oslo|helsinki|zurich|vienna|warsaw|milan|barcelona|lisbon|german|french|british|uk|swedish|dutch|danish|norwegian|finnish|swiss|spanish|italian|polish|irish|belgian|austrian|european|ai|fintech|healthtech|insurtech|startup|scaleup)(-based)?$/i;
+let DISC={items:[],at:null,fails:[],scanned:0,skipped:{watch:0,dupe:0}};
+let scanning=false;
+
+function isFundingHeadline(t){
+  return (FUND_VERB.test(t)&&FUND_HINT.test(t))||/(series [a-e]|seed) (round|funding|extension)/i.test(t);
+}
+function extractCompany(title){
+  const m=title.match(FUND_VERB);
+  if(!m)return null;
+  let head=title.slice(0,m.index)
+    .replace(/^(exclusive|breaking|report|scoop|deal)[:,]\s*/i,'')
+    .replace(/[‘’“”"]/g,'')
+    .replace(/,.*$/,'')
+    .trim();
+  let words=head.split(/\s+/).filter(Boolean);
+  if(!words.length)return null;
+  while(words.length>1&&(/^(the|a|an)$/i.test(words[0])||NAME_DESCRIPTOR.test(words[0])||NAME_DESCRIPTOR.test(words[0].replace(/'s$/i,''))))words.shift();
+  while(words.length>1&&/^(has|have|just|reportedly|quietly)$/i.test(words[words.length-1]))words.pop();
+  let name=words.join(' ').replace(/[.:;]+$/,'').trim();
+  if(name.length<2||name.length>40)return null;
+  /* a lone generic noun means the headline never named the company */
+  if(words.length===1&&/^(unicorn|startup|scaleup|company|firm|fintech|healthtech|insurtech|maker|platform|app|round|fund|vc|founder|founders|giant|rival|competitor|challenger)$/i.test(words[0]))return null;
+  return name;
+}
+function stageFromHeadline(t){
+  const m=t.match(/series ([a-e])\b/i);
+  if(m)return 'Series '+m[1].toUpperCase();
+  if(/pre-seed|\bseed\b/i.test(t))return 'Seed';
+  return 'Unclassified';
+}
+function amtFromHeadline(t){
+  const m=t.match(/([€$£])\s?(\d+(?:[.,]\d+)?)\s*(million|billion|bn|[mb])\b/i);
+  if(!m)return null;
+  let n=parseFloat(m[2].replace(',','.'));
+  if(/^b/i.test(m[3])||/billion/i.test(m[3]))n*=1000;
+  return {amt:Math.round(n),label:m[1]+m[2]+(/^b/i.test(m[3])||/billion/i.test(m[3])?'B':'M')};
+}
+function normName(s){return String(s).toLowerCase().replace(/[^a-z0-9]/g,'');}
+function safeHttpUrl(s){
+  try{const u=new URL(String(s));return (u.protocol==='https:'||u.protocol==='http:')?u.href:null;}catch(e){return null;}
+}
+function watchlistMatch(name){
+  const n=normName(name);
+  if(!n)return null;
+  for(const c of COMPANIES){
+    const w=normName(c.name);
+    if(!w)continue;
+    if(w===n)return c.name;
+  }
+  return null;
+}
+function isoFromPub(d){
+  const t=Date.parse(d);
+  return isNaN(t)?null:new Date(t).toISOString().slice(0,10);
+}
+function loadDiscovered(){
+  try{
+    const raw=localStorage.getItem(DISC_KEY);
+    if(raw){const arr=JSON.parse(raw);if(Array.isArray(arr))return arr;}
+  }catch(e){}
+  return [];
+}
+function saveDiscovered(){
+  try{localStorage.setItem(DISC_KEY,JSON.stringify(COMPANIES.filter(c=>c.discovered)));}catch(e){}
+}
+
+async function scanFeeds(){
+  if(scanning)return;
+  const btn=document.getElementById('btnScan');
+  scanning=true;btn.disabled=true;
+  const orig='Scan press feeds';
+  const all=[],fails=[];
+  for(const f of SCAN_FEEDS){
+    btn.textContent='Scanning '+f.name+'...';
+    try{
+      const r=await fetch('/api/rss?parse=1&url='+encodeURIComponent(f.url));
+      const j=await r.json();
+      if(!r.ok||j.error)throw new Error(j.error||('http '+r.status));
+      (j.items||[]).forEach(it=>all.push(it));
+    }catch(e){fails.push(f.name+': '+String(e.message||e).slice(0,90));}
+  }
+  const found=[],seen=new Set();
+  const skipped={watch:0,dupe:0};
+  const cutoff=Date.now()-7*DAY;
+  for(const it of all){
+    if(!it.title||!isFundingHeadline(it.title))continue;
+    const published=Date.parse(it.date||'');
+    if(isNaN(published)||published<cutoff)continue;
+    const name=extractCompany(it.title);
+    if(!name)continue;
+    const key=normName(name);
+    if(seen.has(key)){skipped.dupe++;continue;}
+    if(watchlistMatch(name)){skipped.watch++;continue;}
+    seen.add(key);
+    found.push({name:name,title:it.title,link:it.link,date:it.date,source:it.source,
+                stage:stageFromHeadline(it.title),money:amtFromHeadline(it.title)});
+  }
+  DISC={items:found,at:Date.now(),fails:fails,scanned:all.length,skipped:skipped};
+  scanning=false;btn.disabled=false;btn.textContent=orig;
+  renderDiscovery();
+  if(fails.length===SCAN_FEEDS.length)toast('All three press feeds failed ('+fails.join('; ')+'). Cached and curated data are still available.','err');
+  else if(fails.length)toast(fails.join(', ')+' failed; other feeds scanned. '+found.length+' funding headline'+(found.length===1?'':'s')+' found.','err');
+  else toast(all.length+' headlines scanned: '+found.length+' new funding candidate'+(found.length===1?'':'s')+', '+skipped.watch+' already on the watchlist.','ok');
+}
+
+function addDiscovered(i){
+  const d=DISC.items[i];
+  if(!d||d.added)return;
+  const iso=isoFromPub(d.date);
+  const srcLabel=d.source+(iso?', '+fmtEvDate(iso):'');
+  const comp={
+    id:'disc-'+normName(d.name).slice(0,24)+'-'+Date.now().toString(36),
+    name:d.name,hq:'not extracted',sector:'unclassified',tags:['Discovered via press scan'],
+    stage:d.stage,discovered:true,
+    line:'Surfaced by the press scan; verify the round in the linked article and classify on first review.',
+    sourceUrl:safeHttpUrl(d.link),
+    round:d.money?{label:d.money.label+(d.stage!=='Unclassified'?' '+d.stage:' round')+' (from headline)',
+                   lead:'lead not extracted',date:iso,src:srcLabel,amt:d.money.amt}:null,
+    ats:null,gh:null,hn:null,founders:[],
+    events:[ev(iso,'funding',d.title,srcLabel,safeHttpUrl(d.link))]
+  };
+  COMPANIES.push(comp);
+  d.added=true;
+  saveDiscovered();
+  ui.sel=comp.id;ui.tab='all';ui.sector=null;
+  render();renderDiscovery();
+  toast(d.name+' added to the watchlist. Momentum is computed from the headline facts only; everything unknown scores a labeled neutral prior.','ok');
+}
+
+function renderDiscovery(){
+  const body=document.getElementById('discBody');
+  const btn=document.getElementById('btnScan');
+  const stamp=document.getElementById('discStamp');
+  const canScan=location.protocol!=='file:'&&serverReachable;
+  btn.disabled=!canScan||scanning;
+  const added=COMPANIES.filter(c=>c.discovered).length;
+  stamp.textContent=DISC.at?('scanned '+hhmmss(DISC.at)):(added?added+' added earlier':'');
+  if(!canScan){
+    body.innerHTML='<span style="color:var(--faint);font-size:12px">Press API offline.</span>';
+    return;
+  }
+  if(!DISC.at){
+    body.innerHTML='<span style="color:var(--faint);font-size:12px">No press scan yet.'+(added?' '+added+' saved candidate'+(added===1?'':'s')+'.':'')+'</span>';
+    return;
+  }
+  if(!DISC.items.length){
+    body.innerHTML='<span style="color:var(--faint);font-size:12px">No new rounds in the latest '+DISC.scanned+' items.'+(DISC.fails.length?' Failed: '+DISC.fails.join(', ')+'.':'')+'</span>';
+    return;
+  }
+  body.innerHTML=DISC.items.map((d,i)=>{
+    const href=safeHttpUrl(d.link);
+    const title=href?'<a class="dh2" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(d.title)+'</a>':'<div class="dh2">'+esc(d.title)+'</div>';
+    return '<div class="disc-item">'+
+      '<div class="dn">'+esc(d.name)+(d.stage!=='Unclassified'?'<span class="dstage">'+esc(d.stage)+'</span>':'')+'</div>'+title+
+      '<div class="dm">'+esc(d.source)+' · '+esc((d.date||'').slice(0,16)||'undated')+'</div>'+
+      '<div class="da">'+(d.added
+        ?'<span class="dadded">On the watchlist</span>'
+        :'<button class="mini primary" data-disc="'+i+'">Add to watchlist</button>')+'</div>'+
+    '</div>';
+  }).join('')+(DISC.skipped.watch
+    ?'<div style="margin-top:8px;font-size:10.5px;color:var(--faint)">'+DISC.skipped.watch+' funding headline'+(DISC.skipped.watch===1?'':'s')+' matched existing watchlist names and '+(DISC.skipped.watch===1?'was':'were')+' skipped.</div>'
+    :'');
+}
+
+/* =====================================================================
+   Toasts, events, keyboard
+   ===================================================================== */
+function toast(msg,kind){
+  const el=document.createElement('div');
+  el.className='toast'+(kind==='err'?' err':kind==='ok'?' ok':'');
+  el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),320);},6000);
+}
+
+document.addEventListener('click',e=>{
+  const row=e.target.closest('.lrow');
+  if(row){ui.sel=row.dataset.id;render();return;}
+  const tab=e.target.closest('[data-tab]');
+  if(tab){ui.tab=tab.dataset.tab;render();return;}
+  const chip=e.target.closest('[data-sector]');
+  if(chip){ui.sector=ui.sector===chip.dataset.sector?null:chip.dataset.sector;render();return;}
+  const pull=e.target.closest('[data-pull]');
+  if(pull){
+    const c=COMPANIES.find(x=>x.id===ui.sel);
+    if(!c)return;
+    const fam=pull.dataset.pull;
+    const fn=fam==='jobs'?fetchJobs:fam==='hn'?fetchHN:fam==='x'?fetchX:fetchGH;
+    pull.disabled=true;
+    fn(c).then(()=>{
+      const now=Date.now();
+      lastStamp[fam]=(fam==='x'&&(!SIG.x[c.id]||SIG.x[c.id].state!=='live'))?null:now;
+      saveSig();render();
+      if(fam==='x'&&SIG.x[c.id]&&SIG.x[c.id].state==='live'){
+        toast('X LIVE · '+(SIG.x[c.id].provider||ui.xProvider||'twitterapi')+' · @'+SIG.x[c.id].handle+' · '+SIG.x[c.id].n+' posts · '+hhmmss(now),'ok');
+      }
+    })
+      .catch(err=>{toast(c.name+' '+fam+' pull failed ('+err.message+'). Cached value kept.','err');pull.disabled=false;});
+    return;
+  }
+  const disc=e.target.closest('[data-disc]');
+  if(disc){addDiscovered(+disc.dataset.disc);return;}
+  if(e.target.closest('[data-close]')||e.target.classList.contains('mback')){
+    document.querySelectorAll('.mback').forEach(m=>m.classList.remove('open'));
+  }
+});
+
+document.getElementById('btnRefresh').addEventListener('click',pullAll);
+document.getElementById('btnJobs').addEventListener('click',()=>pullFamily('jobs'));
+document.getElementById('btnHN').addEventListener('click',()=>pullFamily('hn'));
+document.getElementById('btnGH').addEventListener('click',()=>pullFamily('gh'));
+document.getElementById('btnX').addEventListener('click',pullSelectedX);
+document.getElementById('btnBrief').addEventListener('click',openBrief);
+document.getElementById('btnCopyBrief').addEventListener('click',copyBrief);
+document.getElementById('btnPolish').addEventListener('click',polishBrief);
+document.getElementById('btnRevert').addEventListener('click',()=>{
+  document.getElementById('briefText').textContent=ui.detBrief;
+  ui.briefIsPolished=false;
+  document.getElementById('btnRevert').style.display='none';
+});
+document.getElementById('btnTC').addEventListener('click',()=>pullWire('tc'));
+document.getElementById('btnSifted').addEventListener('click',()=>pullWire('sifted'));
+document.getElementById('btnScan').addEventListener('click',scanFeeds);
+document.getElementById('q').addEventListener('input',e=>{ui.q=e.target.value.trim().toLowerCase();render();});
+
+document.addEventListener('keydown',e=>{
+  const typing=e.target.matches('input,textarea,select')||e.target.isContentEditable;
+  if(e.key==='Escape'){
+    document.querySelectorAll('.mback').forEach(m=>m.classList.remove('open'));
+    if(typing)e.target.blur();
+    return;
+  }
+  if(typing)return; /* shortcuts disabled while typing */
+  const vis=visible(ranked());
+  const idx=vis.findIndex(r=>r.c.id===ui.sel);
+  if(e.key==='j'||e.key==='ArrowDown'){if(idx<vis.length-1){ui.sel=vis[idx+1].c.id;render();scrollSel();}e.preventDefault();}
+  else if(e.key==='k'||e.key==='ArrowUp'){if(idx>0){ui.sel=vis[idx-1].c.id;render();scrollSel();}e.preventDefault();}
+  else if(e.key==='r'){pullAll();}
+  else if(e.key==='b'){openBrief();}
+  else if(e.key==='/'){document.getElementById('q').focus();e.preventDefault();}
+  else if(e.key>='1'&&e.key<='4'){ui.tab=TABS[+e.key-1].id;render();}
+});
+function scrollSel(){
+  const el=document.querySelector('.lrow.sel');
+  if(el)el.scrollIntoView({block:'nearest'});
+}
+
+/* clock */
+setInterval(()=>{document.getElementById('clock').textContent=hhmmss(Date.now());},1000);
+document.getElementById('clock').textContent=hhmmss(Date.now());
+
+/* boot */
+loadDiscovered().forEach(c=>{
+  if(c&&c.id&&c.name&&!COMPANIES.some(x=>x.id===c.id)){
+    c.discovered=true;
+    if(!c.founders)c.founders=[];
+    COMPANIES.push(c);
+  }
+});
+probeServer();
+setInterval(checkServer,60000);
+render();
+renderDiscovery();
+</script>
+</body>
+</html>

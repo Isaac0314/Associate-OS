@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Signal OS</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --bg:#0a0c11;
+    --panel:#10131b;
+    --panel-2:#141826;
+    --line:#1e2432;
+    --line-2:#262d3e;
+    --ink:#e9ecf4;
+    --ink-2:#c3c9d8;
+    --muted:#8a93a8;
+    --faint:#5c6478;
+    --accent:#ff6a54;
+    --accent-soft:rgba(255,106,84,.10);
+    --accent-line:rgba(255,106,84,.35);
+    --up:#3fd598;
+    --mono:"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:
+      radial-gradient(1100px 420px at 72% -12%, rgba(255,106,84,.06), transparent 60%),
+      radial-gradient(900px 380px at 10% -8%, rgba(63,213,152,.035), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font:14px/1.6 var(--sans);
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;align-items:center;
+    padding:0 22px;
+  }
+  ::selection{background:rgba(255,106,84,.30)}
+  .wrap{max-width:1020px;width:100%;padding:72px 0 60px}
+  .kicker{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--accent);
+    animation:rise .5s ease both;
+  }
+  h1{
+    margin:10px 0 12px;font-size:44px;font-weight:700;letter-spacing:-.025em;line-height:1.05;
+    animation:rise .5s .05s ease both;
+  }
+  .sub{
+    color:var(--muted);font-size:15px;max-width:640px;line-height:1.65;
+    animation:rise .5s .1s ease both;
+  }
+  .sub b{color:var(--ink-2);font-weight:600}
+  @keyframes rise{from{transform:translateY(9px)}to{transform:none}}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+  @media (max-width:860px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:22px 22px 20px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+    animation:rise .5s ease both;
+    transition:border-color .15s, transform .15s;
+  }
+  .card:nth-child(1){animation-delay:.14s}
+  .card:nth-child(2){animation-delay:.2s}
+  .card:nth-child(3){animation-delay:.26s}
+  a.card{text-decoration:none;color:inherit;cursor:pointer}
+  a.card:hover{border-color:var(--accent-line);transform:translateY(-2px)}
+  a.card:hover .go{color:var(--accent)}
+  .num{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;
+    color:var(--faint);margin-bottom:14px;
+  }
+  .num b{color:var(--accent);font-weight:700}
+  .card h2{margin:0 0 6px;font-size:19px;font-weight:700;letter-spacing:-.015em}
+  .card .what{color:var(--muted);font-size:12.5px;line-height:1.6;margin-bottom:18px;flex:1}
+  .card ul{margin:0 0 18px;padding:0;list-style:none;flex:1}
+  .card li{
+    font-size:12px;color:var(--ink-2);padding:5px 0 5px 16px;position:relative;line-height:1.5;
+    border-top:1px solid var(--line);
+  }
+  .card li:first-child{border-top:0}
+  .card li:before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.75}
+  .go{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+    color:var(--muted);transition:color .15s;
+  }
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+    color:var(--muted);border:1px solid var(--line-2);border-radius:4px;padding:2.5px 8px;
+  }
+
+  .creed{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:44px;
+    animation:rise .5s .32s ease both;
+  }
+  @media (max-width:860px){.creed{grid-template-columns:1fr}}
+  .creed div{
+    border:1px solid var(--line);border-left:3px solid var(--accent);
+    background:var(--panel);border-radius:10px;padding:14px 18px;
+    font-size:13px;color:var(--ink-2);line-height:1.65;
+  }
+  .creed b{color:var(--ink);display:block;font-size:13.5px;margin-bottom:2px}
+  footer{
+    margin-top:40px;font-size:11px;color:var(--faint);line-height:1.7;
+    animation:rise .5s .38s ease both;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Source / Diligence / Knowledge</div>
+  <h1>Signal OS</h1>
+  <p class="sub">Working demos for sourcing, diligence, and founder-call follow-through.</p>
+
+  <div class="cards">
+    <a class="card" href="./founder-radar/">
+      <div class="num"><b>01</b> &nbsp;SOURCE</div>
+      <h2>Founder Radar</h2>
+      <div class="what">Ranks operators showing observable founder intent before a deck exists.</div>
+      <div class="go">OPEN DEMO &nbsp;&#8594;</div>
+    </a>
+
+    <a class="card" href="./growth-scout/">
+      <div class="num"><b>02</b> &nbsp;SOURCE</div>
+      <h2>Growth Scout</h2>
+      <div class="what">European watchlist; local demo pulls jobs, GitHub, Hacker News, X, and press.</div>
+      <div class="go">OPEN DEMO &nbsp;&#8594;</div>
+    </a>
+
+    <a class="card" href="./breakout-radar/">
+      <div class="num"><b>03</b> &nbsp;DILIGENCE</div>
+      <h2>Breakout Radar</h2>
+      <div class="what">Flags portfolio companies whose operating signals are inflecting before the next round.</div>
+      <div class="go">OPEN DEMO &nbsp;&#8594;</div>
+    </a>
+
+    <a class="card" href="./associate-os/">
+      <div class="num"><b>04</b> &nbsp;KNOWLEDGE</div>
+      <h2>Associate OS</h2>
+      <div class="what">Turns founder calls into cited commitments, drafts, and relationship memory.</div>
+      <div class="go">OPEN DEMO &nbsp;&#8594;</div>
+    </a>
+
+    <div class="card">
+      <div class="num"><b>05</b> &nbsp;KNOWLEDGE</div>
+      <h2>AI Investor Challenge</h2>
+      <div class="what">A 48-hour build screen around a real investment-workflow bottleneck.</div>
+      <div class="go"><span class="tag">DESIGNED PROGRAM &middot; PDF LEAVE-BEHIND</span></div>
+    </div>
+
+    <a class="card" href="https://isaac0314.github.io/six-month-signal/" target="_blank" rel="noopener noreferrer">
+      <div class="num"><b>06</b> &nbsp;PRODUCTION PROOF</div>
+      <h2>The Six-Month Signal</h2>
+      <div class="what">A weekday AI brief with a dated public feed and audio.</div>
+      <div class="go">OPEN PUBLIC FEED &nbsp;&#8594;</div>
+    </a>
+  </div>
+
+  <footer>Built by Isaac Luo · public facts are source-linked; interview datasets are labeled.</footer>
+</div>
+</body>
+</html>

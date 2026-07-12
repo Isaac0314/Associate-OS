@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Founder Radar</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,550;0,9..144,650;1,9..144,450;1,9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Paper and ink: warm, editorial, confident */
+    --paper:#f5f3ed;
+    --panel:#fffdf8;
+    --panel2:#faf8f1;
+    --ink:#1d1a13;
+    --ink2:#48432f;
+    --ink3:#4a463b;
+    --muted:#7d7767;
+    --faint:#aba490;
+
+    --line:#e6e1d2;
+    --line2:#efebde;
+
+    /* Ember: the single accent */
+    --ember:#b4441f;
+    --ember-2:#c8512a;
+    --ember-ink:#8f3517;
+    --ember-soft:#f8e7dd;
+    --ember-line:#ecccba;
+
+    /* Heat tiers */
+    --hot:#b4441f;
+    --warm:#96660d;   --warm-bg:#f6ecd4;  --warm-line:#e8d6a8;
+    --cool:#5c6470;   --cool-bg:#eaecee;  --cool-line:#d8dce1;
+    --green:#3c7040;  --green-bg:#e6efe2; --green-line:#c9dec4;
+
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --mono:"Cascadia Mono","Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+
+    --shadow-sm:0 1px 0 rgba(48,40,24,.03), 0 1px 3px rgba(48,40,24,.05);
+    --shadow-md:0 2px 6px rgba(48,40,24,.06), 0 14px 34px rgba(48,40,24,.08);
+
+    --r-sm:7px; --r-md:10px; --r-lg:13px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(180,68,31,.05), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.004em;
+    overflow:hidden;
+  }
+  ::selection{background:var(--ember-soft)}
+
+  button{
+    font:inherit;cursor:pointer;
+    border:1px solid var(--line);
+    background:var(--panel);color:var(--ink2);
+    border-radius:var(--r-sm);
+    padding:6px 11px;height:30px;
+    font-weight:550;font-size:12.5px;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    transition:background .12s,border-color .12s,color .12s;
+  }
+  button:hover{border-color:#d7d0bd;background:var(--panel2);color:var(--ink)}
+  button:active{background:var(--line2)}
+  button:disabled{opacity:.5;cursor:default}
+  button.primary{background:var(--ember);border-color:var(--ember);color:#fff}
+  button.primary:hover{background:var(--ember-2);border-color:var(--ember-2);color:#fff}
+  button.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+  button.ghost:hover{background:var(--line2);color:var(--ink)}
+  kbd{
+    font:600 10px/1 var(--mono);
+    background:var(--line2);border:1px solid var(--line);border-bottom-width:2px;
+    border-radius:4px;padding:2px 5px;color:var(--muted);
+  }
+  button.primary kbd{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.28);color:#fff}
+  input{
+    font:inherit;border:1px solid var(--line);border-radius:var(--r-sm);
+    padding:6px 10px;background:var(--panel);color:var(--ink);width:100%;
+  }
+  input:focus{outline:none;border-color:var(--ember);box-shadow:0 0 0 3px var(--ember-soft)}
+  input::placeholder{color:var(--faint)}
+  .mono{font-family:var(--mono)}
+
+  /* ---------- header ---------- */
+  header{
+    height:56px;display:flex;align-items:center;gap:10px;
+    padding:0 16px;border-bottom:1px solid var(--line);
+    background:rgba(255,253,248,.85);backdrop-filter:blur(8px) saturate(150%);
+    position:relative;z-index:30;
+  }
+  .brand{display:flex;align-items:baseline;gap:9px;flex:none;margin-right:2px}
+  .mark{
+    width:26px;height:26px;border-radius:8px;flex:none;align-self:center;
+    background:radial-gradient(circle at 32% 30%, var(--ember-2), var(--ember-ink) 75%);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.22), 0 1px 3px rgba(143,53,23,.35);
+    position:relative;
+  }
+  .mark:after{
+    content:"";position:absolute;inset:7px;
+    border:1.5px solid rgba(255,255,255,.85);border-radius:50%;
+    border-left-color:transparent;border-bottom-color:transparent;
+    transform:rotate(-45deg);
+  }
+  .brand b{font:650 19px/1 var(--serif);letter-spacing:-.01em;color:var(--ink)}
+  .brand i{font:italic 450 12.5px/1 var(--serif);color:var(--muted);letter-spacing:.01em}
+  .hchip{
+    display:inline-flex;align-items:center;gap:6px;height:26px;
+    border:1px solid var(--line);border-radius:999px;background:var(--panel);
+    padding:0 11px;font:600 10px/1 var(--mono);letter-spacing:.09em;color:var(--muted);
+    white-space:nowrap;
+  }
+  .hchip .dot{width:6px;height:6px;border-radius:50%;background:var(--faint);flex:none}
+  .hchip.on{border-color:var(--green-line);background:var(--green-bg);color:var(--green)}
+  .hchip.on .dot{background:var(--green);box-shadow:0 0 0 3px rgba(60,112,64,.15)}
+  .hchip.sim .dot{background:var(--warm)}
+  .hchip.hot{border-color:var(--ember-line);background:var(--ember-soft);color:var(--ember-ink)}
+  .hchip.hot .dot{background:var(--ember);box-shadow:0 0 0 3px rgba(180,68,31,.15)}
+  .spacer{flex:1}
+  .cleared{display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-right:4px}
+  .cleared .t{font:550 11.5px/1 var(--mono);color:var(--ink2);letter-spacing:0}
+  .cleared .bar{width:130px;height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+  .cleared .bar i{display:block;height:100%;background:var(--ember);border-radius:3px;transition:width .3s}
+
+  /* ---------- layout ---------- */
+  .app{display:grid;grid-template-columns:308px minmax(0,1fr) 344px;height:calc(100vh - 56px)}
+  .rail{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--panel2)}
+  .center{min-width:0;display:flex;flex-direction:column;min-height:0}
+  .side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--panel2)}
+
+  /* ---------- left rail ---------- */
+  .railhead{padding:12px 12px 0}
+  .tabs{display:flex;background:var(--line2);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px}
+  .tabs button{
+    flex:1;border:0;background:transparent;height:25px;padding:0 6px;
+    border-radius:6px;color:var(--muted);font-size:11.5px;justify-content:center;gap:4px;
+  }
+  .tabs button .n{font:600 10px/1 var(--mono);color:var(--faint)}
+  .tabs button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(48,40,24,.08),0 0 0 1px rgba(48,40,24,.04)}
+  .tabs button.on .n{color:var(--ember)}
+  .askwrap{padding:9px 12px 8px;position:relative}
+  .askwrap input{height:30px;font-size:12.5px;padding-left:28px}
+  .askwrap:before{
+    content:"";position:absolute;left:22px;top:18px;width:9px;height:9px;
+    border:1.5px solid var(--faint);border-radius:50%;
+  }
+  .askwrap:after{
+    content:"";position:absolute;left:31px;top:27px;width:5px;height:1.5px;
+    background:var(--faint);transform:rotate(45deg);transform-origin:left center;
+  }
+  .askans{
+    margin:0 12px 6px;padding:6px 9px;border-radius:7px;
+    background:var(--ember-soft);border:1px solid var(--ember-line);
+    font-size:11.5px;color:var(--ember-ink);
+  }
+  .list{flex:1;overflow-y:auto;padding:4px 8px 10px;min-height:0}
+  .list::-webkit-scrollbar{width:9px}
+  .list::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--panel2)}
+  .cand{
+    padding:9px 11px 8px;border:1px solid transparent;border-radius:var(--r-md);
+    cursor:pointer;margin:2px 0;position:relative;
+    transition:background .1s,border-color .1s;
+  }
+  .cand:hover{background:var(--panel);border-color:var(--line)}
+  .cand.sel{background:var(--panel);border-color:var(--ember-line);box-shadow:var(--shadow-sm),inset 3px 0 0 var(--ember)}
+  .cand .top{display:flex;align-items:baseline;gap:8px}
+  .cand .nm{font:600 13.5px/1.25 var(--serif);letter-spacing:-.008em;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cand .sc{font:650 14px/1 var(--mono);flex:none}
+  .sc.hot{color:var(--hot)} .sc.warmt{color:var(--warm)} .sc.coolt{color:var(--cool)}
+  .cand .hd{font:500 10.5px/1.4 var(--mono);color:var(--faint);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cand .ln{
+    font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .cand .mt{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .atag{
+    font-size:10px;font-weight:600;color:var(--muted);
+    background:var(--line2);border:1px solid var(--line);
+    padding:1px 7px;border-radius:999px;white-space:nowrap;
+  }
+  .fresh{font:550 10px/1 var(--mono);color:var(--faint)}
+  .fresh.new{color:var(--ember);font-weight:650}
+  .stb{font-size:10px;font-weight:650;padding:1px 7px;border-radius:999px;white-space:nowrap}
+  .stb.watchlist{background:var(--warm-bg);color:var(--warm);border:1px solid var(--warm-line)}
+  .stb.contacted{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+  .stb.meeting{background:var(--ember-soft);color:var(--ember-ink);border:1px solid var(--ember-line)}
+  .livep{
+    font:650 9px/1 var(--mono);letter-spacing:.08em;
+    background:var(--ember);color:#fff;padding:2.5px 6px;border-radius:4px;
+  }
+  .railfoot{
+    border-top:1px solid var(--line);padding:8px 14px;
+    font-size:10.5px;color:var(--faint);display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  }
+  .railfoot kbd{font-size:9px;padding:1px 4px}
+  .railfoot .ig{margin-left:auto;cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px}
+  .railfoot .ig:hover{color:var(--ink2)}
+  .empty{color:var(--muted);font-size:12px;text-align:center;padding:34px 18px;line-height:1.6}
+
+  /* ---------- detail ---------- */
+  .detail{flex:1;overflow-y:auto;min-height:0;padding:22px 30px 18px}
+  .detail::-webkit-scrollbar{width:10px}
+  .detail::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--panel)}
+  .center{background:var(--panel)}
+  .dhead{display:flex;align-items:flex-start;gap:18px}
+  .dhead .who{flex:1;min-width:0}
+  .dname{font:650 27px/1.1 var(--serif);letter-spacing:-.015em;color:var(--ink);margin:0}
+  .dname .live{vertical-align:6px;margin-left:8px}
+  .dhandle{font:500 12px/1 var(--mono);color:var(--muted);margin-top:7px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .dhandle .sep{color:var(--line);font-weight:400}
+  .dbadges{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
+  .dline{font:italic 450 14.5px/1.5 var(--serif);color:var(--ink2);margin:14px 0 0;max-width:640px}
+  .pipe{display:flex;align-items:center;gap:0;margin:16px 0 0}
+  .pipe .st{
+    font:600 10px/1 var(--mono);letter-spacing:.07em;color:var(--faint);
+    padding:4px 10px;border:1px solid var(--line);background:var(--panel2);
+    position:relative;
+  }
+  .pipe .st:first-child{border-radius:6px 0 0 6px}
+  .pipe .st:last-child{border-radius:0 6px 6px 0}
+  .pipe .st + .st{margin-left:-1px}
+  .pipe .st.done{color:var(--muted);background:var(--line2)}
+  .pipe .st.cur{color:#fff;background:var(--ember);border-color:var(--ember);z-index:1}
+  .sect{margin-top:26px}
+  .sect h3{
+    font:650 10.5px/1 var(--mono);letter-spacing:.14em;color:var(--muted);
+    margin:0 0 11px;text-transform:uppercase;
+    display:flex;align-items:center;gap:10px;
+  }
+  .sect h3:after{content:"";flex:1;height:1px;background:var(--line2)}
+  .bio{font-size:13px;line-height:1.65;color:var(--ink3);max-width:660px;margin:0}
+  .found{display:flex;flex-direction:column;gap:6px;max-width:660px}
+  .found .f{
+    display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink3);
+    padding:7px 11px;border:1px solid var(--line2);border-radius:8px;background:var(--panel2);
+  }
+  .found .f:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ember);opacity:.55;flex:none}
+  .sigs{display:flex;flex-direction:column;max-width:720px}
+  .sig{
+    display:grid;grid-template-columns:58px 118px 1fr 62px;gap:12px;align-items:baseline;
+    padding:8px 2px;border-bottom:1px solid var(--line2);
+  }
+  .sig:last-child{border-bottom:0}
+  .sig .dt{font:550 11px/1.4 var(--mono);color:var(--muted);white-space:nowrap}
+  .sig .dt.future{color:var(--ember);font-weight:650}
+  .sig .ty{font-size:10.5px;font-weight:650;color:var(--ink2);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .sig .ty:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--tyc,var(--faint));flex:none}
+  .sig .tx{font-size:12.5px;color:var(--ink3);line-height:1.5}
+  .sig .pt{font:650 11.5px/1.4 var(--mono);text-align:right;white-space:nowrap}
+  .scorebox{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+  .gauge{flex:none;text-align:center;padding-top:4px}
+  .gauge svg{display:block}
+  .gauge .cap{font:550 10px/1.5 var(--mono);color:var(--faint);margin-top:6px;max-width:110px}
+  .receipt{flex:1;min-width:320px;max-width:560px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--panel2)}
+  .receipt table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+  .receipt th{
+    text-align:left;font:650 9.5px/1 var(--mono);letter-spacing:.1em;color:var(--faint);
+    padding:8px 12px;border-bottom:1px solid var(--line);background:var(--panel);text-transform:uppercase;
+  }
+  .receipt td{padding:7px 12px;border-bottom:1px solid var(--line2);color:var(--ink3);vertical-align:baseline}
+  .receipt td.r{text-align:right;white-space:nowrap}
+  .receipt td.lbl{font-family:-apple-system,"Segoe UI",sans-serif;font-size:12px;font-weight:550;color:var(--ink2)}
+  .receipt .math{color:var(--muted);white-space:nowrap}
+  .receipt tr.sub td{border-top:1px dashed var(--line);color:var(--ink2);font-weight:600}
+  .receipt tr.prior td{color:var(--ink2)}
+  .receipt tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-weight:700;color:var(--ink);font-size:13px;padding-top:9px}
+  .receipt tr.total td .capnote{font:550 10px/1 var(--mono);color:var(--ember);margin-left:8px}
+  .draftcard{
+    margin-top:12px;border:1px solid var(--ember-line);border-radius:var(--r-md);
+    background:linear-gradient(180deg,#fdf3ec,var(--panel));max-width:660px;overflow:hidden;
+  }
+  .draftcard .dh{
+    display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid var(--ember-line);
+  }
+  .draftcard .dh b{font-size:11px;letter-spacing:.06em;color:var(--ember-ink);text-transform:uppercase;font-weight:700}
+  .draftcard .dh .src{font:550 9.5px/1 var(--mono);color:var(--muted);letter-spacing:.06em}
+  .draftcard .dh .actions{margin-left:auto;display:flex;gap:6px}
+  .draftcard pre{
+    margin:0;padding:13px 15px;white-space:pre-wrap;
+    font:12.5px/1.6 -apple-system,"Segoe UI",sans-serif;color:var(--ink3);
+  }
+  .mini{height:24px;padding:2px 9px;font-size:11px;border-radius:6px}
+  .actionbar{
+    border-top:1px solid var(--line);background:rgba(255,253,248,.92);backdrop-filter:blur(6px);
+    padding:11px 30px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;
+  }
+  .actionbar .hint{margin-left:auto;font-size:11px;color:var(--faint)}
+  .detail .placeholder{
+    height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:var(--muted);gap:8px;text-align:center;
+  }
+  .placeholder b{font:600 18px/1.3 var(--serif);color:var(--ink2)}
+
+  /* ---------- right rail ---------- */
+  .side .card{border-bottom:1px solid var(--line)}
+  .cardh{display:flex;align-items:center;gap:8px;padding:12px 15px 9px}
+  .cardh h2{
+    margin:0;font:650 10.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+  }
+  .cardh .r{margin-left:auto;display:flex;align-items:center;gap:6px}
+  .chip2{
+    font:650 9px/1 var(--mono);letter-spacing:.08em;padding:3px 7px;border-radius:4px;
+    background:var(--line2);color:var(--muted);border:1px solid var(--line);
+  }
+  .chip2.live{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+  .briefbody{padding:2px 15px 14px;font-size:12px;line-height:1.55;color:var(--ink3);max-height:295px;overflow-y:auto}
+  .briefbody::-webkit-scrollbar{width:8px}
+  .briefbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+  .briefbody .bl{
+    font:650 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ember-ink);
+    margin:11px 0 5px;
+  }
+  .briefbody .bl:first-child{margin-top:4px}
+  .briefbody ul{margin:0;padding-left:16px}
+  .briefbody li{margin:3px 0}
+  .briefbody p{margin:4px 0}
+  .briefbody b{color:var(--ink);font-weight:650}
+  .briefbody .up{color:var(--green);font-weight:650;font-family:var(--mono);font-size:11px}
+  .briefbody .thinking{color:var(--faint);font-style:italic;padding:8px 0}
+  .feed{flex:1;overflow-y:auto;min-height:0;padding:6px 10px 12px}
+  .feed::-webkit-scrollbar{width:9px}
+  .feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--panel2)}
+  .ev{
+    border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel);
+    padding:9px 11px;margin:6px 2px;
+  }
+  .ev .top{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+  .ev .tag{
+    font:700 8.5px/1 var(--mono);letter-spacing:.09em;padding:3px 6px;border-radius:4px;
+    background:var(--cool-bg);color:var(--cool);
+  }
+  .ev .tag.DRAFT{background:var(--ember-soft);color:var(--ember-ink)}
+  .ev .tag.SIM{background:var(--warm-bg);color:var(--warm)}
+  .ev .tag.PULL{background:var(--green-bg);color:var(--green)}
+  .ev .tag.TRIAGE{background:var(--line2);color:var(--muted)}
+  .ev .when{margin-left:auto;font:550 10px/1 var(--mono);color:var(--faint);white-space:nowrap}
+  .ev .msg{font-size:12px;line-height:1.5;color:var(--ink3)}
+  .ev .msg b{color:var(--ink);font-weight:600}
+  .ev .draftbox{
+    margin-top:8px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);
+    padding:9px 11px;white-space:pre-wrap;font-size:11.5px;line-height:1.55;color:var(--ink3);
+    max-height:150px;overflow-y:auto;
+  }
+  .ev .evbtns{display:flex;gap:6px;margin-top:7px;align-items:center}
+  .ev .evbtns .lab{font:550 9.5px/1 var(--mono);color:var(--faint);letter-spacing:.04em;margin-left:auto}
+  .feedlabel{
+    padding:6px 15px 0;font:550 10px/1.5 var(--mono);color:var(--faint);letter-spacing:.04em;
+  }
+
+  /* ---------- X validation ---------- */
+  .xwrap{max-width:660px}
+  .xbanner{
+    border:1px solid var(--warm-line);background:var(--warm-bg);color:var(--warm);
+    border-radius:8px;padding:8px 11px;font-size:11.5px;line-height:1.5;margin-bottom:10px;
+  }
+  .xbanner.live{border-color:var(--green-line);background:var(--green-bg);color:var(--green)}
+  .xgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+  .xcell{border:1px solid var(--line);border-radius:8px;background:var(--panel2);padding:8px 10px;min-width:0}
+  .xcell .k{font:650 9px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+  .xcell .v{font:650 15px/1.2 var(--mono);color:var(--ink);margin-top:4px}
+  .xcell .s{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .xhl{
+    border:1px solid var(--ember-line);background:var(--ember-soft);border-radius:8px;
+    padding:8px 11px;font-size:12px;color:var(--ember-ink);line-height:1.5;margin-bottom:10px;
+  }
+  .xhl b{font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px}
+  .xmath{
+    font:550 11px/1.7 var(--mono);color:var(--ink2);background:var(--panel2);
+    border:1px dashed var(--line);border-radius:8px;padding:8px 11px;
+  }
+  .xtry{display:flex;gap:7px;margin-top:10px;align-items:center;max-width:420px}
+  .xtry input{height:28px;font-size:12px}
+  @media(max-width:1180px){.xgrid{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- toasts ---------- */
+  .toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center}
+  .toast{
+    background:var(--ink);color:#f5f1e6;border-radius:10px;padding:9px 15px;
+    font-size:12.5px;box-shadow:var(--shadow-md);display:flex;gap:12px;align-items:center;
+    animation:pop .18s ease-out;max-width:520px;
+  }
+  .toast.err{background:#7c2d16}
+  .toast u{cursor:pointer;text-underline-offset:2px;font-weight:600}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- modal ---------- */
+  .scrim{position:fixed;inset:0;background:rgba(29,26,19,.42);z-index:60;display:none;backdrop-filter:blur(2px)}
+  .scrim.show{display:block}
+  .modal{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:61;
+    width:620px;max-width:94vw;max-height:88vh;overflow-y:auto;display:none;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
+    box-shadow:var(--shadow-md);padding:24px 28px;
+  }
+  .modal.show{display:block}
+  .modal h2{font:650 21px/1.2 var(--serif);margin:0 0 4px;letter-spacing:-.01em}
+  .modal .sub{color:var(--muted);font-size:12.5px;margin:0 0 16px}
+  .modal .formula{
+    font:600 12.5px/1.7 var(--mono);background:var(--panel2);border:1px solid var(--line);
+    border-radius:8px;padding:12px 15px;color:var(--ink2);margin-bottom:16px;
+  }
+  .modal .formula b{color:var(--ember-ink)}
+  .modal h4{font:650 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .wtable{width:100%;border-collapse:collapse;font-size:12px}
+  .wtable td{padding:5px 8px;border-bottom:1px solid var(--line2);color:var(--ink3)}
+  .wtable td.w{font:650 11.5px/1 var(--mono);text-align:right;color:var(--ink);width:52px}
+  .wtable td.note{color:var(--faint);font-size:11px}
+  .modal .phil{
+    margin-top:18px;padding:12px 15px;border-left:3px solid var(--ember);
+    background:var(--ember-soft);border-radius:0 8px 8px 0;
+    font:italic 500 13px/1.6 var(--serif);color:var(--ember-ink);
+  }
+  .modal .x{position:absolute;top:14px;right:14px;border:0;background:transparent;font-size:17px;color:var(--muted);height:28px;padding:2px 8px}
+  .modal .x:hover{color:var(--ink)}
+
+  @media(max-width:1180px){
+    .app{grid-template-columns:280px minmax(0,1fr) 300px}
+    .detail{padding:18px 20px}
+    .actionbar{padding:10px 20px}
+  }
+  @media(max-width:940px){
+    body{overflow:auto}
+    .app{grid-template-columns:1fr;height:auto}
+    .rail,.side{border:0;border-bottom:1px solid var(--line)}
+    .list{max-height:44vh}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><div class="mark"></div><b>Founder Radar</b><i>day-zero sourcing agent</i></div>
+  <span class="hchip" id="srcChip"><span class="dot"></span><span id="srcTxt">SYNTHETIC DATA</span></span>
+  <span class="hchip" id="llmChip"><span class="dot"></span><span id="llmTxt">LLM SIM</span></span>
+  <span class="hchip sim" id="dateChip" style="display:none"><span class="dot"></span><span id="dateTxt"></span></span>
+  <div class="spacer"></div>
+  <div class="cleared"><span class="t mono" id="clearedTxt">0 of 0 cleared</span><span class="bar"><i id="clearedBar" style="width:0%"></i></span></div>
+  <button id="hnBtn">Pull live: Hacker News</button>
+  <button id="skipBtn" class="primary">Skip a week</button>
+  <button id="todayBtn" style="display:none">Today</button>
+  <button id="howBtn" class="ghost" title="How scoring works">? scoring</button>
+</header>
+
+<div class="app">
+  <div class="rail">
+    <div class="railhead"><div class="tabs" id="tabs"></div></div>
+    <div class="askwrap"><input id="askInput" placeholder='Ask the radar, e.g. "who left a fintech job?"' autocomplete="off"/></div>
+    <div id="askAns" style="display:none" class="askans"></div>
+    <div class="list" id="list"></div>
+    <div class="railfoot">
+      <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> move</span>
+      <span><kbd>E</kbd> ignore</span>
+      <span><kbd>L</kbd> watch</span>
+      <span><kbd>O</kbd> outreach</span>
+      <span class="ig" id="igLink" style="display:none"></span>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="detail" id="detail"></div>
+    <div class="actionbar" id="actionbar" style="display:none">
+      <button id="actIgnore">Ignore <kbd>E</kbd></button>
+      <button id="actWatch">Watchlist <kbd>L</kbd></button>
+      <button id="actReach" class="primary">Outreach <kbd>O</kbd></button>
+      <button id="actMeet" style="display:none">Advance to meeting <kbd>M</kbd></button>
+      <button id="actBack" class="ghost" style="display:none">Back to inbox</button>
+      <span class="hint">agent drafts, Isaac sends</span>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="card">
+      <div class="cardh"><h2>Sourcing brief</h2><div class="r"><span class="chip2" id="briefChip">SIM</span><button class="mini ghost" id="briefRegen" style="display:none" title="Rewrite with the LLM">rewrite</button></div></div>
+      <div class="briefbody" id="brief"></div>
+    </div>
+    <div class="cardh" style="padding-bottom:2px"><h2>Agent activity</h2><div class="r"><span class="chip2" id="feedCount"></span></div></div>
+    <div class="feedlabel">agent drafts, Isaac sends</div>
+    <div class="feed" id="feed"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="modal" id="howModal">
+  <button class="x" id="howClose">&times;</button>
+  <h2>How scoring works</h2>
+  <p class="sub">Every number is computed in plain JavaScript, in this file. The LLM never touches a score.</p>
+  <div class="formula">score = min(99, round( &Sigma; <b>weight</b> &times; 0.5^(<b>age_days</b> / 21) &times; <b>quality_prior</b> + <b>x_validation</b> ))</div>
+  <h4>Signal weights</h4>
+  <table class="wtable" id="wTable"></table>
+  <h4>Recency decay</h4>
+  <p style="font-size:12.5px;color:var(--ink3);margin:4px 0 0;line-height:1.6">
+    Each signal decays with a <b>21-day half-life</b>: full weight the day it fires, half after three weeks, a quarter after six.
+    A person is interesting because of what happened <i>recently</i>, so old signals fade instead of accumulating forever.
+  </p>
+  <h4>Founder-quality prior (multiplier)</h4>
+  <table class="wtable" id="pTable"></table>
+  <h4>X validation (optional adjustment)</h4>
+  <p style="font-size:12.5px;color:var(--ink3);margin:4px 0 0;line-height:1.6">
+    Runs only when you click <b>Validate on X</b>: cadence min(4, posts/week) + audience min(4, log10(followers)) + engagement (2 if median likes &ge; 10, 1 if &ge; 3), cap <b>+10</b>.
+    The receipt labels the line sample or live; sample numbers exist only for the fictional candidates.
+  </p>
+  <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">Scores cap at 99. "Likely" means 60 or above. Live Hacker News candidates run through the identical engine.</p>
+  <div class="phil">Code owns the facts, the LLM owns the language. Statuses, scores and rankings are deterministic; the model only writes prose, and every LLM feature has a deterministic fallback.</div>
+</div>
+
+<script>
+"use strict";
+/* =====================================================================
+   Founder Radar - single-file demo app.
+   All data is synthetic and clearly fictional except the optional
+   live Hacker News pull. Scores are deterministic; see the modal.
+   ===================================================================== */
+
+/* ---------- utils ---------- */
+var esc = function(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); };
+var first = function(n){ return String(n||"").split(" ")[0]; };
+var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var WD  = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var _now = new Date();
+var BASE = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate(), 12, 0, 0);
+function dayDate(off){ return new Date(BASE.getTime() + off * 864e5); }
+function fmtDay(off){ var t = dayDate(off); return t.getDate() + " " + MON[t.getMonth()]; }
+function fmtLong(off){ var t = dayDate(off); return WD[t.getDay()] + " " + t.getDate() + " " + MON[t.getMonth()]; }
+function mulberry32(a){ return function(){ a|=0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a>>>15, 1|a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0) / 4294967296; }; }
+function pick(r, arr){ return arr[Math.floor(r()*arr.length)]; }
+function rint(r, a, b){ return a + Math.floor(r()*(b-a+1)); }
+
+/* ---------- scoring engine: code owns the facts ---------- */
+var HALF_LIFE = 21;          /* days to half weight */
+var LIKELY_MIN = 60;         /* "Likely" threshold */
+var SCORE_CAP = 99;
+var WEIGHTS = {
+  left_job: 32,
+  cofounder_search: 30,
+  show_hn: 26,
+  preprint: 24,
+  github_spike: 22,
+  demo_day_post: 20,
+  bio_change: 18,
+  domain_registered: 14,
+  watched_follow: 12,
+  hn_traction: 12          /* dynamic: points/15, capped at 12 */
+};
+var SIG_LABEL = {
+  left_job:"Left job", cofounder_search:"Cofounder search", show_hn:"Show HN",
+  preprint:"Preprint", github_spike:"GitHub spike", demo_day_post:"Demo day",
+  bio_change:"Bio change", domain_registered:"Domain reg", watched_follow:"Watched follow",
+  hn_traction:"HN traction"
+};
+var SIG_NOTE = {
+  left_job:"the strongest single tell: they walked away from the salary",
+  cofounder_search:"actively assembling a team",
+  show_hn:"shipped something publicly",
+  preprint:"fresh research with startup surface area",
+  github_spike:"building in the open, gathering attention",
+  demo_day_post:"already inside a founder program",
+  bio_change:"self-declared intent",
+  domain_registered:"bought the name before telling anyone",
+  watched_follow:"a trusted scout account noticed them",
+  hn_traction:"dynamic bonus: points / 15, capped at 12"
+};
+var SIG_COLOR = {
+  left_job:"#b4441f", cofounder_search:"#c8512a", show_hn:"#96660d", preprint:"#5b6ea6",
+  github_spike:"#3c7040", demo_day_post:"#8a5fa0", bio_change:"#b98416",
+  domain_registered:"#5c6470", watched_follow:"#7a8a5a", hn_traction:"#96660d"
+};
+var PRIORS = {
+  exited_founder: { mult:1.35, label:"Second-time founder, prior exit" },
+  staff_top_co:   { mult:1.25, label:"Staff+ at a top-tier company" },
+  research:       { mult:1.20, label:"Research pedigree" },
+  operator:       { mult:1.15, label:"Senior operator at a scale-up" },
+  builder:        { mult:1.10, label:"Prolific public builder" },
+  none:           { mult:1.00, label:"No prior signal" }
+};
+
+function breakdown(c, T){
+  var rows = [];
+  for (var i=0;i<c.signals.length;i++){
+    var s = c.signals[i];
+    if (s.d > T) continue;
+    var w = (s.w != null) ? s.w : WEIGHTS[s.t];
+    var age = T - s.d;
+    var decay = Math.pow(0.5, age / HALF_LIFE);
+    rows.push({ s:s, w:w, age:age, decay:decay, pts:w*decay });
+  }
+  rows.sort(function(a,b){ return b.pts - a.pts; });
+  var sub = 0; rows.forEach(function(r){ sub += r.pts; });
+  var prior = PRIORS[c.prior] || PRIORS.none;
+  /* optional X validation adjustment (deterministic, cap 10; see the X panel) */
+  var xv = (typeof S === "object" && S && S.xval) ? S.xval[c.id] : null;
+  var xadj = (xv && xv.adj) ? xv.adj.total : 0;
+  var raw = sub * prior.mult + xadj;
+  return { rows:rows, sub:sub, prior:prior, xv:xv, xadj:xadj, raw:raw, capped: raw > SCORE_CAP,
+           score: Math.min(SCORE_CAP, Math.round(raw)) };
+}
+function scoreAt(c, T){ return breakdown(c, T).score; }
+function firstSeenDay(c){ var m = Infinity; c.signals.forEach(function(s){ if (s.d < m) m = s.d; }); return m; }
+function newestVisibleDay(c, T){ var m = -Infinity; c.signals.forEach(function(s){ if (s.d <= T && s.d > m) m = s.d; }); return m; }
+function isVisible(c, T){ return firstSeenDay(c) <= T; }
+function heat(sc){ return sc >= 70 ? "hot" : sc >= 45 ? "warmt" : "coolt"; }
+
+/* ---------- synthetic dataset: clearly fictional people ---------- */
+/* 14 hand-authored heroes + 74 generated = 88 total; 74 visible on day 0,
+   the rest surface across the 4 simulated weeks. */
+function sig(t, d, detail, short, w){ var o = { t:t, d:d, detail:detail, short:short }; if (w != null) o.w = w; return o; }
+
+var HEROES = [
+  { id:"h1", name:"Amara Okonkwo", handle:"@amara_builds", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
+    oneliner:"Staff engineer who ran Stripe's EMEA ledger infra for six years; circling an idea in agent-native payments ops.",
+    bio:"Six years on payments infrastructure at Stripe, the last three as staff engineer owning EMEA ledger reconciliation. Known internally for killing a quarter of the on-call load with one migration. Has been quietly interviewing ML infra founders \"for fun\" since spring.",
+    found:["LinkedIn headline diff watch","GitHub org watch: ledgerline velocity alert","X bio diff watch"],
+    signals:[
+      sig("bio_change", -24, 'X bio changed to "building something new"', 'the new "building something new" bio'),
+      sig("left_job", -9, "Left Staff Engineer role at Stripe after 6 years (LinkedIn headline change)", "you wrapped up a six-year Stripe run"),
+      sig("github_spike", -2, "Repo ledgerline gained 340 stars in 9 days; 21-day commit streak", "ledgerline moving fast on GitHub"),
+      sig("cofounder_search", 5, 'Active on YC cofounder matching: "seeking commercial cofounder, payments infra"', "your cofounder search post")
+    ]},
+  { id:"h2", name:"Henrik Sorensen", handle:"@henriksrs", city:"Copenhagen", archetype:"Second-time founder", prior:"exited_founder",
+    oneliner:"Sold FreightPilot in 2024; registered a new domain and started a cofounder search within the same fortnight.",
+    bio:"Founded FreightPilot, a freight-forwarding OS, and sold it to a strategic in 2024 after growing to 40 people. Sat out a one-year earnout. The pattern-match is textbook: exited founder, restless, already buying domains.",
+    found:["Watched follow: @evarosengren (angel, 3 unicorn seed checks)","Domain registration watch (.io new regs)","YC cofounder matching scan"],
+    signals:[
+      sig("bio_change", -20, 'X bio changed to "day zero, again"', 'the "day zero, again" bio'),
+      sig("watched_follow", -15, "Followed by @evarosengren (watched angel account)", "a scout we trust started watching you"),
+      sig("domain_registered", -6, "Registered relaycrew.io (private WHOIS)", "that fresh relaycrew.io registration"),
+      sig("cofounder_search", -3, 'Active on YC cofounder matching: "second-time founder seeking technical cofounder"', "your cofounder search post")
+    ]},
+  { id:"h3", name:"Zofia Zielinska", handle:"@zofiaml", city:"London", archetype:"ML researcher", prior:"research",
+    oneliner:"UCL researcher whose agent-evaluation preprint is doing the rounds; repo went vertical within a week.",
+    bio:"Final-year researcher at UCL's DARK lab working on verifiable evaluation of tool-using agents. The preprint landed the same week the reference implementation started trending. Advisor is famously supportive of spinouts.",
+    found:["arXiv cs.AI new-author watch","GitHub org watch: agenteval-kit velocity alert"],
+    signals:[
+      sig("bio_change", -16, 'X bio changed to "thinking about evals, full time"', "the evals-obsessed bio update"),
+      sig("preprint", -4, 'Preprint "Verifiable Agent Evaluations at Scale" posted to arXiv', "your agent-evals preprint"),
+      sig("github_spike", -1, "Repo agenteval-kit gained 510 stars in 6 days", "agenteval-kit going vertical"),
+      sig("cofounder_search", 9, 'Active on YC cofounder matching: "researcher seeking commercial cofounder"', "your cofounder search post")
+    ]},
+  { id:"h4", name:"Callum Ashworth", handle:"@callumashw", city:"London", archetype:"Fintech operator", prior:"operator",
+    oneliner:"Head of Lending Ops at Monzo until last week; the kind of operator who leaves only when the idea is already loaded.",
+    bio:"Built Monzo's lending operations from 12 to 90 people, then handed it over. Previously early at a credit bureau startup. Colleagues describe him as \"the person who actually understands UK credit plumbing end to end\".",
+    found:["LinkedIn headline diff watch","Watched follow: @marcusvantour (fintech scout)"],
+    signals:[
+      sig("watched_follow", -12, "Followed by @marcusvantour (watched fintech scout)", "a fintech scout flagging you"),
+      sig("left_job", -3, "Left Head of Lending Operations role at Monzo after 5 years (LinkedIn)", "you walked away from Monzo lending ops"),
+      sig("bio_change", 6, 'X bio changed to "0 to 1 again. credit is broken."', 'the "credit is broken" bio')
+    ]},
+  { id:"h5", name:"Ingrid Haugen", handle:"@ingridphoton", city:"Zurich", archetype:"PhD spinout", prior:"research",
+    oneliner:"ETH photonics PhD; demo-day project on chip-scale spectrometers that three hardware angels asked about by name.",
+    bio:"Finishing a photonics PhD at ETH Zurich on chip-scale spectrometry. Presented at the ETH entrepreneurship demo day; the lab holds two relevant patents with a founder-friendly licensing office.",
+    found:["Demo day / accelerator lists (ETH)","arXiv physics.optics new-author watch","Domain registration watch"],
+    signals:[
+      sig("preprint", -19, 'Preprint "Chip-Scale Spectrometry Without Moving Parts" posted to arXiv', "the chip-scale spectrometry preprint"),
+      sig("demo_day_post", -11, "Presented at ETH entrepreneurship demo day; project SpectraTile", "your SpectraTile demo-day showing"),
+      sig("domain_registered", 4, "Registered spectratile.com (private WHOIS)", "that spectratile.com registration")
+    ]},
+  { id:"h6", name:"Dario Marchetti", handle:"@dariobuilds", city:"Milan", archetype:"Indie builder", prior:"builder",
+    oneliner:"Serial shipper; latest Show HN (a local-first CRM for freelancers) hit 214 points and the repo is compounding.",
+    bio:"Has shipped eight side projects in three years, two of them ramen-profitable. The latest, a local-first CRM, hit the HN front page. Writes a devlog with 9k subscribers. Textbook day-zero: an audience, shipping velocity, no company yet.",
+    found:["Show HN scan (HN Algolia)","GitHub org watch: quietcrm velocity alert"],
+    signals:[
+      sig("github_spike", -13, "Repo quietcrm gained 280 stars in 12 days", "quietcrm compounding on GitHub"),
+      sig("show_hn", -1, "Show HN: QuietCRM, a local-first CRM for freelancers (214 points)", "your Show HN hitting 214 points"),
+      sig("hn_traction", -1, "HN traction: 214 points (bonus weight 12.0)", "the front-page traction", 12)
+    ]},
+  { id:"h7", name:"Fenna van der Berg", handle:"@fennavdb", city:"Amsterdam", archetype:"ML researcher", prior:"research",
+    oneliner:"DeepMind research engineer on retrieval; bio flipped to \"thinking about what's next\" and the exit rumour is now a headline change.",
+    bio:"Research engineer at Google DeepMind working on retrieval-augmented systems, previously TU Delft. Two well-cited papers. The bio change plus a visible slowdown in internal commits is the classic pre-departure pattern.",
+    found:["X bio diff watch","arXiv cs.IR new-author watch","LinkedIn headline diff watch"],
+    signals:[
+      sig("preprint", -30, 'Preprint "Sparse Retrieval at Production Scale" posted to arXiv', "the sparse-retrieval paper"),
+      sig("bio_change", -12, 'X bio changed to "thinking about what\'s next"', 'the "thinking about what\'s next" bio'),
+      sig("left_job", 2, "Left Research Engineer role at Google DeepMind after 4 years (LinkedIn)", "you closed the DeepMind chapter")
+    ]},
+  { id:"h8", name:"Emeka Adeyemi", handle:"@emeka_dev", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
+    oneliner:"Revolut staff engineer moonlighting on an open-source data-contracts tool; weekend commits became every-day commits.",
+    bio:"Staff engineer on Revolut's data platform. His side project, a data-contracts linter, quietly picked up adoption at three fintechs. Commit timestamps migrated from weekends to weekday mornings, which usually means notice has been handed in.",
+    found:["GitHub org watch: contractile velocity alert","YC cofounder matching scan"],
+    signals:[
+      sig("github_spike", -7, "Repo contractile gained 190 stars in 14 days; weekday commit pattern", "contractile picking up real adoption"),
+      sig("cofounder_search", 11, 'Active on YC cofounder matching: "data infra, seeking GTM cofounder"', "your cofounder search post")
+    ]},
+  { id:"h9", name:"Saoirse Farrell", handle:"@saoirsef", city:"Dublin", archetype:"Second-time founder", prior:"exited_founder",
+    oneliner:"Sold a care-coordination startup in 2023; stepped off the acquirer's payroll and straight into an EF cohort shortlist.",
+    bio:"Founded and sold CarePath, a care-home coordination platform. Did her 18 months at the acquirer, left the week the lockup ended. Has been spotted at two pre-idea founder programmes since.",
+    found:["Watched follow: @leilacapital (health-tech angel)","LinkedIn headline diff watch","Demo day / accelerator lists"],
+    signals:[
+      sig("left_job", -26, "Left post-acquisition Product Director role at HealthEdge Group (LinkedIn)", "you stepped off the acquirer's payroll"),
+      sig("watched_follow", -5, "Followed by @leilacapital (watched health-tech angel)", "a health-tech angel tracking you"),
+      sig("demo_day_post", 16, "Listed in Entrepreneur First LD21 cohort preview", "the EF cohort listing")
+    ]},
+  { id:"h10", name:"Katja Lindqvist", handle:"@katjalind", city:"Stockholm", archetype:"Fintech operator", prior:"operator",
+    oneliner:"Klarna principal PM who owned checkout; left in the spring and just registered a suspiciously good domain.",
+    bio:"Principal PM at Klarna, five years across checkout and merchant onboarding. Left in the spring \"to travel\", except the travel appears to consist of registering domains and having coffee with infra engineers.",
+    found:["LinkedIn headline diff watch","Domain registration watch (.dev new regs)"],
+    signals:[
+      sig("left_job", -18, "Left Principal Product Manager role at Klarna after 5 years (LinkedIn)", "you closed out five years at Klarna"),
+      sig("domain_registered", -10, "Registered checkoutfair.dev (private WHOIS)", "that checkoutfair.dev registration"),
+      sig("bio_change", 7, 'X bio changed to "building. quietly."', 'the "building. quietly." bio')
+    ]},
+  { id:"h11", name:"Milos Novak", handle:"@milos_quant", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
+    oneliner:"Quant researcher who left a top systematic fund last week; his public repos suggest markets tooling, not another fund seat.",
+    bio:"Five years as a quantitative researcher at a top systematic fund in London, ex-Imperial. The interesting part: his open-source work is developer tooling for backtesting, not alpha. People who leave funds to build tooling rarely go back.",
+    found:["LinkedIn headline diff watch","GitHub org watch"],
+    signals:[
+      sig("left_job", -1, "Left Quantitative Researcher role at a systematic fund after 5 years (LinkedIn)", "you left the fund seat behind"),
+      sig("github_spike", 8, "Repo backcast gained 220 stars in 8 days", "backcast taking off on GitHub")
+    ]},
+  { id:"h12", name:"Noor El-Sayed", handle:"@noorbuilds", city:"Cambridge", archetype:"PhD spinout", prior:"research",
+    oneliner:"Cambridge PhD on tabular foundation models; reference repo trending and an accelerator listing already in the pipeline.",
+    bio:"PhD candidate at Cambridge working on tabular foundation models for scientific data. The preprint drew unusually practical attention: two pharma data teams opened issues on the repo within days.",
+    found:["arXiv cs.LG new-author watch","GitHub org watch: tabfm velocity alert"],
+    signals:[
+      sig("preprint", -8, 'Preprint "Tabular Foundation Models for Lab Data" posted to arXiv', "the tabular foundation-models preprint"),
+      sig("github_spike", -3, "Repo tabfm gained 260 stars in 7 days", "tabfm trending with practitioners"),
+      sig("demo_day_post", 19, "Listed in Creative Destruction Lab (Oxford) cohort preview", "the CDL cohort listing")
+    ]},
+  { id:"h13", name:"Tobias Keller", handle:"@tobikeller", city:"Berlin", archetype:"Fintech operator", prior:"operator",
+    oneliner:"Adyen engineering manager whose bio quietly flipped; the resignation usually follows within a month.",
+    bio:"Engineering manager for merchant risk at Adyen, ex-N26. Runs a private reading group on payment orchestration. The bio flip is the first domino; his network says the second is already falling.",
+    found:["X bio diff watch","LinkedIn headline diff watch"],
+    signals:[
+      sig("bio_change", -5, 'X bio changed to "exploring. dms open."', 'the "exploring. dms open." bio'),
+      sig("left_job", 12, "Left Engineering Manager role at Adyen after 4 years (LinkedIn)", "you handed back the Adyen badge")
+    ]},
+  { id:"h14", name:"Meera Raghavan", handle:"@meera_infra", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
+    oneliner:"Wise platform lead already interviewing cofounders; moving faster than her old employer knows.",
+    bio:"Led the platform group at Wise for three years, before that SRE at Google. Left quietly last month. Already ran a structured cofounder search: a spreadsheet, a rubric, twelve coffees. That is not a hobbyist.",
+    found:["LinkedIn headline diff watch","YC cofounder matching scan"],
+    signals:[
+      sig("left_job", -13, "Left Platform Engineering Lead role at Wise after 3 years (LinkedIn)", "you wrapped the Wise platform role"),
+      sig("cofounder_search", -2, 'Active on YC cofounder matching: "infra founder seeking design-minded cofounder"', "your structured cofounder search")
+    ]}
+];
+
+/* ----- generated filler: deterministic (fixed seed), clearly fictional ----- */
+var FIRSTS = ["Anneli","Bastian","Cerys","Dominik","Edda","Ffion","Greta","Hauke","Ines","Janek","Kasia","Lachlan","Maren","Nikolai","Oona","Piotr","Quinn","Ruaridh","Sanna","Teodor","Ulla","Viktor","Wanda","Xenia","Yannick","Zlata","Aoife","Bram","Cosima","Dmitri","Elin","Fergal","Gunnar","Hedda","Ivo","Jorunn","Kalle","Liv","Matteo","Nadia","Oskar","Petra","Rasmus","Solveig"];
+var LASTS  = ["Bergstrom","Castellano","Drummond","Eriksen","Falkenrath","Grieve","Holmgren","Iversen","Jankowski","Kubiak","Lindqvist","Mancini","Nyberg","Ostrowski","Pettersen","Quintero","Rieger","Sandoval","Thorsen","Ugarte","Vollan","Wozniak","Ybarra","Zeeman","Aldervik","Brandt","Cattaneo","Dahlberg","Engel","Fiorini","Gastown","Hollis","Imhoff","Jarvis","Krogh","Lachapelle","Moxon","Nowak","Oyelaran","Pryce","Ravnsborg"];
+var CITIES = ["London","Berlin","Amsterdam","Stockholm","Paris","Dublin","Copenhagen","Munich","Barcelona","Zurich","Lisbon","Warsaw"];
+var SPACES = ["dev tools","payments infra","applied AI ops","data tooling","vertical SaaS","agent infrastructure","climate fintech","compliance automation","health data","supply-chain software"];
+var BIGCOS = ["Stripe","Datadog","Spotify","Meta","Google","AWS","Palantir","Snowflake","Shopify","Microsoft"];
+var FINCOS = ["Monzo","Revolut","Wise","Klarna","Checkout.com","Adyen","N26","Starling","GoCardless"];
+var UNIS   = ["Imperial","UCL","Oxford","Cambridge","ETH Zurich","TU Munich","KTH","EPFL","TU Delft","Edinburgh"];
+var ROLES_ENG = ["Staff Engineer","Principal Engineer","Senior Staff Engineer","Engineering Manager","Platform Lead"];
+var ROLES_OP  = ["Head of Growth","Head of Operations","Principal PM","Head of Risk","Head of Payments","GM Expansion"];
+var REPOS  = ["vaultkit","promptforge","opsloom","finchart","agentmesh","quietlog","stackpilot","railgun-db","tracewell","formfoundry","meshlane","dockhand"];
+var PAPERS = ["Latency-Aware Speculative Decoding","Self-Healing Data Pipelines","Cheap Long-Context Retrieval","Robust Table Extraction in the Wild","Streaming Feature Stores","Zero-Shot Ledger Matching"];
+var PROGRAMS = ["Entrepreneur First","Techstars London","Station F","Creative Destruction Lab","Conception X"];
+var SCOUTS = ["@evarosengren","@marcusvantour","@leilacapital","@oddvarseed","@petramakes"];
+var PHRASES = ["building something new","day zero","stealth mode","exploring what's next","cooking","0 to 1 again","new chapter loading"];
+var EXITCOS = ["ParcelForge (acq. 2023)","LoopDesk (acq. 2024)","Nightframe (acq. 2022)","Cartload (acq. 2024)","Signalhut (acq. 2023)"];
+
+var GARCH = [
+  { key:"Ex-bigtech engineer", prior:"staff_top_co", pool:["left_job","bio_change","github_spike","domain_registered","cofounder_search"] },
+  { key:"ML researcher",       prior:"research",     pool:["preprint","github_spike","bio_change","cofounder_search"] },
+  { key:"Second-time founder", prior:"exited_founder",pool:["watched_follow","bio_change","domain_registered","cofounder_search","demo_day_post"] },
+  { key:"Fintech operator",    prior:"operator",     pool:["left_job","bio_change","cofounder_search","watched_follow"] },
+  { key:"PhD spinout",         prior:"research",     pool:["preprint","demo_day_post","domain_registered","github_spike"] },
+  { key:"Indie builder",       prior:"builder",      pool:["show_hn","github_spike","domain_registered","bio_change"] }
+];
+
+function makeSignal(t, d, ctx, r){
+  switch(t){
+    case "left_job": return sig(t, d, "Left " + ctx.role + " role at " + ctx.co + " after " + ctx.yrs + " years (LinkedIn headline change)", "you wrapped up your " + ctx.role + " run at " + ctx.co);
+    case "bio_change": { var p = pick(r, PHRASES); return sig(t, d, 'X bio changed to "' + p + '"', 'the new "' + p + '" bio'); }
+    case "github_spike": { var n = rint(r,90,420), dd = rint(r,5,14); return sig(t, d, "Repo " + ctx.repo + " gained " + n + " stars in " + dd + " days", ctx.repo + " moving fast on GitHub"); }
+    case "show_hn": { var pts = rint(r,40,260); return sig(t, d, "Show HN: " + ctx.title + " (" + pts + " points)", "your Show HN hitting " + pts + " points"); }
+    case "preprint": return sig(t, d, 'Preprint "' + ctx.paper + '" posted to arXiv', "the " + ctx.paper.split(" ").slice(0,2).join(" ").toLowerCase() + " preprint");
+    case "domain_registered": return sig(t, d, "Registered " + ctx.domain + " (private WHOIS)", "that fresh " + ctx.domain + " registration");
+    case "cofounder_search": return sig(t, d, 'Active on YC cofounder matching: "' + ctx.space + ', seeking cofounder"', "your cofounder search post");
+    case "demo_day_post": { var pr = pick(r, PROGRAMS); return sig(t, d, "Presented at " + pr + " demo day", "your " + pr + " demo-day showing"); }
+    case "watched_follow": { var sc = pick(r, SCOUTS); return sig(t, d, "Followed by " + sc + " (watched account)", "a scout account we trust flagging you"); }
+  }
+  return sig(t, d, SIG_LABEL[t], "a fresh signal");
+}
+var FOUND_SRC = {
+  left_job:"LinkedIn headline diff watch", bio_change:"X bio diff watch",
+  github_spike:"GitHub org watch: starred-velocity alert", show_hn:"Show HN scan (HN Algolia)",
+  preprint:"arXiv new-author watch", domain_registered:"Domain registration watch (.io/.dev new regs)",
+  cofounder_search:"YC cofounder matching scan", demo_day_post:"Demo day / accelerator lists",
+  watched_follow:"Watched follow list (scout accounts)"
+};
+
+function genCandidates(){
+  var out = [];
+  for (var i = 0; i < 74; i++){
+    var r = mulberry32(1000 + i * 97);
+    var arch = GARCH[i % GARCH.length];
+    var name = FIRSTS[i % FIRSTS.length] + " " + LASTS[i % LASTS.length];
+    var fn = first(name).toLowerCase(), ln = name.split(" ")[1].toLowerCase();
+    var handle = "@" + fn + pick(r, ["_" + ln.slice(0,4), ln.slice(0,5), "_builds", "hq", "_dev", "labs"]);
+    var ctx = {
+      role: arch.key === "Fintech operator" ? pick(r, ROLES_OP) : pick(r, ROLES_ENG),
+      co: arch.key === "Fintech operator" ? pick(r, FINCOS) : pick(r, BIGCOS),
+      yrs: rint(r,3,8), repo: pick(r, REPOS),
+      domain: pick(r, REPOS) + pick(r, [".io",".dev",".com"]),
+      paper: pick(r, PAPERS), space: pick(r, SPACES), uni: pick(r, UNIS),
+      title: pick(r, ["a tiny local-first analytics tool","an open-source uptime pager","a spreadsheet that talks to your DB","a self-hosted feature-flag server","a CLI for messy CSVs"])
+    };
+    var future = i >= 60;                      /* last 14 surface in later weeks */
+    var nsig = 1 + Math.floor(r()*3); if (r() > 0.85) nsig = 4;
+    var pool = arch.pool.slice();
+    /* shuffle pool deterministically */
+    for (var k = pool.length - 1; k > 0; k--){ var j = Math.floor(r()*(k+1)); var tmp = pool[k]; pool[k] = pool[j]; pool[j] = tmp; }
+    var types = pool.slice(0, nsig);
+    var off = future ? rint(r,1,18) : -rint(r,1,27);
+    var signals = [];
+    for (var q = 0; q < types.length; q++){
+      if (off > 28) break;
+      signals.push(makeSignal(types[q], off, ctx, r));
+      off += rint(r,3,12);
+    }
+    var oneliner, bio;
+    if (arch.key === "Ex-bigtech engineer"){
+      oneliner = ctx.role + " at " + ctx.co + " for " + ctx.yrs + " years; infra depth, now circling an idea in " + ctx.space + ".";
+      bio = ctx.yrs + " years at " + ctx.co + ", most recently as " + ctx.role + ". Deep " + ctx.space + " exposure and a public repo (" + ctx.repo + ") that keeps growing. Based in {CITY}.";
+    } else if (arch.key === "ML researcher"){
+      oneliner = "Researcher (" + ctx.uni + ") behind \"" + ctx.paper + "\"; code and citations both trending.";
+      bio = "Researcher affiliated with " + ctx.uni + ". Recent work on " + ctx.paper.toLowerCase() + " has clear startup surface area, and the reference implementation is picking up practitioner adoption. Based in {CITY}.";
+    } else if (arch.key === "Second-time founder"){
+      var ex = pick(r, EXITCOS);
+      oneliner = "Founded and sold " + ex + "; the usual post-exit restlessness is showing in the usual places.";
+      bio = "Previously founded " + ex + ". Sat out the earnout, kept the network warm, and is now exhibiting the standard pre-company behaviours: domains, scout follows, quiet coffees. Based in {CITY}.";
+    } else if (arch.key === "Fintech operator"){
+      oneliner = ctx.role + " at " + ctx.co + "; operators like this rarely leave without a thesis in hand.";
+      bio = ctx.role + " at " + ctx.co + " with " + ctx.yrs + " years in " + ctx.space + ". Owns a problem space end to end and has started talking about it in the first person. Based in {CITY}.";
+    } else if (arch.key === "PhD spinout"){
+      oneliner = ctx.uni + " PhD; \"" + ctx.paper + "\" plus a lab with founder-friendly IP terms.";
+      bio = "PhD candidate at " + ctx.uni + ". Thesis work on " + ctx.paper.toLowerCase() + " is patent-adjacent, and the group has spun out companies before. Based in {CITY}.";
+    } else {
+      oneliner = "Indie builder; ships monthly, latest project is " + ctx.title + ".";
+      bio = "Prolific indie builder: " + ctx.title + " is the latest of many. Small audience, real users, no company yet. Based in {CITY}.";
+    }
+    var city = pick(r, CITIES);
+    var srcs = []; signals.forEach(function(s){ var f = FOUND_SRC[s.t]; if (f && srcs.indexOf(f) < 0) srcs.push(f); });
+    out.push({ id:"g"+i, name:name, handle:handle, city:city, archetype:arch.key, prior:arch.prior,
+      oneliner:oneliner, bio:bio.replace("{CITY}", city), found:srcs, signals:signals });
+  }
+  return out;
+}
+var CANDS = HEROES.concat(genCandidates());
+
+/* ---------- state ---------- */
+var LS = "founder_radar_v1";
+var S = load();
+function load(){
+  try{
+    var raw = JSON.parse(localStorage.getItem(LS));
+    if (raw && raw.statuses){ if (!raw.xval) raw.xval = {}; return raw; }
+  }catch(e){}
+  return fresh();
+}
+function fresh(){
+  var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xval:{}, tab:"all", sel:null };
+  var likely = CANDS.filter(function(c){ return isVisible(c,0) && scoreAt(c,0) >= LIKELY_MIN; }).length;
+  var visible = CANDS.filter(function(c){ return isVisible(c,0); }).length;
+  st.feed.push({ tag:"SCAN", day:0, msg:"Ingested 6 watch sources: X follows, GitHub org watch, Show HN, arXiv, domain registrations, demo day lists." });
+  st.feed.push({ tag:"SCORE", day:0, msg:"Scored <b>" + visible + " profiles</b>; " + likely + " are likely (60+). Ranked inbox rebuilt." });
+  var top = CANDS.filter(function(c){ return isVisible(c,0); }).sort(function(a,b){ return scoreAt(b,0)-scoreAt(a,0); })[0];
+  if (top){
+    st.drafts[top.id] = { text: draftOutreachFor(top, 0), day: 0 };
+    st.feed.push({ tag:"DRAFT", day:0, cid: top.id, msg:"Top of queue: <b>" + esc(top.name) + "</b> (" + scoreAt(top,0) + "). Outreach drafted and ready." });
+  }
+  return st;
+}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+
+function allCands(){ return CANDS.concat(S.hn); }
+function byId(id){ var a = allCands(); for (var i=0;i<a.length;i++) if (a[i].id === id) return a[i]; return null; }
+function st(c){ return S.statuses[c.id] || "inbox"; }
+
+/* ---------- outreach drafts (deterministic) ---------- */
+function draftOutreachFor(c, T){
+  var b = breakdown(c, T);
+  var tops = [];
+  for (var i=0;i<b.rows.length && tops.length<2;i++){ var sh = b.rows[i].s.short; if (sh && tops.indexOf(sh) < 0) tops.push(sh); }
+  var hook;
+  if (tops.length === 2) hook = "Two things put you on my radar: " + tops[0] + ", and " + tops[1] + ".";
+  else if (tops.length === 1) hook = "You showed up on my radar: " + tops[0] + ".";
+  else hook = "You showed up on my radar this week.";
+  return "Hi " + first(c.name) + ",\n\n" + hook +
+    "\n\nI work with people at day zero, before there is a company to pitch. If you are weighing what to build next, I would like to compare notes on the space. Nothing to sell, no deck needed.\n\nOpen to 20 minutes this week?\n\nIsaac";
+}
+
+/* ---------- LLM plumbing (optional; deterministic fallback always) ---------- */
+var API = (location.protocol === "file:") ? "http://127.0.0.1:8756" : "";
+var LLM = { live:false, provider:"sim", model:"", xConfigured:false, xProvider:"" };
+var briefAI = null, briefPending = false, briefTimer = null;
+function briefSig(){ return S.demo + "|" + S.hn.length + "|" + JSON.stringify(S.statuses); }
+
+fetch(API + "/api/health").then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+  if (j){ LLM = { live: !!j.live, provider: j.provider, model: j.model,
+                  xConfigured: !!j.x_configured, xProvider: j.x_provider || "" }; }
+}).catch(function(){}).finally(function(){
+  renderHeader(); renderBrief(); maybeAIBrief();
+});
+
+function briefData(){
+  var T = S.demo, vis = allCands().filter(function(c){ return isVisible(c, T); });
+  var active = vis.filter(function(c){ return st(c) !== "ignored"; });
+  var likely = active.filter(function(c){ return st(c) === "inbox" && scoreAt(c, T) >= LIKELY_MIN; });
+  var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
+  var risers = [], freshOnes = [];
+  vis.forEach(function(c){
+    var now = scoreAt(c, T), f = firstSeenDay(c);
+    if (f > T - 7 && f <= T) freshOnes.push({ c:c, now:now });
+    else { var before = scoreAt(c, T - 7); if (now - before >= 6) risers.push({ c:c, now:now, delta: now - before }); }
+  });
+  risers.sort(function(a,b){ return b.delta - a.delta; });
+  freshOnes.sort(function(a,b){ return b.now - a.now; });
+  var suggested = active.filter(function(c){ return st(c) === "inbox"; })
+    .sort(function(a,b){ return scoreAt(b,T) - scoreAt(a,T); }).slice(0,3);
+  return { T:T, total: vis.length, likely: likely.length, cleared: cleared,
+           risers: risers.slice(0,3), fresh: freshOnes.slice(0,4), suggested: suggested };
+}
+function newestSignal(c, T){
+  var best = null; c.signals.forEach(function(s){ if (s.d <= T && (!best || s.d > best.d)) best = s; });
+  return best;
+}
+function briefDetHtml(){
+  var d = briefData(), h = "";
+  h += '<div class="bl">Queue</div><p><b>' + d.total + '</b> in queue &middot; <b>' + d.likely + '</b> likely &middot; ' + d.cleared + ' cleared</p>';
+  h += '<div class="bl">Top risers</div>';
+  h += d.risers.length ? "<ul>" + d.risers.map(function(r){
+    var ns = newestSignal(r.c, d.T);
+    return "<li><b>" + esc(r.c.name) + "</b> " + r.now + ' <span class="up">+' + r.delta + "</span>: " + esc(ns ? ns.detail : "recent signal") + "</li>";
+  }).join("") + "</ul>" : "<p>No meaningful risers this week.</p>";
+  h += '<div class="bl">New this week</div>';
+  h += d.fresh.length ? "<ul>" + d.fresh.map(function(f){
+    return "<li><b>" + esc(f.c.name) + "</b> (" + f.now + ") via " + esc((f.c.found && f.c.found[0]) || "watch source") + "</li>";
+  }).join("") + "</ul>" : "<p>Nobody new surfaced this week.</p>";
+  h += '<div class="bl">Do next</div>';
+  h += d.suggested.length ? "<ul>" + d.suggested.map(function(c){
+    var ns = newestSignal(c, d.T);
+    return "<li>Queue outreach for <b>" + esc(c.name) + "</b> (" + scoreAt(c, d.T) + "): " + esc(ns ? ns.detail : "") + "</li>";
+  }).join("") + "</ul>" : "<p>Queue is clear. Pull a new source.</p>";
+  return h;
+}
+function mdToHtml(md){
+  var lines = esc(md).split(/\r?\n/), out = "", ul = false;
+  function inline(s){ return s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>"); }
+  for (var i=0;i<lines.length;i++){
+    var t = lines[i].trim();
+    if (!t){ if (ul){ out += "</ul>"; ul = false; } continue; }
+    var m = t.match(/^[-*]\s+(.*)/);
+    if (m){ if (!ul){ out += "<ul>"; ul = true; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
+    if (ul){ out += "</ul>"; ul = false; }
+    var head = t.match(/^\*\*([^*]+)\*\*:?\s*$/) || t.match(/^#{1,3}\s+(.*)/);
+    if (head){ out += '<div class="bl">' + inline(head[1]) + "</div>"; continue; }
+    out += "<p>" + inline(t) + "</p>";
+  }
+  if (ul) out += "</ul>";
+  return out;
+}
+function maybeAIBrief(){
+  if (!LLM.live) return;
+  if (briefAI && briefAI.sig === briefSig()) return;
+  clearTimeout(briefTimer);
+  briefTimer = setTimeout(generateAIBrief, 500);
+}
+function generateAIBrief(){
+  if (!LLM.live || briefPending) return;
+  var sig = briefSig();
+  if (briefAI && briefAI.sig === sig) return;
+  briefPending = true; renderBrief();
+  var d = briefData();
+  var payload = {
+    today: fmtLong(S.demo),
+    data: {
+      queue: { total: d.total, likely: d.likely, cleared: d.cleared },
+      top_risers: d.risers.map(function(r){ var ns = newestSignal(r.c, d.T); return { name: r.c.name, score: r.now, delta: r.delta, newest_signal: ns ? ns.detail : "" }; }),
+      new_this_week: d.fresh.map(function(f){ return { name: f.c.name, score: f.now, source: (f.c.found && f.c.found[0]) || "" }; }),
+      suggested: d.suggested.map(function(c){ var ns = newestSignal(c, d.T); return { name: c.name, score: scoreAt(c, d.T), newest_signal: ns ? ns.detail : "" }; })
+    }
+  };
+  var ctl = new AbortController();
+  var t = setTimeout(function(){ ctl.abort(); }, 25000);
+  fetch(API + "/api/brief", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), signal: ctl.signal })
+    .then(function(r){ return r.json().then(function(j){ if (!r.ok || j.error) throw new Error(j.error || "http " + r.status); return j; }); })
+    .then(function(j){ briefAI = { sig: sig, html: mdToHtml(j.brief || "") }; })
+    .catch(function(){ briefAI = null; })
+    .finally(function(){ clearTimeout(t); briefPending = false; renderBrief(); });
+}
+
+/* ---------- feed ---------- */
+function feedPush(tag, msg, cid){
+  S.feed.push({ tag: tag, day: S.demo, msg: msg, cid: cid || null });
+}
+
+/* ---------- actions ---------- */
+var STATUS_VERB = { ignored:"Ignored", watchlist:"Watchlisted", contacted:"Outreach queued for", meeting:"Meeting booked with", inbox:"Restored to inbox:" };
+function setStatus(c, status, silent){
+  var prev = st(c);
+  if (prev === status) return;
+  var order = listOrder();
+  var idx = order.findIndex(function(x){ return x.id === c.id; });
+  S.statuses[c.id] = status;
+  if (status === "inbox") delete S.statuses[c.id];
+  if (status === "contacted" && !S.drafts[c.id]){
+    S.drafts[c.id] = { text: draftOutreachFor(c, S.demo), day: S.demo };
+    feedPush("DRAFT", "Outreach drafted for <b>" + esc(c.name) + "</b> (" + scoreAt(c, S.demo) + "), personalized from " + breakdown(c, S.demo).rows.length + " signals.", c.id);
+  }
+  feedPush("TRIAGE", STATUS_VERB[status] + " <b>" + esc(c.name) + "</b>" + (status === "ignored" ? " (cleared from queue)" : "") + ".");
+  if (!silent){
+    if (status === "ignored"){
+      toast("Ignored " + c.name, false, function(){ delete S.statuses[c.id]; S.feed.pop(); save(); renderAll(); });
+    } else {
+      toast(STATUS_VERB[status] + " " + c.name);
+    }
+  }
+  /* keep triage flowing: advance to the next untriaged candidate */
+  var after = null;
+  var order2 = listOrder();
+  if (order2.length){
+    if (status === "inbox" && order2.some(function(x){ return x.id === c.id; })){
+      after = c.id;
+    } else {
+      for (var i2 = 0; i2 < order2.length; i2++){
+        if (i2 >= idx && st(order2[i2]) === "inbox"){ after = order2[i2].id; break; }
+      }
+      if (!after){
+        var inbox2 = order2.filter(function(x){ return st(x) === "inbox"; });
+        if (inbox2.length) after = inbox2[inbox2.length - 1].id;
+        else if (order2.some(function(x){ return x.id === c.id; })) after = c.id;
+        else after = (order2[Math.min(idx, order2.length - 1)] || order2[0]).id;
+      }
+    }
+  }
+  S.sel = after;
+  save(); renderAll();
+}
+
+/* ---------- skip a week ---------- */
+function skipWeek(){
+  if (S.demo >= 28){ toast("Simulation capped at +28 days"); return; }
+  var before = {};
+  allCands().forEach(function(c){ if (isVisible(c, S.demo)) before[c.id] = scoreAt(c, S.demo); });
+  S.demo += 7;
+  var T = S.demo;
+  var risers = [], fresh = [], newSignals = 0;
+  allCands().forEach(function(c){
+    if (!isVisible(c, T)) return;
+    c.signals.forEach(function(s){ if (s.d > T - 7 && s.d <= T) newSignals++; });
+    var now = scoreAt(c, T);
+    if (before[c.id] == null){ fresh.push({ c:c, now:now }); }
+    else if (now - before[c.id] >= 6){ risers.push({ c:c, was: before[c.id], now: now, delta: now - before[c.id] }); }
+  });
+  risers.sort(function(a,b){ return b.delta - a.delta; });
+  fresh.sort(function(a,b){ return b.now - a.now; });
+  feedPush("SIM", "Clock advanced to <b>" + fmtLong(T) + "</b> (+7d). " + newSignals + " new signals landed; scores re-decayed and the queue re-ranked.");
+  fresh.slice(0,3).forEach(function(f){
+    feedPush("SCAN", "New in queue: <b>" + esc(f.c.name) + "</b> (" + f.now + ") via " + esc((f.c.found && f.c.found[0]) || "watch source") + ".");
+  });
+  var drafted = 0;
+  risers.forEach(function(r){
+    if (drafted >= 3) return;
+    if (st(r.c) !== "inbox") return;
+    var ns = newestSignal(r.c, T);
+    S.drafts[r.c.id] = { text: draftOutreachFor(r.c, T), day: T };
+    feedPush("DRAFT", "<b>" + esc(r.c.name) + "</b> jumped " + r.was + " &rarr; <b>" + r.now + "</b> (" + esc(ns ? ns.detail : "new signal") + "). Outreach drafted.", r.c.id);
+    drafted++;
+  });
+  briefAI = null;
+  save(); renderAll(); maybeAIBrief();
+  toast("+7 days: " + risers.length + " risers, " + fresh.length + " new, " + drafted + " drafts fired");
+}
+function resetToday(){
+  S.demo = 0;
+  S.feed = S.feed.filter(function(e){ return e.day <= 0; });
+  Object.keys(S.drafts).forEach(function(id){ if (S.drafts[id].day > 0) delete S.drafts[id]; });
+  Object.keys(S.aiDrafts).forEach(function(id){ if (S.aiDrafts[id].day > 0) delete S.aiDrafts[id]; });
+  briefAI = null;
+  save(); renderAll(); maybeAIBrief();
+  toast("Back to today");
+}
+
+/* ---------- live pull: Hacker News ---------- */
+function pullHN(){
+  var btn = document.getElementById("hnBtn");
+  btn.disabled = true; btn.textContent = "Pulling Hacker News...";
+  fetch("https://hn.algolia.com/api/v1/search_by_date?query=%22Show%20HN%22&tags=story&hitsPerPage=25")
+    .then(function(r){ if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+    .then(function(j){
+      var seen = {}; S.hn.forEach(function(h){ seen[h.hnId] = 1; });
+      var added = 0;
+      (j.hits || []).forEach(function(hit){
+        if (added >= 8) return;
+        var title = hit.title || "";
+        if (!/show hn/i.test(title)) return;
+        if (!hit.author || seen[hit.objectID]) return;
+        var ageDays = Math.max(0, Math.floor((Date.now() - new Date(hit.created_at).getTime()) / 864e5));
+        var points = hit.points || 0;
+        var clean = title.replace(/^show\s*hn:?\s*/i, "");
+        var d0 = S.demo - ageDays;
+        var signals = [ sig("show_hn", d0, "Show HN: " + clean + " (" + points + " points, " + (hit.num_comments || 0) + " comments)", "your Show HN post (" + points + " points)") ];
+        if (points > 0){
+          var bw = Math.min(12, points / 15);
+          signals.push(sig("hn_traction", d0, "HN traction: " + points + " points (bonus weight " + bw.toFixed(1) + ")", "the HN traction", bw));
+        }
+        S.hn.push({
+          id: "hn-" + hit.objectID, hnId: hit.objectID, live: true,
+          name: hit.author, handle: "@" + hit.author + " (HN)", city: "Hacker News",
+          archetype: "Indie builder", prior: points >= 80 ? "builder" : "none",
+          oneliner: clean,
+          bio: 'HN account "' + hit.author + '". Shipped "' + clean + '" as a Show HN' + (points ? " that reached " + points + " points" : "") + ". Pulled live from the HN Algolia API; enrichment pending.",
+          found: ["Show HN scan (HN Algolia API, live pull)"],
+          signals: signals
+        });
+        seen[hit.objectID] = 1; added++;
+      });
+      if (added){
+        feedPush("PULL", "Pulled Hacker News live: <b>" + added + " Show HN builders</b> scored by the same deterministic engine.");
+        toast(added + " live candidates in from Hacker News");
+      } else {
+        toast("No new Show HN posts since the last pull");
+      }
+      briefAI = null; save(); renderAll(); maybeAIBrief();
+    })
+    .catch(function(){
+      toast("Hacker News pull failed (offline?). Demo continues on synthetic data.", true);
+    })
+    .finally(function(){ btn.disabled = false; btn.textContent = "Pull live: Hacker News"; });
+}
+
+/* ---------- X founder-validation layer ----------
+   Deterministic adjustment, always shown with its arithmetic:
+     cadence  = min(4, posts_per_week)            1 pt per post/week
+     audience = min(4, log10(followers))          1 pt per order of magnitude
+     engagement = 2 if median likes >= 10, 1 if >= 3, else 0
+   Max +10 on the trigger-score receipt. Sample numbers exist ONLY for the
+   fictional synthetic candidates; live HN accounts never get invented data. */
+var XP = { cid:null, busy:false, mode:null, handle:null };
+function hashStr(s){ var h = 2166136261; for (var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h>>>0; }
+function xAdjFrom(m){
+  var ppw = Number.isFinite(m.ppw) ? m.ppw : 0;
+  var engMed = Number.isFinite(m.engMed) ? m.engMed : 0;
+  var cad = Math.min(4, Math.round(ppw * 10) / 10);
+  var aud = Math.min(4, Math.round(Math.log10(Math.max(1, m.followers)) * 10) / 10);
+  var eng = engMed >= 10 ? 2 : engMed >= 3 ? 1 : 0;
+  return { cad:cad, aud:aud, eng:eng, total: Math.round((cad + aud + eng) * 10) / 10 };
+}
+var XHL = {
+  left_job:"Yesterday was my last day. Time to build.",
+  cofounder_search:"Looking for a cofounder. Serious people only, DMs open.",
+  show_hn:"The Show HN went better than expected. Thank you, internet.",
+  preprint:"Preprint is out. DMs open to anyone building in this space.",
+  github_spike:"The repo just crossed another star milestone. Momentum is real.",
+  demo_day_post:"Demo day done. Now the real work starts.",
+  bio_change:"New bio, new chapter.",
+  domain_registered:"Bought the domain. No turning back now.",
+  watched_follow:"Grateful for the signal boost this week.",
+  hn_traction:"Front page. Wild."
+};
+function sampleXFor(c){
+  var r = mulberry32(hashStr(c.handle || c.id));
+  var followers = rint(r, 320, 12800);
+  var following = rint(r, 140, 940);
+  var ppw = Math.round((0.6 + r() * 7.5) * 10) / 10;
+  var engMed = rint(r, 2, 44);
+  var ns = newestSignal(c, S.demo);
+  return {
+    sample:true, handle:(c.handle || "").replace(/^@/, ""),
+    followers:followers, following:following,
+    ratio: Math.round(followers / Math.max(1, following) * 10) / 10,
+    ageDays: rint(r, 420, 3300), ppw:ppw, lastDays: rint(r, 0, 4), engMed:engMed,
+    highlight:{ text: XHL[(ns && ns.t) || "bio_change"] || XHL.bio_change, likes: rint(r, engMed, engMed * 6) },
+    adj: xAdjFrom({ ppw:ppw, followers:followers, engMed:engMed }),
+    day: S.demo
+  };
+}
+function applySampleX(c){
+  if (c.live){
+    /* live HN pull = a real person's account: no fabricated numbers, ever */
+    XP = { cid:c.id, mode:"nolive" };
+    renderDetail();
+    return;
+  }
+  S.xval[c.id] = sampleXFor(c);
+  XP = { cid:c.id, mode:"sample" };
+  feedPush("XVAL", "X validation (sample data) for <b>" + esc(c.name) + "</b>: +" + S.xval[c.id].adj.total + " adjustment on the trigger score.");
+  save(); renderAll();
+}
+function applyLiveX(c, handle, user, tweets){
+  var followers = user.followers || 0, following = user.following || 0;
+  var created = user.created_at ? Date.parse(user.created_at) : NaN;
+  var times = tweets.map(function(t){ return Date.parse(t.created_at); })
+    .filter(function(n){ return !isNaN(n); }).sort(function(a,b){ return b - a; });
+  var ppw = null, lastDays = null;
+  if (times.length){
+    lastDays = Math.max(0, Math.round((Date.now() - times[0]) / 864e5));
+    if (times.length >= 2){
+      var span = (times[0] - times[times.length - 1]) / 864e5;
+      ppw = Math.min(99, Math.round((times.length - 1) / Math.max(span, 0.2) * 7 * 10) / 10);
+    } else ppw = 0.5;
+  }
+  var likes = tweets.map(function(t){ return t.likes || 0; }).sort(function(a,b){ return a - b; });
+  var engMed = likes.length ? likes[Math.floor(likes.length / 2)] : null;
+  var hi = null;
+  tweets.forEach(function(t){ if (!hi || (t.likes || 0) > (hi.likes || 0)) hi = t; });
+  S.xval[c.id] = {
+    sample:false, provider: LLM.xProvider || "X API", handle:handle,
+    followers:followers, following:following,
+    ratio: Math.round(followers / Math.max(1, following) * 10) / 10,
+    ageDays: isNaN(created) ? null : Math.max(0, Math.round((Date.now() - created) / 864e5)),
+    ppw:ppw, lastDays:lastDays, engMed:engMed, insufficient:times.length < 2,
+    highlight: hi ? { text: (hi.text || "").slice(0, 200), likes: hi.likes || 0 } : null,
+    adj: xAdjFrom({ ppw:ppw, followers:followers, engMed:engMed }),
+    day: S.demo
+  };
+  XP = { cid:c.id, mode:"live" };
+  feedPush("XVAL", "X validation (live, @" + esc(handle) + ") for <b>" + esc(c.name) + "</b>: " + followers + " followers, " + (ppw == null ? "insufficient cadence data" : ppw + " posts/week") + ". Adjustment +" + S.xval[c.id].adj.total + ".");
+  save(); renderAll();
+}
+function validateOnX(c, handleOverride){
+  var handle = (handleOverride || c.handle || "").replace(/^@/, "").split(/[\s(]/)[0].trim();
+  if (!handle){ toast("No handle on this candidate", true); return; }
+  XP = { cid:c.id, busy:true };
+  renderDetail();
+  var serverUp = false;
+  fetch(API + "/api/x/user?handle=" + encodeURIComponent(handle))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      serverUp = true;
+      if (j && j.configured === false){ applySampleX(c); return; }
+      if (j && j.ok === false){
+        if (j.error === "not_found"){ XP = { cid:c.id, mode:"notfound", handle:handle }; renderDetail(); return; }
+        throw new Error(j.error || "X lookup failed");
+      }
+      if (!j || !j.user) throw new Error("unexpected response from /api/x/user");
+      return fetch(API + "/api/x/tweets?handle=" + encodeURIComponent(handle) + "&count=10")
+        .then(function(r2){ return r2.json().then(function(t){
+          if (!r2.ok || !t || t.ok === false) throw new Error((t && t.error) || "X post lookup failed");
+          applyLiveX(c, handle, j.user, t.tweets || []);
+        }); });
+    })
+    .catch(function(e){
+      XP = { cid:null, busy:false };
+      if (serverUp) toast("X lookup failed: " + e.message, true);
+      else toast("Local X connector unavailable", true);
+      renderDetail();
+    });
+}
+var X_BANNER = "Sample data.";
+function xcell(k, v, s){
+  return '<div class="xcell"><div class="k">' + k + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : "") + "</div>";
+}
+function fmtNum(n){ n = n || 0; return n >= 1000 ? (n / 1000).toFixed(1) + "k" : String(n); }
+function xTryInput(ph){
+  return '<div class="xtry"><input id="xTryInput" placeholder="' + esc(ph) + '" autocomplete="off"/><button class="mini" id="xTryBtn">Check live</button></div>';
+}
+function renderXSection(c, b){
+  var h = '<div class="sect"><h3>X validation</h3><div class="xwrap">';
+  var xv = b.xv, active = XP.cid === c.id;
+  if (active && XP.busy){
+    h += '<p class="bio" style="color:var(--muted)">Checking ' + esc(c.handle) + " on X...</p>";
+  } else if (active && XP.mode === "notfound"){
+    h += '<div class="xbanner">No X profile returned.</div>';
+    h += xTryInput("any real handle, e.g. janoberhauser");
+  } else if (active && XP.mode === "nolive"){
+    h += '<div class="xbanner">No X data returned.</div>';
+  } else if (xv){
+    if (xv.sample){
+      h += '<div class="xbanner">' + X_BANNER + "</div>";
+    } else {
+      h += '<div class="xbanner live">X LIVE · ' + esc(xv.provider) + " · @" + esc(xv.handle) + "</div>";
+    }
+    h += '<div class="xgrid">';
+    h += xcell("Followers", fmtNum(xv.followers), null);
+    h += xcell("Following ratio", xv.ratio + "x", fmtNum(xv.followers) + " / " + fmtNum(xv.following) + " following");
+    h += xcell("Account age", xv.ageDays == null ? "n/a" : (xv.ageDays / 365).toFixed(1) + "y", xv.ageDays == null ? "not reported" : xv.ageDays + " days");
+    h += xcell("Post cadence", xv.ppw == null ? "insufficient" : xv.ppw + "/wk", xv.lastDays == null ? "fewer than 2 dated posts returned" : "last post " + (xv.lastDays === 0 ? "today" : xv.lastDays + "d ago"));
+    h += xcell("Engagement median", xv.engMed == null ? "insufficient" : xv.engMed + " likes", xv.engMed == null ? "no posts returned" : "per recent post");
+    h += "</div>";
+    if (xv.highlight){
+      h += '<div class="xhl"><b>Flagged highlight post' + (xv.sample ? " (sample)" : "") + "</b>&quot;" + esc(xv.highlight.text) + "&quot; &middot; " + xv.highlight.likes + " likes</div>";
+    }
+    h += (xv.insufficient ? '<div class="xnote">The provider returned fewer than two dated posts. Cadence and engagement contribute 0 until enough observations exist; the audience signal remains usable.</div>' : '');
+    h += '<div class="xmath">X adjustment = cadence min(4, ' + (xv.ppw == null ? 'insufficient' : xv.ppw) + ") = " + xv.adj.cad +
+         " + audience min(4, log10(" + xv.followers + ")) = " + xv.adj.aud +
+         " + engagement (median " + (xv.engMed == null ? 'insufficient' : xv.engMed + ' likes') + ") = " + xv.adj.eng +
+         ' &rarr; <b>+' + xv.adj.total + "</b> on the trigger-score receipt (cap 10)</div>";
+    h += '<div style="display:flex;gap:7px;margin-top:10px;align-items:center;flex-wrap:wrap">' +
+         '<button class="mini" id="xRevalBtn">Re-check</button>' +
+         '<button class="mini ghost" id="xClearBtn">Remove adjustment</button></div>';
+    if (!xv.sample) h += xTryInput("try any real handle, e.g. janoberhauser");
+  } else {
+    h += '<button id="xValBtn">Validate on X</button> <span style="font-size:11px;color:var(--faint)">followers, cadence, engagement; adds a labeled adjustment to the trigger score</span>';
+  }
+  h += "</div></div>";
+  return h;
+}
+
+/* ---------- list / tabs / ask ---------- */
+var TABS = [ ["all","All"], ["likely","Likely"], ["watchlist","Watchlist"], ["contacted","Contacted"] ];
+function askQuery(){ var el = document.getElementById("askInput"); return (el.value || "").trim().toLowerCase(); }
+var STOPWORDS = ["who","whos","what","which","that","this","the","a","an","is","are","was","were","has","have","had","did","does","do","just","any","anyone","in","on","at","of","for","me","my","show","find","recently","with","and","or","to","from"];
+function askTokens(){
+  var q = askQuery();
+  if (!q) return [];
+  return q.replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(function(w){
+    return w.length > 1 && STOPWORDS.indexOf(w) < 0;
+  });
+}
+function haystack(c){
+  return (c.name + " " + c.handle + " " + c.city + " " + c.archetype + " " + c.oneliner + " " + c.bio + " " +
+    c.signals.map(function(s){ return SIG_LABEL[s.t] + " " + s.detail; }).join(" ")).toLowerCase();
+}
+function tabMatch(c){
+  var s = st(c), sc = scoreAt(c, S.demo);
+  if (S.tab === "all") return s !== "ignored";
+  if (S.tab === "likely") return s === "inbox" && sc >= LIKELY_MIN;
+  if (S.tab === "watchlist") return s === "watchlist";
+  if (S.tab === "contacted") return s === "contacted" || s === "meeting";
+  return true;
+}
+function listOrder(){
+  var toks = askTokens();
+  var arr = allCands().filter(function(c){
+    if (!isVisible(c, S.demo)) return false;
+    if (!tabMatch(c)) return false;
+    if (toks.length){
+      var hs = haystack(c);
+      for (var i=0;i<toks.length;i++) if (hs.indexOf(toks[i]) < 0) return false;
+    }
+    return true;
+  });
+  arr.sort(function(a,b){
+    var d = scoreAt(b, S.demo) - scoreAt(a, S.demo);
+    if (d) return d;
+    return newestVisibleDay(b, S.demo) - newestVisibleDay(a, S.demo);
+  });
+  return arr;
+}
+function tabCount(key){
+  var old = S.tab; S.tab = key;
+  var n = allCands().filter(function(c){ return isVisible(c, S.demo) && tabMatch(c); }).length;
+  S.tab = old; return n;
+}
+
+/* ---------- rendering ---------- */
+function renderHeader(){
+  var vis = allCands().filter(function(c){ return isVisible(c, S.demo); });
+  var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
+  document.getElementById("clearedTxt").textContent = cleared + " of " + vis.length + " cleared";
+  document.getElementById("clearedBar").style.width = (vis.length ? Math.round(cleared / vis.length * 100) : 0) + "%";
+  var srcChip = document.getElementById("srcChip");
+  document.getElementById("srcTxt").textContent = S.hn.length ? "SYNTHETIC + LIVE HN" : "SYNTHETIC DATA";
+  srcChip.className = "hchip" + (S.hn.length ? " hot" : "");
+  var llmChip = document.getElementById("llmChip");
+  document.getElementById("llmTxt").textContent = LLM.live ? ("LLM LIVE " + (LLM.provider || "").toUpperCase()) : "LLM SIM";
+  llmChip.className = "hchip" + (LLM.live ? " on" : "");
+  var dc = document.getElementById("dateChip");
+  if (S.demo > 0){
+    dc.style.display = "";
+    document.getElementById("dateTxt").textContent = "SIM " + fmtLong(S.demo).toUpperCase() + " (+" + S.demo + "D)";
+  } else dc.style.display = "none";
+  document.getElementById("todayBtn").style.display = S.demo > 0 ? "" : "none";
+  document.getElementById("skipBtn").textContent = S.demo > 0 ? "Skip a week (+7d)" : "Skip a week";
+}
+
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = TABS.map(function(t){
+    return '<button data-tab="' + t[0] + '" class="' + (S.tab === t[0] ? "on" : "") + '">' + t[1] + ' <span class="n">' + tabCount(t[0]) + "</span></button>";
+  }).join("");
+}
+
+function freshLabel(c){
+  var age = S.demo - newestVisibleDay(c, S.demo);
+  return age <= 0 ? "today" : age + "d";
+}
+
+function renderList(){
+  var arr = listOrder();
+  if (S.sel == null || !arr.some(function(c){ return c.id === S.sel; })){
+    S.sel = arr.length ? arr[0].id : null;
+  }
+  var q = askQuery();
+  var ans = document.getElementById("askAns");
+  if (q){
+    ans.style.display = "";
+    ans.innerHTML = "<b>" + arr.length + "</b> match" + (arr.length === 1 ? "" : "es") + " for &quot;" + esc(q) + "&quot; &middot; ranked by trigger score";
+  } else ans.style.display = "none";
+  var el = document.getElementById("list");
+  if (!arr.length){
+    el.innerHTML = '<div class="empty">Nothing here.' + (S.tab !== "all" ? " Try the All tab." : "") + "</div>";
+  } else {
+    el.innerHTML = arr.map(function(c){
+      var sc = scoreAt(c, S.demo), s = st(c);
+      var f = freshLabel(c);
+      return '<div class="cand' + (c.id === S.sel ? " sel" : "") + '" data-id="' + esc(c.id) + '">' +
+        '<div class="top"><span class="nm">' + esc(c.name) + '</span><span class="sc ' + heat(sc) + '">' + sc + "</span></div>" +
+        '<div class="hd">' + esc(c.handle) + " &middot; " + esc(c.city) + "</div>" +
+        '<div class="ln">' + esc(c.oneliner) + "</div>" +
+        '<div class="mt"><span class="atag">' + esc(c.archetype) + '</span><span class="fresh' + (f === "today" ? " new" : "") + '">&#9679; ' + f + "</span>" +
+        (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
+        (c.live ? '<span class="livep">LIVE</span>' : "") +
+        "</div></div>";
+    }).join("");
+  }
+  var ig = allCands().filter(function(c){ return isVisible(c, S.demo) && st(c) === "ignored"; }).length;
+  var link = document.getElementById("igLink");
+  if (ig){ link.style.display = ""; link.textContent = ig + " ignored - restore"; } else link.style.display = "none";
+  var selEl = el.querySelector(".cand.sel");
+  if (selEl && typeof selEl.scrollIntoView === "function") selEl.scrollIntoView({ block: "nearest" });
+}
+
+var PIPE = ["New","Scored","Contacted","Meeting"];
+function stageOf(c){
+  var s = st(c);
+  if (s === "meeting") return 3;
+  if (s === "contacted") return 2;
+  var isNew = firstSeenDay(c) > S.demo - 7;
+  return (s === "inbox" && isNew) ? 0 : 1;
+}
+
+function renderDetail(){
+  var el = document.getElementById("detail");
+  var bar = document.getElementById("actionbar");
+  var c = S.sel ? byId(S.sel) : null;
+  if (!c){
+    bar.style.display = "none";
+    el.innerHTML = '<div class="placeholder"><b>No candidate selected</b><span>Pick someone from the queue, or pull a live source.</span></div>';
+    return;
+  }
+  bar.style.display = "";
+  var T = S.demo, b = breakdown(c, T), s = st(c);
+  var stage = stageOf(c);
+  var h = "";
+  h += '<div class="dhead"><div class="who">';
+  h += '<h1 class="dname">' + esc(c.name) + (c.live ? ' <span class="livep live">LIVE</span>' : "") + "</h1>";
+  h += '<div class="dhandle mono">' + esc(c.handle) + '<span class="sep">|</span>' + esc(c.city) + '<span class="sep">|</span>first seen ' + fmtDay(firstSeenDay(c)) + "</div>";
+  h += '<div class="dbadges"><span class="atag">' + esc(c.archetype) + '</span><span class="atag">prior: ' + esc(b.prior.label) + ' &times;' + b.prior.mult.toFixed(2) + "</span>" +
+       (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") + "</div>";
+  h += '<p class="dline">' + esc(c.oneliner) + "</p>";
+  h += '<div class="pipe">' + PIPE.map(function(p, i){
+    return '<span class="st' + (i === stage ? " cur" : i < stage ? " done" : "") + '">' + p.toUpperCase() + "</span>";
+  }).join("") + "</div>";
+  h += "</div>";
+  /* gauge */
+  var pct = b.score / SCORE_CAP, r = 34, circ = 2 * Math.PI * r;
+  var col = b.score >= 70 ? "var(--hot)" : b.score >= 45 ? "var(--warm)" : "var(--cool)";
+  h += '<div class="gauge"><svg width="96" height="96" viewBox="0 0 96 96">' +
+    '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--line2)" stroke-width="7"/>' +
+    '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" ' +
+      'stroke-dasharray="' + (circ * pct).toFixed(1) + " " + circ.toFixed(1) + '" transform="rotate(-90 48 48)"/>' +
+    '<text x="48" y="54" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="650" font-size="27" fill="var(--ink)">' + b.score + "</text>" +
+    "</svg><div class=\"cap\">trigger score<br/>cap 99</div></div>";
+  h += "</div>";
+
+  h += '<div class="sect"><h3>Enriched bio</h3><p class="bio">' + esc(c.bio) + "</p></div>";
+
+  h += '<div class="sect"><h3>How we found them</h3><div class="found">' +
+    (c.found || []).map(function(f){ return '<div class="f">' + esc(f) + "</div>"; }).join("") + "</div></div>";
+
+  var vis = c.signals.filter(function(x){ return x.d <= T; }).slice().sort(function(a,b){ return b.d - a.d; });
+  var pending = c.signals.filter(function(x){ return x.d > T; }).length;
+  h += '<div class="sect"><h3>Objective signals</h3><div class="sigs">' +
+    vis.map(function(x){
+      var w = (x.w != null) ? x.w : WEIGHTS[x.t];
+      var pts = w * Math.pow(0.5, (T - x.d) / HALF_LIFE);
+      return '<div class="sig"><span class="dt">' + fmtDay(x.d) + '</span>' +
+        '<span class="ty" style="--tyc:' + (SIG_COLOR[x.t] || "var(--faint)") + '">' + esc(SIG_LABEL[x.t]) + "</span>" +
+        '<span class="tx">' + esc(x.detail) + "</span>" +
+        '<span class="pt" style="color:' + (SIG_COLOR[x.t] || "var(--muted)") + '">+' + pts.toFixed(1) + "</span></div>";
+    }).join("") +
+    (pending ? '<div class="sig"><span class="dt future">later</span><span class="ty">Pending</span><span class="tx" style="color:var(--faint)">' + pending + ' more signal' + (pending > 1 ? "s" : "") + ' will land inside the 4-week simulation window. Skip a week to see them.</span><span class="pt"></span></div>' : "") +
+    "</div></div>";
+
+  /* the receipt: deterministic score breakdown */
+  h += '<div class="sect"><h3>Trigger score</h3><div class="scorebox">';
+  h += '<div class="receipt"><table><tr><th>Signal</th><th>Date</th><th style="text-align:right">Weight &times; decay</th><th style="text-align:right">Pts</th></tr>';
+  h += b.rows.map(function(rw){
+    var wDisp = Number.isInteger(rw.w) ? rw.w : rw.w.toFixed(1);
+    return "<tr><td class=\"lbl\">" + esc(SIG_LABEL[rw.s.t]) + "</td><td>" + fmtDay(rw.s.d) + "</td>" +
+      '<td class="r math">' + wDisp + " &times; " + rw.decay.toFixed(2) + "</td>" +
+      '<td class="r">' + rw.pts.toFixed(1) + "</td></tr>";
+  }).join("");
+  h += '<tr class="sub"><td class="lbl">Signal subtotal</td><td></td><td class="r math">&Sigma; over ' + b.rows.length + "</td><td class=\"r\">" + b.sub.toFixed(1) + "</td></tr>";
+  h += '<tr class="prior"><td class="lbl">Founder-quality prior</td><td colspan="2">' + esc(b.prior.label) + '</td><td class="r">&times;' + b.prior.mult.toFixed(2) + "</td></tr>";
+  if (b.xv){
+    h += '<tr class="prior"><td class="lbl">X validation (' + (b.xv.sample ? "sample data" : "live @" + esc(b.xv.handle)) + ')</td>' +
+         '<td colspan="2" class="math">cad ' + b.xv.adj.cad + " + aud " + b.xv.adj.aud + " + eng " + b.xv.adj.eng + "</td>" +
+         '<td class="r">+' + b.xadj.toFixed(1) + "</td></tr>";
+  }
+  var totalMath = b.xv ? (b.sub * b.prior.mult).toFixed(1) + " + " + b.xadj.toFixed(1) : b.raw.toFixed(1);
+  h += '<tr class="total"><td class="lbl">Trigger score' + (b.capped ? '<span class="capnote">capped at 99 (raw ' + b.raw.toFixed(0) + ")</span>" : "") + '</td><td></td><td class="r math">round(' + totalMath + ")</td><td class=\"r\">" + b.score + "</td></tr>";
+  h += "</table></div>";
+  h += "</div></div>";
+
+  /* X founder-validation panel */
+  h += renderXSection(c, b);
+
+  /* outreach draft */
+  var d = S.drafts[c.id], ai = S.aiDrafts[c.id];
+  if (d){
+    h += '<div class="sect"><h3>Outreach draft</h3>';
+    h += '<div class="draftcard"><div class="dh"><b>Drafted by the agent</b><span class="src">' + (ai ? "LLM REWRITE (" + esc((LLM.provider || "llm").toUpperCase()) + ")" : "DETERMINISTIC TEMPLATE") + '</span>' +
+      '<div class="actions">' + (LLM.live && !ai ? '<button class="mini" id="aiRewrite">Rewrite with AI</button>' : "") +
+      '<button class="mini" id="copyDraft">Copy</button></div></div>' +
+      "<pre>" + esc(ai ? ai.text : d.text) + "</pre></div></div>";
+  }
+  h += '<div style="height:8px"></div>';
+  el.innerHTML = h;
+
+  /* action bar states */
+  document.getElementById("actMeet").style.display = (s === "contacted") ? "" : "none";
+  document.getElementById("actBack").style.display = (s !== "inbox") ? "" : "none";
+  document.getElementById("actIgnore").style.display = (s === "ignored") ? "none" : "";
+
+  /* X validation controls */
+  var xb = document.getElementById("xValBtn");
+  if (xb) xb.onclick = function(){ validateOnX(c); };
+  var xr = document.getElementById("xRevalBtn");
+  if (xr) xr.onclick = function(){
+    var prev = S.xval[c.id];
+    validateOnX(c, prev && !prev.sample ? prev.handle : null);
+  };
+  var xc = document.getElementById("xClearBtn");
+  if (xc) xc.onclick = function(){
+    delete S.xval[c.id];
+    XP = { cid:null };
+    feedPush("XVAL", "X validation removed for <b>" + esc(c.name) + "</b>; adjustment reverted.");
+    save(); renderAll();
+  };
+  var xt = document.getElementById("xTryBtn");
+  var xi = document.getElementById("xTryInput");
+  if (xt && xi){
+    var goX = function(){ var v = xi.value.trim(); if (v) validateOnX(c, v); };
+    xt.onclick = goX;
+    xi.onkeydown = function(e){ if (e.key === "Enter"){ e.preventDefault(); goX(); } };
+  }
+
+  var cp = document.getElementById("copyDraft");
+  if (cp) cp.onclick = function(){
+    copyText(ai ? ai.text : d.text);
+    cp.textContent = "Copied"; setTimeout(function(){ cp.textContent = "Copy"; }, 1200);
+  };
+  var rw = document.getElementById("aiRewrite");
+  if (rw) rw.onclick = function(){
+    rw.disabled = true; rw.textContent = "Rewriting...";
+    var b2 = breakdown(c, S.demo);
+    var payload = {
+      today: fmtLong(S.demo),
+      draft: d.text,
+      candidate: { name: c.name, archetype: c.archetype, oneliner: c.oneliner,
+        signals: b2.rows.slice(0,4).map(function(r2){ return r2.s.detail; }) }
+    };
+    var ctl = new AbortController(); var tm = setTimeout(function(){ ctl.abort(); }, 20000);
+    fetch(API + "/api/outreach", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), signal: ctl.signal })
+      .then(function(r){ return r.json().then(function(j){ if (!r.ok || j.error) throw new Error(j.error || "http"); return j; }); })
+      .then(function(j){ S.aiDrafts[c.id] = { text: j.message || d.text, day: S.demo }; save(); renderDetail(); renderFeed(); })
+      .catch(function(){ toast("LLM rewrite failed; keeping the deterministic draft", true); renderDetail(); })
+      .finally(function(){ clearTimeout(tm); });
+  };
+}
+
+function renderBrief(){
+  var chip = document.getElementById("briefChip");
+  var regen = document.getElementById("briefRegen");
+  var live = LLM.live;
+  chip.textContent = live ? "LIVE" : "SIM";
+  chip.className = "chip2" + (live ? " live" : "");
+  regen.style.display = live ? "" : "none";
+  var el = document.getElementById("brief");
+  var head = '<p style="margin:6px 0 0;color:var(--faint);font:550 10px/1 var(--mono)">WEEK OF ' + fmtLong(S.demo).toUpperCase() + "</p>";
+  if (briefPending && !(briefAI && briefAI.sig === briefSig())){
+    el.innerHTML = head + '<div class="thinking">The LLM is rewriting this brief...</div>' + briefDetHtml();
+    return;
+  }
+  if (live && briefAI && briefAI.sig === briefSig()){
+    el.innerHTML = head + briefAI.html;
+    return;
+  }
+  el.innerHTML = head + briefDetHtml();
+}
+
+function renderFeed(){
+  var el = document.getElementById("feed");
+  var evs = S.feed.slice().reverse();
+  document.getElementById("feedCount").textContent = evs.length + " events";
+  el.innerHTML = evs.map(function(e, i){
+    var idx = S.feed.length - 1 - i;
+    var draft = null;
+    if (e.cid){
+      var ai = S.aiDrafts[e.cid], dd = S.drafts[e.cid];
+      draft = ai ? ai.text : (dd ? dd.text : null);
+    }
+    return '<div class="ev" data-fidx="' + idx + '">' +
+      '<div class="top"><span class="tag ' + esc(e.tag) + '">' + esc(e.tag) + '</span><span class="when">' + fmtDay(e.day) + "</span></div>" +
+      '<div class="msg">' + e.msg + "</div>" +
+      (draft ? '<div class="draftbox">' + esc(draft) + '</div><div class="evbtns"><button class="mini" data-copycid="' + esc(e.cid) + '">Copy draft</button><button class="mini ghost" data-open="' + esc(e.cid) + '">Open</button><span class="lab">agent drafts, Isaac sends</span></div>' : "") +
+      "</div>";
+  }).join("") || '<div class="empty">No agent activity yet.</div>';
+}
+
+function renderAll(){
+  renderHeader(); renderTabs(); renderList(); renderDetail(); renderBrief(); renderFeed();
+  save();
+}
+
+/* ---------- toasts / clipboard ---------- */
+function toast(msg, isErr, undoFn){
+  var wrap = document.getElementById("toasts");
+  var t = document.createElement("div");
+  t.className = "toast" + (isErr ? " err" : "");
+  t.innerHTML = esc(msg) + (undoFn ? " <u>Undo</u>" : "");
+  if (undoFn){
+    t.querySelector("u").onclick = function(){ undoFn(); t.remove(); };
+  }
+  wrap.appendChild(t);
+  setTimeout(function(){ t.remove(); }, isErr ? 5200 : 3400);
+}
+function copyText(txt){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).catch(function(){ fallbackCopy(txt); });
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  var ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  ta.remove();
+}
+
+/* ---------- modal ---------- */
+function buildModal(){
+  var order = ["left_job","cofounder_search","show_hn","preprint","github_spike","demo_day_post","bio_change","domain_registered","watched_follow","hn_traction"];
+  document.getElementById("wTable").innerHTML = order.map(function(k){
+    return "<tr><td>" + esc(SIG_LABEL[k]) + '</td><td class="w">' + WEIGHTS[k] + '</td><td class="note">' + esc(SIG_NOTE[k]) + "</td></tr>";
+  }).join("");
+  document.getElementById("pTable").innerHTML = Object.keys(PRIORS).map(function(k){
+    return "<tr><td>" + esc(PRIORS[k].label) + '</td><td class="w">&times;' + PRIORS[k].mult.toFixed(2) + "</td><td class=\"note\"></td></tr>";
+  }).join("");
+}
+function modalOpen(){ return document.getElementById("howModal").classList.contains("show"); }
+function openHow(){ document.getElementById("scrim").classList.add("show"); document.getElementById("howModal").classList.add("show"); }
+function closeHow(){ document.getElementById("scrim").classList.remove("show"); document.getElementById("howModal").classList.remove("show"); }
+
+/* ---------- keyboard triage ---------- */
+function moveSel(dir){
+  var arr = listOrder();
+  if (!arr.length) return;
+  var i = arr.findIndex(function(c){ return c.id === S.sel; });
+  var next = Math.max(0, Math.min(arr.length - 1, i + dir));
+  S.sel = arr[next].id;
+  renderList(); renderDetail(); save();
+}
+function actOnSel(status){
+  var c = S.sel ? byId(S.sel) : null;
+  if (!c) return;
+  if (status === "meeting" && st(c) !== "contacted"){ toast("Queue outreach first (O), then advance to meeting"); return; }
+  setStatus(c, status);
+}
+document.addEventListener("keydown", function(e){
+  var t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)){
+    if (e.key === "Escape") t.blur();
+    return;
+  }
+  if (modalOpen()){ if (e.key === "Escape") closeHow(); return; }
+  var k = e.key.toLowerCase();
+  if (e.key === "ArrowDown" || k === "j"){ e.preventDefault(); moveSel(1); }
+  else if (e.key === "ArrowUp" || k === "k"){ e.preventDefault(); moveSel(-1); }
+  else if (k === "e"){ actOnSel("ignored"); }
+  else if (k === "l"){ actOnSel("watchlist"); }
+  else if (k === "o"){ actOnSel("contacted"); }
+  else if (k === "m"){ actOnSel("meeting"); }
+  else if (k === "?"){ openHow(); }
+});
+
+/* ---------- events ---------- */
+document.addEventListener("click", function(e){
+  var el = e.target;
+  var tab = el.closest ? el.closest("[data-tab]") : null;
+  if (tab){ S.tab = tab.getAttribute("data-tab"); S.sel = null; renderAll(); return; }
+  var card = el.closest ? el.closest(".cand[data-id]") : null;
+  if (card){ S.sel = card.getAttribute("data-id"); renderList(); renderDetail(); save(); return; }
+  var cp = el.closest ? el.closest("[data-copycid]") : null;
+  if (cp){
+    var cid = cp.getAttribute("data-copycid");
+    var ai = S.aiDrafts[cid], dd = S.drafts[cid];
+    copyText(ai ? ai.text : (dd ? dd.text : ""));
+    cp.textContent = "Copied"; setTimeout(function(){ cp.textContent = "Copy draft"; }, 1200);
+    return;
+  }
+  var op = el.closest ? el.closest("[data-open]") : null;
+  if (op){
+    var id = op.getAttribute("data-open");
+    var c = byId(id);
+    if (c){
+      S.tab = "all"; S.sel = id;
+      if (st(c) === "ignored") delete S.statuses[id];
+      renderAll();
+    }
+    return;
+  }
+});
+document.getElementById("skipBtn").addEventListener("click", skipWeek);
+document.getElementById("todayBtn").addEventListener("click", resetToday);
+document.getElementById("hnBtn").addEventListener("click", pullHN);
+document.getElementById("howBtn").addEventListener("click", openHow);
+document.getElementById("howClose").addEventListener("click", closeHow);
+document.getElementById("scrim").addEventListener("click", closeHow);
+document.getElementById("briefRegen").addEventListener("click", function(){ briefAI = null; generateAIBrief(); });
+document.getElementById("igLink").addEventListener("click", function(){
+  var n = 0;
+  Object.keys(S.statuses).forEach(function(id){ if (S.statuses[id] === "ignored"){ delete S.statuses[id]; n++; } });
+  feedPush("TRIAGE", "Restored " + n + " ignored candidates to the inbox.");
+  save(); renderAll(); toast(n + " restored to inbox");
+});
+document.getElementById("askInput").addEventListener("input", function(){ renderList(); renderDetail(); });
+document.getElementById("actIgnore").addEventListener("click", function(){ actOnSel("ignored"); });
+document.getElementById("actWatch").addEventListener("click", function(){ actOnSel("watchlist"); });
+document.getElementById("actReach").addEventListener("click", function(){ actOnSel("contacted"); });
+document.getElementById("actMeet").addEventListener("click", function(){ actOnSel("meeting"); });
+document.getElementById("actBack").addEventListener("click", function(){ actOnSel("inbox"); });
+
+/* ---------- boot ---------- */
+buildModal();
+renderAll();
+</script>
+</body>
+</html>
