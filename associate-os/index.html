@@ -209,6 +209,27 @@ table.rt{width:100%;border-collapse:collapse}
 .lt .ago{color:var(--muted)}
 .nact{font-size:12px;color:var(--text2);max-width:270px}
 .via{font:italic 400 12px var(--sans);color:var(--text2)}
+/* relationships: purpose line + column guide + row actions */
+.r-purpose{max-width:1030px;margin:0 0 14px;display:flex;align-items:flex-start;gap:14px}
+.r-purpose .txt{font:400 13px/1.55 var(--sans);color:var(--text2);flex:1}
+.r-purpose .txt b{color:var(--text);font-weight:600}
+.r-purpose .rsum{color:var(--muted)}
+.r-guidebtn{flex-shrink:0;font:400 9.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:4px;padding:5px 11px;background:var(--panel);cursor:pointer;white-space:nowrap}
+.r-guidebtn:hover{border-color:var(--text);color:var(--text)}
+.r-legend{max-width:1030px;margin:0 0 18px;border:1px solid var(--line);border-left:2px solid var(--agent);border-radius:0 3px 3px 0;background:var(--panel);padding:13px 17px;display:none}
+.r-legend.show{display:block}
+.r-legend dl{display:grid;grid-template-columns:130px 1fr;gap:6px 18px;margin:0}
+.r-legend dt{font:400 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--text)}
+.r-legend dd{margin:0;font-size:12px;line-height:1.5;color:var(--text2)}
+.r-legend dd b{color:var(--text);font-weight:600}
+.r-legend .foot{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px;font-style:italic;color:var(--muted)}
+.rt .checkin{font:500 10.5px var(--sans);color:#fff;background:var(--agent);border:1px solid var(--agent);border-radius:4px;padding:3px 11px;white-space:nowrap;cursor:pointer}
+.rt .checkin:hover{background:#D04430}
+.rt .restbtn{font:500 10.5px var(--sans);color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:3px 11px;white-space:nowrap;cursor:pointer}
+.rt .restbtn:hover{border-color:var(--text)}
+.rt .rest{font-size:11px;color:var(--muted);font-style:italic}
+.rt .viahint{font:400 9.5px var(--mono);color:var(--muted);margin-top:4px}
+.rt td.donext{white-space:nowrap}
 
 /* ---------- pipeline ---------- */
 .p-wrap{flex:1;min-height:0;overflow:auto;padding:22px 28px 30px}
@@ -334,17 +355,32 @@ table.rt{width:100%;border-collapse:collapse}
 
       <div class="view" id="view-relationships">
         <div class="r-wrap">
+          <div class="r-purpose">
+            <div class="txt"><b>Who you have met, and who is slipping.</b> Everyone you know or want to reach, sorted so the people going quiet sit at the top. On anyone marked <b>Going cold</b> or <b>Cold</b>, hit <b>Draft check-in</b> and the agent writes a note you send from Gmail. <span id="rSummary" class="rsum"></span></div>
+            <button class="r-guidebtn" data-act="rellegend">What the columns mean</button>
+          </div>
+          <div class="r-legend" id="rLegend">
+            <dl>
+              <dt>Person</dt><dd>Who they are.</dd>
+              <dt>Company &amp; role</dt><dd>Where they sit and what they do.</dd>
+              <dt>Last spoke</dt><dd>The date of your most recent logged meeting with them, and how many days ago that was.</dd>
+              <dt>Status</dt><dd><b>Warm</b>, seen within about two weeks. <b>Going cold</b>, two to three weeks quiet. <b>Cold</b>, over three weeks. <b>Not met yet</b>, no meeting logged.</dd>
+              <dt>Open item</dt><dd>The next promise still open between the two of you, with its due date. Blank if nothing is pending.</dd>
+              <dt>Do next</dt><dd>The one action for this row. Cold threads get a one-click check-in; people you have not met show the warmest person who can introduce you.</dd>
+            </dl>
+            <div class="foot">Status is measured from days since you last spoke. Your typical gap between touches (the median time between your logged contacts) is about <span id="rGap">a couple of weeks</span>, so a thread past two weeks is drifting.</div>
+          </div>
           <div class="pathcard">
             <div class="h">
-              <span class="t">Path to X</span>
-              <span style="font-size:11.5px;color:var(--muted)">warm paths in this network</span>
+              <span class="t">Warm intro paths</span>
+              <span style="font-size:11.5px;color:var(--muted)">the warmest person who could introduce you to someone you have not met</span>
               <span style="flex:1"></span>
               <select id="pathTarget" style="font-size:12px"></select>
             </div>
             <div class="pathviz" id="pathViz"></div>
           </div>
           <table class="rt">
-            <thead><tr><th>Person</th><th>Company</th><th>Last touch</th><th>Warmth</th><th>Next action</th><th>Reach</th></tr></thead>
+            <thead><tr><th>Person</th><th>Company &amp; role</th><th>Last spoke</th><th>Status</th><th>Open item</th><th>Do next</th></tr></thead>
             <tbody id="rBody"></tbody>
           </table>
         </div>
@@ -417,6 +453,12 @@ table.rt{width:100%;border-collapse:collapse}
   <div class="ip"><b>The agent drafts. Isaac sends.</b>
     Nothing here is written by the model on its own: dates, statuses, and numbers come from code, and the model only drafts prose. No email leaves this app. Every draft has an Open in Gmail button so you review and hit send yourself.</div>
   <div class="gfoot"><button class="btn pri" id="introGo">Got it</button></div>
+</div>
+
+<div class="modal" id="modalDraft" style="width:540px">
+  <div class="mh"><span class="t" id="draftTitle">Draft</span><button class="x" data-close>&times;</button></div>
+  <div class="gnote">The agent drafts, you send. Review the note, then open it in Gmail.</div>
+  <div id="draftBody"></div>
 </div>
 
 <div class="toasts" id="toasts"></div>
@@ -1094,6 +1136,22 @@ function renderMeetingDetail(){
 }
 
 // ---------- rendering: relationships ----------
+// Median gap between consecutive logged touches, across everyone with 2+ meetings.
+// Honest: computed from real meeting dates, null when there is not enough history.
+function typicalGapDays(){
+  const gaps = [];
+  for (const p of S.people){
+    const dates = S.meetings
+      .filter(m => (m.attendees||[]).includes(p.id) && diffDays(m.date, today()) >= 0)
+      .map(m => m.date)
+      .sort((a,b) => diffDays(b,a));
+    for (let i = 1; i < dates.length; i++){ const g = diffDays(dates[i-1], dates[i]); if (g > 0) gaps.push(g); }
+  }
+  if (!gaps.length) return null;
+  gaps.sort((a,b) => a - b);
+  const mid = Math.floor(gaps.length / 2);
+  return gaps.length % 2 ? gaps[mid] : Math.round((gaps[mid-1] + gaps[mid]) / 2);
+}
 function renderRelationships(){
   const rows = S.people.filter(p => p.id !== 'isaac').map(p => ({p, w: warmth(p.id)}));
   rows.sort((a,b) => {
@@ -1101,22 +1159,40 @@ function renderRelationships(){
     if (rank[a.w.k] !== rank[b.w.k]) return rank[a.w.k] - rank[b.w.k];
     return (b.w.days||0) - (a.w.days||0);
   });
+  const WLABEL = {warm:'Warm', cooling:'Going cold', cold:'Cold', none:'Not met yet'};
   $('#rBody').innerHTML = rows.map(({p, w}) => {
     const na = nextActionFor(p);
-    let reach;
-    if (w.lt){ reach = '<span class="lt">direct</span>'; }
-    else {
+    let doNext;
+    if (w.k === 'cold' || w.k === 'cooling'){
+      doNext = '<button class="checkin" data-act="checkin" data-p="' + p.id + '">Draft check-in</button>';
+    } else if (w.k === 'warm'){
+      doNext = '<span class="rest">In touch, nothing needed</span>';
+    } else {
       const chain = pathTo(p.id);
-      reach = chain && chain.length > 1 ? '<span class="via">via ' + esc(personById(chain[chain.length-2].id).name) + '</span>' : '<span class="lt">none</span>';
+      if (chain && chain.length > 1){
+        const via = personById(chain[chain.length-2].id);
+        doNext = '<button class="restbtn" data-act="introask" data-p="' + p.id + '" data-via="' + via.id + '">Draft intro ask</button>' +
+                 '<div class="viahint">warm path via ' + esc(first(via.name)) + '</div>';
+      } else {
+        doNext = '<span class="rest">no warm path yet</span>';
+      }
     }
     return '<tr>' +
       '<td><div class="pcell">' + avatar(p.name) + '<span class="nm">' + esc(p.name) + '</span></div></td>' +
       '<td><div class="co">' + esc(p.company) + '</div><div class="rl">' + esc(p.role) + '</div></td>' +
-      '<td>' + (w.lt ? '<span class="lt">' + nice(w.lt) + ' <span class="ago">(' + w.days + 'd)</span></span>' : '<span class="lt ago">no direct touch</span>') + '</td>' +
-      '<td><span class="warmth ' + w.k + '"><span class="wd"></span>' + (w.k === 'none' ? 'unmet' : w.k) + '</span></td>' +
+      '<td>' + (w.lt ? '<span class="lt">' + nice(w.lt) + ' <span class="ago">&middot; ' + w.days + 'd ago</span></span>' : '<span class="lt ago">no meeting logged</span>') + '</td>' +
+      '<td><span class="warmth ' + w.k + '"><span class="wd"></span>' + WLABEL[w.k] + '</span></td>' +
       '<td class="nact">' + (na ? esc(na.text) + ' ' + dueChip(na) : '<span style="color:var(--muted)">none open</span>') + '</td>' +
-      '<td>' + reach + '</td></tr>';
+      '<td class="donext">' + doNext + '</td></tr>';
   }).join('');
+  // column guide: honest typical-gap figure + a plain summary line
+  const gap = typicalGapDays();
+  if ($('#rGap')) $('#rGap').textContent = gap ? gap + ' days' : 'a couple of weeks';
+  if ($('#rSummary')){
+    const nCold = rows.filter(r => r.w.k === 'cold' || r.w.k === 'cooling').length;
+    const nUnmet = rows.filter(r => r.w.k === 'none').length;
+    $('#rSummary').textContent = 'Right now ' + nCold + ' ' + (nCold === 1 ? 'thread is' : 'threads are') + ' going cold and ' + nUnmet + ' ' + (nUnmet === 1 ? 'person is' : 'people are') + ' not met yet.';
+  }
   // path-to-X selector: interesting targets are the unmet ones first
   const sel = $('#pathTarget');
   const targets = S.people.filter(p => !lastTouch(p.id)).concat(S.people.filter(p => lastTouch(p.id)));
@@ -1466,6 +1542,12 @@ async function healthCheck(){
 // ---------- granola import ----------
 function openModal(id){ $('#scrim').classList.add('show'); $(id).classList.add('show'); }
 function closeModals(){ $('#scrim').classList.remove('show'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('show')); }
+function openDraftModal(title, draft){
+  if (!draft) return;
+  $('#draftTitle').textContent = title;
+  $('#draftBody').innerHTML = draftBoxHtml(draft, 'dmodal');
+  openModal('#modalDraft');
+}
 function openGranola(){
   openModal('#modalGranola');
   $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px"><b>Private.</b> The next step reveals real meeting titles.</div>';
@@ -1641,6 +1723,27 @@ document.addEventListener('click', e => {
     // the ask is TO the connector about the target; render as intro from target's perspective handled in feed
     S.activity[S.activity.length - 1].ref = {type:'pathask', viaId:f.id, tgtId:tp.id};
     save(); renderFeed(); toast('Draft ready.', 'ok');
+  }
+  if (act === 'rellegend'){ const el = $('#rLegend'); if (el) el.classList.toggle('show'); return; }
+  if (act === 'checkin'){
+    const p = personById(t.dataset.p); if (!p) return;
+    const d = draftRewarm(p.id);
+    const w = warmth(p.id);
+    logActivity('draft', 'Check-in drafted for ' + p.name + (w.days != null ? ' (' + w.days + 'd quiet)' : '') + '.', {type:'rewarm', pId:p.id});
+    save(); renderFeed();
+    openDraftModal('Check-in with ' + first(p.name), d);
+    toast('Draft ready.', 'ok');
+    return;
+  }
+  if (act === 'introask'){
+    const tgt = personById(t.dataset.p), via = personById(t.dataset.via); if (!tgt || !via) return;
+    const ref = {type:'pathask', viaId:via.id, tgtId:tgt.id};
+    const d = draftFromRef(ref);
+    logActivity('draft', 'Intro ask drafted: ' + via.name + ' to open a door to ' + tgt.name + '.', ref);
+    save(); renderFeed();
+    openDraftModal('Ask ' + first(via.name) + ' for an intro to ' + first(tgt.name), d);
+    toast('Draft ready.', 'ok');
+    return;
   }
 });
 // path-ask draft rendering support

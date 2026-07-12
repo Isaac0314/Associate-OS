@@ -709,9 +709,13 @@ header button{height:28px;border-radius:var(--r-sm)}
     transition:border-color .12s,color .12s;
   }
 .frv a.xicon:hover{border-color:var(--ink);color:var(--ink)}
-.frv .xctl a.xh{text-decoration:none}
-.frv .xctl a.xh:hover{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.frv .xctl a.xh{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px}
+.frv .xctl a.xh:hover{color:var(--ink);border-bottom-color:var(--ink)}
 .frv .xctl .xh.dim{color:var(--faint)}
+/* discoverable X link inside a list row: ink text, hairline underline, small X glyph */
+.frv .list .xlink{display:inline-flex;align-items:center;gap:4px;color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.frv .list .xlink:hover{border-bottom-color:var(--ink)}
+.frv .list .xlink svg{width:10px;height:10px;opacity:.85}
 @media(max-width:1180px){.frv .xgrid{grid-template-columns:repeat(2,1fr)}}
 /* ---------- watched-accounts popover ---------- */
 .frv .pop{
@@ -928,7 +932,7 @@ header button{height:28px;border-radius:var(--r-sm)}
       <p>The Companies tab ranks European growth-stage companies by live signals: open roles, Hacker News mentions, GitHub stars, founder posting cadence on X, and sourced funding events. Starring a company holds it on the Watch tab and pushes it into the shared pipeline. Founder names open that person on the People tab.</p>
     </div>
     <div class="ipanel"><b>2 &middot; People</b>
-      <p>The People tab ranks people who look like they are about to start a company. Live inflows: Show HN posts and the recent follows of your watched X accounts. Real people carry live X numbers and a real X link; fictional profiles are tagged SAMPLE.</p>
+      <p>The People tab ranks people who look like they are about to start a company. Every candidate is real: the recent follows of your watched X accounts and Show HN authors, each enriched from the live X and HN APIs. Every person carries live numbers and a real X or HN link. There are no sample profiles.</p>
     </div>
     <div class="ipanel"><b>3 &middot; Scoring</b>
       <p>Recent, strong signals add more points; older signals fade out over weeks. A company score is the score for this period of time, and the score history chart in the company panel shows how it moved over time. Click any score for its receipt. Every number comes from code and carries its source and pull time; the model only drafts prose.</p>
@@ -1160,7 +1164,7 @@ const COMPANIES=[
     ev('2025-05','funding','$120M Series C at a $1B valuation (Durable, Altimeter, General Catalyst).','Parloa announcement, May 2025','https://www.parloa.com/parloa-in-the-press/parloa-raises-120m-series-c-to-reinvent-customer-service-with-agentic-ai/'),
     ev('2026-01-15','funding','$350M Series D at a $3B valuation led by General Catalyst, with EQT Ventures, Altimeter, Durable and Mosaic; valuation tripled in eight months, ARR past $50M.','TechCrunch, 15 Jan 2026','https://techcrunch.com/2026/01/15/parloa-triples-its-valuation-in-8-months-to-3b-with-350m-raise/'),
   ]},
- {id:'peec',name:'Peec AI',hq:'Berlin',sector:'ai',tags:['AI search analytics','GEO'],stage:'Series A',network:true,
+ {id:'peec',name:'Peec AI',hq:'Berlin',sector:'ai',tags:['AI search analytics','GEO','Agentic commerce'],stage:'Series A',network:true,agentic:true,subcat:'GEO / Agent-EO',
   line:'Shows brands how they appear inside ChatGPT and other AI answers.',
   round:{label:'$21M Series A at >$100M',lead:'Singular',date:'2025-11-17',src:'TechCrunch, 17 Nov 2025',amt:21},
   sourceUrl:'https://techcrunch.com/2025/11/17/as-consumers-ditch-google-for-chatgpt-peec-ai-raises-21m-to-help-brands-adapt/',
@@ -1363,6 +1367,68 @@ const COMPANIES=[
   events:[
     ev('2025-03','risk','Pivoted away from building its own power plant to selling pulsed-power and amplifier capability for defence and science; about $108M raised.','TechCrunch, Mar 2025'),
   ]},
+
+ /* ---------- Agentic-commerce market map (Antler, Jul 2026) ----------
+    Source: antler.co agentic-commerce market map. sector:'agentic' keeps these
+    out of the five European sector chips; they show under All and the AGENTIC
+    COMMERCE chip (which filters on the agentic flag). Mostly early-stage: no
+    funding invented (round null), no boards or founder handles invented; HN
+    mentions wired keyless where the name is distinctive enough. */
+ {id:'anon',name:'Anon',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Access / Authentication',tags:['Agentic commerce','Access / Authentication'],stage:'Undisclosed',line:'Authenticated access so agents can act inside a user\'s existing web accounts.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'neuralpayments',name:'Neural Payments',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'Access / Authentication',tags:['Agentic commerce','Access / Authentication'],stage:'Undisclosed',line:'Payment authorization and identity rails for embedded and agent-driven flows.',round:null,ats:null,gh:null,hn:'"Neural Payments"',events:[]},
+ {id:'skyfire',name:'Skyfire',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Access / Authentication',tags:['Agentic commerce','Access / Authentication'],stage:'Undisclosed',line:'Payment and identity rails that let autonomous agents transact.',round:null,ats:null,gh:null,hn:'"Skyfire"',events:[]},
+ {id:'auth0',name:'Auth0',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Access / Authentication',tags:['Agentic commerce','Access / Authentication'],stage:'Undisclosed',line:'Identity and authentication platform, extended to agent and token-based access.',round:null,ats:null,gh:null,hn:'"Auth0"',events:[]},
+ {id:'stytch',name:'Stytch',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Access / Authentication',tags:['Agentic commerce','Access / Authentication'],stage:'Undisclosed',line:'Authentication and fraud infrastructure, including auth built for AI agents.',round:null,ats:null,gh:null,hn:'"Stytch"',events:[]},
+ {id:'newgeneration',name:'New Generation',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Tools that make merchant catalogs and storefronts readable by agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'merchkit',name:'Merchkit',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Merchant toolkit for exposing products to agentic shopping surfaces.',round:null,ats:null,gh:null,hn:'"Merchkit"',events:[]},
+ {id:'swap',name:'Swap',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Commerce operations platform for modern merchants.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'colossal',name:'Colossal',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Merchant enablement for agent-driven commerce.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'catalog',name:'Catalog',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Structured product catalogs built for machine and agent consumption.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'commerceclarity',name:'Commerce Clarity',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Merchant Enablement',tags:['Agentic commerce','Merchant Enablement'],stage:'Undisclosed',line:'Analytics and enablement for merchants selling into AI channels.',round:null,ats:null,gh:null,hn:'"Commerce Clarity"',events:[]},
+ {id:'bluefish',name:'Bluefish',hq:'not tracked',sector:'agentic',agentic:true,subcat:'GEO / Agent-EO',tags:['Agentic commerce','GEO / Agent-EO'],stage:'Undisclosed',line:'Brand visibility and optimization for AI answer engines.',round:null,ats:null,gh:null,hn:'"Bluefish"',events:[]},
+ {id:'chainshift',name:'Chainshift',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'GEO / Agent-EO',tags:['Agentic commerce','GEO / Agent-EO'],stage:'Undisclosed',line:'Agent-facing optimization so brands surface in AI answers.',round:null,ats:null,gh:null,hn:'"Chainshift"',events:[]},
+ {id:'profound',name:'Profound',hq:'not tracked',sector:'agentic',agentic:true,subcat:'GEO / Agent-EO',tags:['Agentic commerce','GEO / Agent-EO'],stage:'Undisclosed',line:'Shows brands how they appear across AI answers and answer engines.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'wilgot',name:'Wilgot',hq:'not tracked',sector:'agentic',agentic:true,subcat:'GEO / Agent-EO',tags:['Agentic commerce','GEO / Agent-EO'],stage:'Undisclosed',line:'Generative-engine optimization for visibility inside AI search.',round:null,ats:null,gh:null,hn:'"Wilgot"',events:[]},
+ {id:'blankspace',name:'Blankspace',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'Data Monetization',tags:['Agentic commerce','Data Monetization'],stage:'Undisclosed',line:'Lets publishers and data owners monetize access by AI agents.',round:null,ats:null,gh:null,hn:'"Blankspace"',events:[]},
+ {id:'tollbit',name:'Tollbit',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Data Monetization',tags:['Agentic commerce','Data Monetization'],stage:'Undisclosed',line:'Paywall and metering layer so sites charge AI crawlers and agents.',round:null,ats:null,gh:null,hn:'"Tollbit"',events:[]},
+ {id:'brightdata',name:'Bright Data',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Web data and access infrastructure for agents and automation.',round:null,ats:null,gh:null,hn:'"Bright Data"',events:[]},
+ {id:'browserbase',name:'Browserbase',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Hosted headless browsers for running agents and automations at scale.',round:null,ats:null,gh:null,hn:'"Browserbase"',events:[]},
+ {id:'browseruse',name:'Browser Use',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Open framework that lets agents drive a real browser.',round:null,ats:null,gh:null,hn:'"Browser Use"',events:[]},
+ {id:'exa',name:'Exa',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Search API built for AI agents and retrieval.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'parallel',name:'Parallel',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Web research and browsing infrastructure for AI agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'skyvern',name:'Skyvern',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Browser Automation',tags:['Agentic commerce','Browser Automation'],stage:'Undisclosed',line:'Automates browser workflows using vision and LLM agents.',round:null,ats:null,gh:null,hn:'"Skyvern"',events:[]},
+ {id:'composio',name:'Composio',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Tool Discovery / Orchestration',tags:['Agentic commerce','Tool Discovery / Orchestration'],stage:'Undisclosed',line:'Tool and integration layer that gives agents access to external apps.',round:null,ats:null,gh:null,hn:'"Composio"',events:[]},
+ {id:'wildcard',name:'Wildcard',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Tool Discovery / Orchestration',tags:['Agentic commerce','Tool Discovery / Orchestration'],stage:'Undisclosed',line:'Discovery and orchestration of tools for AI agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'gett',name:'Gett',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'LLM App Builder',tags:['Agentic commerce','LLM App Builder'],stage:'Undisclosed',line:'Builder for agent-native commerce applications.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'latinum',name:'Latinum',hq:'not tracked',sector:'agentic',agentic:true,subcat:'LLM App Builder',tags:['Agentic commerce','LLM App Builder'],stage:'Undisclosed',line:'Framework for building agentic commerce experiences.',round:null,ats:null,gh:null,hn:'"Latinum"',events:[]},
+ {id:'listo',name:'Listo',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'LLM App Builder',tags:['Agentic commerce','LLM App Builder'],stage:'Undisclosed',line:'App builder for agent-driven commerce flows.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'vypr',name:'Vypr',hq:'not tracked',sector:'agentic',agentic:true,subcat:'LLM App Builder',tags:['Agentic commerce','LLM App Builder'],stage:'Undisclosed',line:'Tooling to build and ship LLM-powered commerce apps.',round:null,ats:null,gh:null,hn:'"Vypr"',events:[]},
+ {id:'alpic',name:'Alpic',hq:'not tracked',sector:'agentic',agentic:true,subcat:'LLM App Builder',tags:['Agentic commerce','LLM App Builder'],stage:'Undisclosed',line:'Platform for building and deploying agentic applications.',round:null,ats:null,gh:null,hn:'"Alpic"',events:[]},
+ {id:'locus',name:'Locus',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payments / Tokenization',tags:['Agentic commerce','Payments / Tokenization'],stage:'Undisclosed',line:'Payment and tokenization rails for agent transactions.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'mesta',name:'Mesta',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payments / Tokenization',tags:['Agentic commerce','Payments / Tokenization'],stage:'Undisclosed',line:'Stablecoin and cross-border rails for programmatic money movement.',round:null,ats:null,gh:null,hn:'"Mesta"',events:[]},
+ {id:'nekuda',name:'Nekuda',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payments / Tokenization',tags:['Agentic commerce','Payments / Tokenization'],stage:'Undisclosed',line:'Payment infrastructure and tokenization for AI-agent purchases.',round:null,ats:null,gh:null,hn:'"Nekuda"',events:[]},
+ {id:'tokenflow',name:'Token Flow',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payments / Tokenization',tags:['Agentic commerce','Payments / Tokenization'],stage:'Undisclosed',line:'Tokenized payment flows for machine-to-machine commerce.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'firmly',name:'Firmly',hq:'not tracked',sector:'agentic',agentic:true,subcat:'API-Enabled Checkout',tags:['Agentic commerce','API-Enabled Checkout'],stage:'Undisclosed',line:'Embedded checkout that lets commerce happen anywhere, including in agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'henrylabs',name:'Henry Labs',hq:'not tracked',sector:'agentic',agentic:true,subcat:'API-Enabled Checkout',tags:['Agentic commerce','API-Enabled Checkout'],stage:'Undisclosed',line:'API-first checkout infrastructure for agent-driven purchases.',round:null,ats:null,gh:null,hn:'"Henry Labs"',events:[]},
+ {id:'rokt',name:'Rokt',hq:'not tracked',sector:'agentic',agentic:true,subcat:'API-Enabled Checkout',tags:['Agentic commerce','API-Enabled Checkout'],stage:'Undisclosed',line:'Ecommerce and transaction-moment optimization at checkout.',round:null,ats:null,gh:null,hn:'"Rokt"',events:[]},
+ {id:'rye',name:'Rye',hq:'not tracked',sector:'agentic',agentic:true,subcat:'API-Enabled Checkout',tags:['Agentic commerce','API-Enabled Checkout'],stage:'Undisclosed',line:'Universal product and checkout API for agent commerce.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'alguna',name:'Alguna',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Agent Metering / Billing',tags:['Agentic commerce','Agent Metering / Billing'],stage:'Undisclosed',line:'Usage-based billing built for AI and agent products.',round:null,ats:null,gh:null,hn:'"Alguna"',events:[]},
+ {id:'nevermined',name:'Nevermined',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Agent Metering / Billing',tags:['Agentic commerce','Agent Metering / Billing'],stage:'Undisclosed',line:'Metering and payments for AI services and agent usage.',round:null,ats:null,gh:null,hn:'"Nevermined"',events:[]},
+ {id:'olas',name:'Olas',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Agent Metering / Billing',tags:['Agentic commerce','Agent Metering / Billing'],stage:'Undisclosed',line:'Coordination and metering network for autonomous agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'paid',name:'Paid',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Agent Metering / Billing',tags:['Agentic commerce','Agent Metering / Billing'],stage:'Undisclosed',line:'Billing and monetization for AI agents.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'solvapay',name:'Solvapay',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'Agent Metering / Billing',tags:['Agentic commerce','Agent Metering / Billing'],stage:'Undisclosed',line:'Metering and payment collection for agent usage.',round:null,ats:null,gh:null,hn:'"Solvapay"',events:[]},
+ {id:'sapiom',name:'Sapiom',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Payment-flow infrastructure for agentic transactions.',round:null,ats:null,gh:null,hn:'"Sapiom"',events:[]},
+ {id:'catena',name:'Catena',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Programmable payment flows for machine commerce.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'crossmint',name:'Crossmint',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Wallets, payments and tokenization APIs for agents and apps.',round:null,ats:null,gh:null,hn:'"Crossmint"',events:[]},
+ {id:'natural',name:'Natural',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Payment flows built for AI-driven commerce.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'payman',name:'Payman',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Lets AI agents pay and get paid, with human controls.',round:null,ats:null,gh:null,hn:'"Payman"',events:[]},
+ {id:'payos',name:'PayOS',hq:'not tracked',sector:'agentic',agentic:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Payment operating layer for agent-initiated transactions.',round:null,ats:null,gh:null,hn:'"PayOS"',events:[]},
+ {id:'ralio',name:'Ralio',hq:'not tracked',sector:'agentic',agentic:true,network:true,subcat:'Payment Flows',tags:['Agentic commerce','Payment Flows'],stage:'Undisclosed',line:'Payment-flow rails for agentic commerce.',round:null,ats:null,gh:null,hn:'"Ralio"',events:[]},
+ {id:'omnea',name:'Omnea',hq:'not tracked',sector:'agentic',agentic:true,subcat:'B2B Procurement',tags:['Agentic commerce','B2B Procurement'],stage:'Undisclosed',line:'Procurement and supplier management, extending toward agentic buying.',round:null,ats:null,gh:null,hn:'"Omnea"',events:[]},
+ {id:'magnetic',name:'Magnetic',hq:'not tracked',sector:'agentic',agentic:true,subcat:'B2B Procurement',tags:['Agentic commerce','B2B Procurement'],stage:'Undisclosed',line:'AI-driven procurement and sourcing workflows.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'levelpath',name:'Levelpath',hq:'not tracked',sector:'agentic',agentic:true,subcat:'B2B Procurement',tags:['Agentic commerce','B2B Procurement'],stage:'Undisclosed',line:'Mobile-first procurement platform with AI workflows.',round:null,ats:null,gh:null,hn:'"Levelpath"',events:[]},
+ {id:'zip',name:'Zip',hq:'not tracked',sector:'agentic',agentic:true,subcat:'B2B Procurement',tags:['Agentic commerce','B2B Procurement'],stage:'Undisclosed',line:'Intake-to-procurement platform with AI-assisted buying.',round:null,ats:null,gh:null,hn:null,events:[]},
+ {id:'didero',name:'Didero',hq:'not tracked',sector:'agentic',agentic:true,subcat:'B2B Procurement',tags:['Agentic commerce','B2B Procurement'],stage:'Undisclosed',line:'AI procurement platform for direct and indirect spend.',round:null,ats:null,gh:null,hn:'"Didero"',events:[]},
 ];
 
 /* ---------- founders (X layer) ----------
@@ -2006,7 +2072,10 @@ function visible(rows){
     if(ui.tab==='high'&&s.total<70)return false;
     if(ui.tab==='network'&&!c.network)return false;
     if(ui.tab==='watch'&&!STARRED.has(c.id))return false;
-    if(ui.sector&&c.sector!==ui.sector)return false;
+    if(ui.sector){
+      if(ui.sector==='agentic'){ if(!c.agentic)return false; }
+      else if(c.sector!==ui.sector) return false;
+    }
     if(ui.q){
       const hay=(c.name+' '+c.hq+' '+c.tags.join(' ')+' '+(SECTORS[c.sector]||'unclassified')).toLowerCase();
       if(!hay.includes(ui.q))return false;
@@ -2067,9 +2136,13 @@ function renderTabs(rows){
   ).join('');
 }
 function renderChips(){
-  document.getElementById('sectorChips').innerHTML=Object.keys(SECTORS).map(k=>
+  var html=Object.keys(SECTORS).map(k=>
     '<button class="chip '+(ui.sector===k?'on':'')+'" data-sector="'+k+'">'+SECTORS[k]+'</button>'
   ).join('');
+  /* Mathias's agentic-commerce market map: filters on the agentic flag, so it also
+     catches Peec (sector ai) that carries the flag. */
+  html+='<button class="chip agentic '+(ui.sector==='agentic'?'on':'')+'" data-sector="agentic" title="Isolate the agentic-commerce market map">AGENTIC COMMERCE</button>';
+  document.getElementById('sectorChips').innerHTML=html;
 }
 function renderStamps(){
   const el=document.getElementById('stamps');
@@ -2839,11 +2912,11 @@ window.GS={
 (function(){
 "use strict";
 /* =====================================================================
-   Founder Radar - single-file app.
+   Founder Radar - single-file app (real-only).
    Two live inflows: Show HN (HN Algolia, free) and watched follows
    (recent follows of the watch accounts via the local X connector,
-   cached per day per account). Real candidates score only from real
-   observables; synthetic candidates carry a per-card "sample" tag.
+   cached per day per account). Every candidate is a real profile and
+   scores only from real observables. There is no synthetic data.
    Scores are deterministic; see the intro modal.
    ===================================================================== */
 
@@ -2904,62 +2977,46 @@ function rint(r, a, b){ return a + Math.floor(r()*(b-a+1)); }
 var HALF_LIFE = 21;          /* days to half weight */
 var LIKELY_MIN = 60;         /* "Likely" threshold */
 var SCORE_CAP = 99;
+/* Real-only signal set. Every weight scores off a live X or HN observable;
+   nothing is a sample connector. Calibrated so a person hit by several strong
+   real tells lands 60-75, a thin one 20-35, from real signal COUNT (prior
+   stays x1.00 for reals, so the range is never faked by a multiplier). */
 var WEIGHTS = {
-  left_job: 32,
-  cofounder_search: 30,
-  preprint: 24,
-  github_spike: 22,
-  bio_change: 18,
-  show_hn: 16,             /* later-stage: the product already shipped */
-  domain_registered: 14,
-  x_bio_builder: 14,
-  watched_follow: 12,
-  hn_traction: 12,         /* dynamic: points/15, capped at 12 */
-  demo_day_post: 10,       /* later-stage: already inside a program */
-  x_account_new: 10,
-  x_audience: 6
+  watched_follow: 24,      /* strongest real tell; each EXTRA watch-account follow adds +8 (set on the signal) */
+  show_hn: 18,             /* shipped a Show HN (HN Algolia) */
+  x_bio_builder: 16,       /* builder language in the live X bio */
+  x_tweet_builder: 14,     /* recent posts talk about building or launching */
+  hn_traction: 12,         /* dynamic: HN points / 15, capped at 12 */
+  x_account_new: 10,       /* recently created X account */
+  x_audience: 8            /* sizeable real audience (weighted up on a young account) */
 };
 var SIG_LABEL = {
-  left_job:"left their job",
-  cofounder_search:"started a cofounder search",
-  show_hn:"posted Show HN (later-stage)",
-  preprint:"posted a research paper (arXiv)",
-  github_spike:"GitHub stars jumped",
-  demo_day_post:"demo day appearance (later-stage)",
-  bio_change:"changed their X bio",
-  domain_registered:"registered a new domain",
   watched_follow:"followed by a trusted account",
-  hn_traction:"Show HN traction",
+  show_hn:"posted Show HN",
   x_bio_builder:"builder words in X bio",
-  x_account_new:"new X account",
+  x_tweet_builder:"posting about building on X",
+  hn_traction:"Show HN traction",
+  x_account_new:"new-ish X account",
   x_audience:"audience on X"
 };
-/* how each signal is tracked, one honest line for the scoring modal */
+/* how each signal is tracked, one honest line for the scoring modal (all wired) */
 var SIG_HOW = {
-  left_job:"LinkedIn headline diff watch",
-  cofounder_search:"YC cofounder-matching scan",
-  show_hn:"live pull from the HN Algolia API; launches count less, the product already shipped",
-  preprint:"arXiv new-author watch",
-  github_spike:"GitHub star-velocity watch",
-  demo_day_post:"accelerator and demo day lists; later-stage, so it counts less",
-  bio_change:"X bio diff watch",
-  domain_registered:"new domain registration feeds",
-  watched_follow:"recent follows of your watch accounts, pulled daily from the X API",
+  watched_follow:"recent follows of your watch accounts, pulled daily from the X API; each extra watch-account follow stacks +8",
+  show_hn:"live pull from the HN Algolia API",
+  x_bio_builder:"bio text from the X API, scanned for builder language",
+  x_tweet_builder:"recent posts from the X API, scanned for build and launch language",
   hn_traction:"points from the same HN pull: points / 15, capped at 12",
-  x_bio_builder:"bio text from the X API",
   x_account_new:"account created date from the X API",
-  x_audience:"follower count from the X API"
+  x_audience:"follower count from the X API; counts more on a young account"
 };
 var SIG_WIRED = {
-  show_hn:true, hn_traction:true, watched_follow:true,
-  x_bio_builder:true, x_account_new:true, x_audience:true
+  watched_follow:true, show_hn:true, x_bio_builder:true, x_tweet_builder:true,
+  hn_traction:true, x_account_new:true, x_audience:true
 };
 /* restrained ink-and-coral palette: coral marks the two strongest tells */
 var SIG_COLOR = {
-  left_job:"#E8543F", cofounder_search:"#E8543F", show_hn:"#16181B", preprint:"#16181B",
-  github_spike:"#16181B", demo_day_post:"#16181B", bio_change:"#6B7280",
-  domain_registered:"#6B7280", watched_follow:"#6B7280", hn_traction:"#16181B",
-  x_bio_builder:"#6B7280", x_account_new:"#6B7280", x_audience:"#6B7280"
+  watched_follow:"#E8543F", x_bio_builder:"#E8543F", show_hn:"#16181B",
+  x_tweet_builder:"#16181B", hn_traction:"#16181B", x_account_new:"#6B7280", x_audience:"#6B7280"
 };
 var PRIORS = {
   exited_founder: { mult:1.35, label:"Second-time founder, prior exit" },
@@ -2996,249 +3053,17 @@ function newestVisibleDay(c, T){ var m = -Infinity; c.signals.forEach(function(s
 function isVisible(c, T){ return firstSeenDay(c) <= T; }
 function heat(sc){ return sc >= 70 ? "hot" : sc >= 45 ? "warmt" : "coolt"; }
 
-/* ---------- synthetic dataset: clearly fictional people ---------- */
-/* 14 hand-authored heroes + 74 generated = 88 total; 74 visible on day 0,
-   the rest surface across the 4 simulated weeks. */
+/* ---------- real-only queue ----------
+   Every person here is a real profile: a watched-account follow enriched
+   from the live X API, a Show HN author from the HN Algolia API, or a
+   deep-linked handle. There is no synthetic data. sig() is still the
+   builder used by the live pulls below. */
 function sig(t, d, detail, short, w){ var o = { t:t, d:d, detail:detail, short:short }; if (w != null) o.w = w; return o; }
-
-var HEROES = [
-  { id:"h1", name:"Amara Okonkwo", handle:"@amara_builds", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
-    oneliner:"Staff engineer who ran Stripe's EMEA ledger infra for six years; circling an idea in agent-native payments ops.",
-    bio:"Six years on payments infrastructure at Stripe, the last three as staff engineer owning EMEA ledger reconciliation. Known internally for killing a quarter of the on-call load with one migration. Has been quietly interviewing ML infra founders \"for fun\" since spring.",
-    found:["LinkedIn headline diff watch","GitHub org watch: ledgerline velocity alert","X bio diff watch"],
-    signals:[
-      sig("bio_change", -24, 'X bio changed to "building something new"', 'the new "building something new" bio'),
-      sig("left_job", -9, "Left Staff Engineer role at Stripe after 6 years (LinkedIn headline change)", "you wrapped up a six-year Stripe run"),
-      sig("github_spike", -2, "Repo ledgerline gained 340 stars in 9 days; 21-day commit streak", "ledgerline moving fast on GitHub"),
-      sig("cofounder_search", 5, 'Active on YC cofounder matching: "seeking commercial cofounder, payments infra"', "your cofounder search post")
-    ]},
-  { id:"h2", name:"Henrik Sorensen", handle:"@henriksrs", city:"Copenhagen", archetype:"Second-time founder", prior:"exited_founder",
-    oneliner:"Sold FreightPilot in 2024; registered a new domain and started a cofounder search within the same fortnight.",
-    bio:"Founded FreightPilot, a freight-forwarding OS, and sold it to a strategic in 2024 after growing to 40 people. Sat out a one-year earnout. The pattern-match is textbook: exited founder, restless, already buying domains.",
-    found:["Watched follow: @evarosengren (angel, 3 unicorn seed checks)","Domain registration watch (.io new regs)","YC cofounder matching scan"],
-    signals:[
-      sig("bio_change", -20, 'X bio changed to "day zero, again"', 'the "day zero, again" bio'),
-      sig("watched_follow", -15, "Followed by @evarosengren (watched angel account)", "a scout we trust started watching you"),
-      sig("domain_registered", -6, "Registered relaycrew.io (private WHOIS)", "that fresh relaycrew.io registration"),
-      sig("cofounder_search", -3, 'Active on YC cofounder matching: "second-time founder seeking technical cofounder"', "your cofounder search post")
-    ]},
-  { id:"h3", name:"Zofia Zielinska", handle:"@zofiaml", city:"London", archetype:"ML researcher", prior:"research",
-    oneliner:"UCL researcher whose agent-evaluation preprint is doing the rounds; repo went vertical within a week.",
-    bio:"Final-year researcher at UCL's DARK lab working on verifiable evaluation of tool-using agents. The preprint landed the same week the reference implementation started trending. Advisor is famously supportive of spinouts.",
-    found:["arXiv cs.AI new-author watch","GitHub org watch: agenteval-kit velocity alert"],
-    signals:[
-      sig("bio_change", -16, 'X bio changed to "thinking about evals, full time"', "the evals-obsessed bio update"),
-      sig("preprint", -4, 'Preprint "Verifiable Agent Evaluations at Scale" posted to arXiv', "your agent-evals preprint"),
-      sig("github_spike", -1, "Repo agenteval-kit gained 510 stars in 6 days", "agenteval-kit going vertical"),
-      sig("cofounder_search", 9, 'Active on YC cofounder matching: "researcher seeking commercial cofounder"', "your cofounder search post")
-    ]},
-  { id:"h4", name:"Callum Ashworth", handle:"@callumashw", city:"London", archetype:"Fintech operator", prior:"operator",
-    oneliner:"Head of Lending Ops at Monzo until last week; the kind of operator who leaves only when the idea is already loaded.",
-    bio:"Built Monzo's lending operations from 12 to 90 people, then handed it over. Previously early at a credit bureau startup. Colleagues describe him as \"the person who actually understands UK credit plumbing end to end\".",
-    found:["LinkedIn headline diff watch","Watched follow: @marcusvantour (fintech scout)"],
-    signals:[
-      sig("watched_follow", -12, "Followed by @marcusvantour (watched fintech scout)", "a fintech scout flagging you"),
-      sig("left_job", -3, "Left Head of Lending Operations role at Monzo after 5 years (LinkedIn)", "you walked away from Monzo lending ops"),
-      sig("bio_change", 6, 'X bio changed to "0 to 1 again. credit is broken."', 'the "credit is broken" bio')
-    ]},
-  { id:"h5", name:"Ingrid Haugen", handle:"@ingridphoton", city:"Zurich", archetype:"PhD spinout", prior:"research",
-    oneliner:"ETH photonics PhD; demo-day project on chip-scale spectrometers that three hardware angels asked about by name.",
-    bio:"Finishing a photonics PhD at ETH Zurich on chip-scale spectrometry. Presented at the ETH entrepreneurship demo day; the lab holds two relevant patents with a founder-friendly licensing office.",
-    found:["Demo day / accelerator lists (ETH)","arXiv physics.optics new-author watch","Domain registration watch"],
-    signals:[
-      sig("preprint", -19, 'Preprint "Chip-Scale Spectrometry Without Moving Parts" posted to arXiv', "the chip-scale spectrometry preprint"),
-      sig("demo_day_post", -11, "Presented at ETH entrepreneurship demo day; project SpectraTile", "your SpectraTile demo-day showing"),
-      sig("domain_registered", 4, "Registered spectratile.com (private WHOIS)", "that spectratile.com registration")
-    ]},
-  { id:"h6", name:"Dario Marchetti", handle:"@dariobuilds", city:"Milan", archetype:"Indie builder", prior:"builder",
-    oneliner:"Serial shipper; latest Show HN (a local-first CRM for freelancers) hit 214 points and the repo is compounding.",
-    bio:"Has shipped eight side projects in three years, two of them ramen-profitable. The latest, a local-first CRM, hit the HN front page. Writes a devlog with 9k subscribers. Textbook day-zero: an audience, shipping velocity, no company yet.",
-    found:["Show HN scan (HN Algolia)","GitHub org watch: quietcrm velocity alert"],
-    signals:[
-      sig("github_spike", -13, "Repo quietcrm gained 280 stars in 12 days", "quietcrm compounding on GitHub"),
-      sig("show_hn", -1, "Show HN: QuietCRM, a local-first CRM for freelancers (214 points)", "your Show HN hitting 214 points"),
-      sig("hn_traction", -1, "HN traction: 214 points (bonus weight 12.0)", "the front-page traction", 12)
-    ]},
-  { id:"h7", name:"Fenna van der Berg", handle:"@fennavdb", city:"Amsterdam", archetype:"ML researcher", prior:"research",
-    oneliner:"DeepMind research engineer on retrieval; bio flipped to \"thinking about what's next\" and the exit rumour is now a headline change.",
-    bio:"Research engineer at Google DeepMind working on retrieval-augmented systems, previously TU Delft. Two well-cited papers. The bio change plus a visible slowdown in internal commits is the classic pre-departure pattern.",
-    found:["X bio diff watch","arXiv cs.IR new-author watch","LinkedIn headline diff watch"],
-    signals:[
-      sig("preprint", -30, 'Preprint "Sparse Retrieval at Production Scale" posted to arXiv', "the sparse-retrieval paper"),
-      sig("bio_change", -12, 'X bio changed to "thinking about what\'s next"', 'the "thinking about what\'s next" bio'),
-      sig("left_job", 2, "Left Research Engineer role at Google DeepMind after 4 years (LinkedIn)", "you closed the DeepMind chapter")
-    ]},
-  { id:"h8", name:"Emeka Adeyemi", handle:"@emeka_dev", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
-    oneliner:"Revolut staff engineer moonlighting on an open-source data-contracts tool; weekend commits became every-day commits.",
-    bio:"Staff engineer on Revolut's data platform. His side project, a data-contracts linter, quietly picked up adoption at three fintechs. Commit timestamps migrated from weekends to weekday mornings, which usually means notice has been handed in.",
-    found:["GitHub org watch: contractile velocity alert","YC cofounder matching scan"],
-    signals:[
-      sig("github_spike", -7, "Repo contractile gained 190 stars in 14 days; weekday commit pattern", "contractile picking up real adoption"),
-      sig("cofounder_search", 11, 'Active on YC cofounder matching: "data infra, seeking GTM cofounder"', "your cofounder search post")
-    ]},
-  { id:"h9", name:"Saoirse Farrell", handle:"@saoirsef", city:"Dublin", archetype:"Second-time founder", prior:"exited_founder",
-    oneliner:"Sold a care-coordination startup in 2023; stepped off the acquirer's payroll and straight into an EF cohort shortlist.",
-    bio:"Founded and sold CarePath, a care-home coordination platform. Did her 18 months at the acquirer, left the week the lockup ended. Has been spotted at two pre-idea founder programmes since.",
-    found:["Watched follow: @leilacapital (health-tech angel)","LinkedIn headline diff watch","Demo day / accelerator lists"],
-    signals:[
-      sig("left_job", -26, "Left post-acquisition Product Director role at HealthEdge Group (LinkedIn)", "you stepped off the acquirer's payroll"),
-      sig("watched_follow", -5, "Followed by @leilacapital (watched health-tech angel)", "a health-tech angel tracking you"),
-      sig("demo_day_post", 16, "Listed in Entrepreneur First LD21 cohort preview", "the EF cohort listing")
-    ]},
-  { id:"h10", name:"Katja Lindqvist", handle:"@katjalind", city:"Stockholm", archetype:"Fintech operator", prior:"operator",
-    oneliner:"Klarna principal PM who owned checkout; left in the spring and just registered a suspiciously good domain.",
-    bio:"Principal PM at Klarna, five years across checkout and merchant onboarding. Left in the spring \"to travel\", except the travel appears to consist of registering domains and having coffee with infra engineers.",
-    found:["LinkedIn headline diff watch","Domain registration watch (.dev new regs)"],
-    signals:[
-      sig("left_job", -18, "Left Principal Product Manager role at Klarna after 5 years (LinkedIn)", "you closed out five years at Klarna"),
-      sig("domain_registered", -10, "Registered checkoutfair.dev (private WHOIS)", "that checkoutfair.dev registration"),
-      sig("bio_change", 7, 'X bio changed to "building. quietly."', 'the "building. quietly." bio')
-    ]},
-  { id:"h11", name:"Milos Novak", handle:"@milos_quant", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
-    oneliner:"Quant researcher who left a top systematic fund last week; his public repos suggest markets tooling, not another fund seat.",
-    bio:"Five years as a quantitative researcher at a top systematic fund in London, ex-Imperial. The interesting part: his open-source work is developer tooling for backtesting, not alpha. People who leave funds to build tooling rarely go back.",
-    found:["LinkedIn headline diff watch","GitHub org watch"],
-    signals:[
-      sig("left_job", -1, "Left Quantitative Researcher role at a systematic fund after 5 years (LinkedIn)", "you left the fund seat behind"),
-      sig("github_spike", 8, "Repo backcast gained 220 stars in 8 days", "backcast taking off on GitHub")
-    ]},
-  { id:"h12", name:"Noor El-Sayed", handle:"@noorbuilds", city:"Cambridge", archetype:"PhD spinout", prior:"research",
-    oneliner:"Cambridge PhD on tabular foundation models; reference repo trending and an accelerator listing already in the pipeline.",
-    bio:"PhD candidate at Cambridge working on tabular foundation models for scientific data. The preprint drew unusually practical attention: two pharma data teams opened issues on the repo within days.",
-    found:["arXiv cs.LG new-author watch","GitHub org watch: tabfm velocity alert"],
-    signals:[
-      sig("preprint", -8, 'Preprint "Tabular Foundation Models for Lab Data" posted to arXiv', "the tabular foundation-models preprint"),
-      sig("github_spike", -3, "Repo tabfm gained 260 stars in 7 days", "tabfm trending with practitioners"),
-      sig("demo_day_post", 19, "Listed in Creative Destruction Lab (Oxford) cohort preview", "the CDL cohort listing")
-    ]},
-  { id:"h13", name:"Tobias Keller", handle:"@tobikeller", city:"Berlin", archetype:"Fintech operator", prior:"operator",
-    oneliner:"Adyen engineering manager whose bio quietly flipped; the resignation usually follows within a month.",
-    bio:"Engineering manager for merchant risk at Adyen, ex-N26. Runs a private reading group on payment orchestration. The bio flip is the first domino; his network says the second is already falling.",
-    found:["X bio diff watch","LinkedIn headline diff watch"],
-    signals:[
-      sig("bio_change", -5, 'X bio changed to "exploring. dms open."', 'the "exploring. dms open." bio'),
-      sig("left_job", 12, "Left Engineering Manager role at Adyen after 4 years (LinkedIn)", "you handed back the Adyen badge")
-    ]},
-  { id:"h14", name:"Meera Raghavan", handle:"@meera_infra", city:"London", archetype:"Ex-bigtech engineer", prior:"staff_top_co",
-    oneliner:"Wise platform lead already interviewing cofounders; moving faster than her old employer knows.",
-    bio:"Led the platform group at Wise for three years, before that SRE at Google. Left quietly last month. Already ran a structured cofounder search: a spreadsheet, a rubric, twelve coffees. That is not a hobbyist.",
-    found:["LinkedIn headline diff watch","YC cofounder matching scan"],
-    signals:[
-      sig("left_job", -13, "Left Platform Engineering Lead role at Wise after 3 years (LinkedIn)", "you wrapped the Wise platform role"),
-      sig("cofounder_search", -2, 'Active on YC cofounder matching: "infra founder seeking design-minded cofounder"', "your structured cofounder search")
-    ]}
-];
-
-/* ----- generated filler: deterministic (fixed seed), clearly fictional ----- */
-var FIRSTS = ["Anneli","Bastian","Cerys","Dominik","Edda","Ffion","Greta","Hauke","Ines","Janek","Kasia","Lachlan","Maren","Nikolai","Oona","Piotr","Quinn","Ruaridh","Sanna","Teodor","Ulla","Viktor","Wanda","Xenia","Yannick","Zlata","Aoife","Bram","Cosima","Dmitri","Elin","Fergal","Gunnar","Hedda","Ivo","Jorunn","Kalle","Liv","Matteo","Nadia","Oskar","Petra","Rasmus","Solveig"];
-var LASTS  = ["Bergstrom","Castellano","Drummond","Eriksen","Falkenrath","Grieve","Holmgren","Iversen","Jankowski","Kubiak","Lindqvist","Mancini","Nyberg","Ostrowski","Pettersen","Quintero","Rieger","Sandoval","Thorsen","Ugarte","Vollan","Wozniak","Ybarra","Zeeman","Aldervik","Brandt","Cattaneo","Dahlberg","Engel","Fiorini","Gastown","Hollis","Imhoff","Jarvis","Krogh","Lachapelle","Moxon","Nowak","Oyelaran","Pryce","Ravnsborg"];
-var CITIES = ["London","Berlin","Amsterdam","Stockholm","Paris","Dublin","Copenhagen","Munich","Barcelona","Zurich","Lisbon","Warsaw"];
-var SPACES = ["dev tools","payments infra","applied AI ops","data tooling","vertical SaaS","agent infrastructure","climate fintech","compliance automation","health data","supply-chain software"];
-var BIGCOS = ["Stripe","Datadog","Spotify","Meta","Google","AWS","Palantir","Snowflake","Shopify","Microsoft"];
-var FINCOS = ["Monzo","Revolut","Wise","Klarna","Checkout.com","Adyen","N26","Starling","GoCardless"];
-var UNIS   = ["Imperial","UCL","Oxford","Cambridge","ETH Zurich","TU Munich","KTH","EPFL","TU Delft","Edinburgh"];
-var ROLES_ENG = ["Staff Engineer","Principal Engineer","Senior Staff Engineer","Engineering Manager","Platform Lead"];
-var ROLES_OP  = ["Head of Growth","Head of Operations","Principal PM","Head of Risk","Head of Payments","GM Expansion"];
-var REPOS  = ["vaultkit","promptforge","opsloom","finchart","agentmesh","quietlog","stackpilot","railgun-db","tracewell","formfoundry","meshlane","dockhand"];
-var PAPERS = ["Latency-Aware Speculative Decoding","Self-Healing Data Pipelines","Cheap Long-Context Retrieval","Robust Table Extraction in the Wild","Streaming Feature Stores","Zero-Shot Ledger Matching"];
-var PROGRAMS = ["Entrepreneur First","Techstars London","Station F","Creative Destruction Lab","Conception X"];
-var SCOUTS = ["@evarosengren","@marcusvantour","@leilacapital","@oddvarseed","@petramakes"];
-var PHRASES = ["building something new","day zero","stealth mode","exploring what's next","cooking","0 to 1 again","new chapter loading"];
-var EXITCOS = ["ParcelForge (acq. 2023)","LoopDesk (acq. 2024)","Nightframe (acq. 2022)","Cartload (acq. 2024)","Signalhut (acq. 2023)"];
-
-var GARCH = [
-  { key:"Ex-bigtech engineer", prior:"staff_top_co", pool:["left_job","bio_change","github_spike","domain_registered","cofounder_search"] },
-  { key:"ML researcher",       prior:"research",     pool:["preprint","github_spike","bio_change","cofounder_search"] },
-  { key:"Second-time founder", prior:"exited_founder",pool:["watched_follow","bio_change","domain_registered","cofounder_search","demo_day_post"] },
-  { key:"Fintech operator",    prior:"operator",     pool:["left_job","bio_change","cofounder_search","watched_follow"] },
-  { key:"PhD spinout",         prior:"research",     pool:["preprint","demo_day_post","domain_registered","github_spike"] },
-  { key:"Indie builder",       prior:"builder",      pool:["show_hn","github_spike","domain_registered","bio_change"] }
-];
-
-function makeSignal(t, d, ctx, r){
-  switch(t){
-    case "left_job": return sig(t, d, "Left " + ctx.role + " role at " + ctx.co + " after " + ctx.yrs + " years (LinkedIn headline change)", "you wrapped up your " + ctx.role + " run at " + ctx.co);
-    case "bio_change": { var p = pick(r, PHRASES); return sig(t, d, 'X bio changed to "' + p + '"', 'the new "' + p + '" bio'); }
-    case "github_spike": { var n = rint(r,90,420), dd = rint(r,5,14); return sig(t, d, "Repo " + ctx.repo + " gained " + n + " stars in " + dd + " days", ctx.repo + " moving fast on GitHub"); }
-    case "show_hn": { var pts = rint(r,40,260); return sig(t, d, "Show HN: " + ctx.title + " (" + pts + " points)", "your Show HN hitting " + pts + " points"); }
-    case "preprint": return sig(t, d, 'Preprint "' + ctx.paper + '" posted to arXiv', "the " + ctx.paper.split(" ").slice(0,2).join(" ").toLowerCase() + " preprint");
-    case "domain_registered": return sig(t, d, "Registered " + ctx.domain + " (private WHOIS)", "that fresh " + ctx.domain + " registration");
-    case "cofounder_search": return sig(t, d, 'Active on YC cofounder matching: "' + ctx.space + ', seeking cofounder"', "your cofounder search post");
-    case "demo_day_post": { var pr = pick(r, PROGRAMS); return sig(t, d, "Presented at " + pr + " demo day", "your " + pr + " demo-day showing"); }
-    case "watched_follow": { var sc = pick(r, SCOUTS); return sig(t, d, "Followed by " + sc + " (watched account)", "a scout account we trust flagging you"); }
-  }
-  return sig(t, d, SIG_LABEL[t], "a fresh signal");
-}
-var FOUND_SRC = {
-  left_job:"LinkedIn headline diff watch", bio_change:"X bio diff watch",
-  github_spike:"GitHub org watch: starred-velocity alert", show_hn:"Show HN scan (HN Algolia)",
-  preprint:"arXiv new-author watch", domain_registered:"Domain registration watch (.io/.dev new regs)",
-  cofounder_search:"YC cofounder matching scan", demo_day_post:"Demo day / accelerator lists",
-  watched_follow:"Watched follow list (scout accounts)"
-};
-
-function genCandidates(){
-  var out = [];
-  for (var i = 0; i < 74; i++){
-    var r = mulberry32(1000 + i * 97);
-    var arch = GARCH[i % GARCH.length];
-    var name = FIRSTS[i % FIRSTS.length] + " " + LASTS[i % LASTS.length];
-    var fn = first(name).toLowerCase(), ln = name.split(" ")[1].toLowerCase();
-    var handle = "@" + fn + pick(r, ["_" + ln.slice(0,4), ln.slice(0,5), "_builds", "hq", "_dev", "labs"]);
-    var ctx = {
-      role: arch.key === "Fintech operator" ? pick(r, ROLES_OP) : pick(r, ROLES_ENG),
-      co: arch.key === "Fintech operator" ? pick(r, FINCOS) : pick(r, BIGCOS),
-      yrs: rint(r,3,8), repo: pick(r, REPOS),
-      domain: pick(r, REPOS) + pick(r, [".io",".dev",".com"]),
-      paper: pick(r, PAPERS), space: pick(r, SPACES), uni: pick(r, UNIS),
-      title: pick(r, ["a tiny local-first analytics tool","an open-source uptime pager","a spreadsheet that talks to your DB","a self-hosted feature-flag server","a CLI for messy CSVs"])
-    };
-    var future = i >= 60;                      /* last 14 surface in later weeks */
-    var nsig = 1 + Math.floor(r()*3); if (r() > 0.85) nsig = 4;
-    var pool = arch.pool.slice();
-    /* shuffle pool deterministically */
-    for (var k = pool.length - 1; k > 0; k--){ var j = Math.floor(r()*(k+1)); var tmp = pool[k]; pool[k] = pool[j]; pool[j] = tmp; }
-    var types = pool.slice(0, nsig);
-    var off = future ? rint(r,1,18) : -rint(r,1,27);
-    var signals = [];
-    for (var q = 0; q < types.length; q++){
-      if (off > 28) break;
-      signals.push(makeSignal(types[q], off, ctx, r));
-      off += rint(r,3,12);
-    }
-    var oneliner, bio;
-    if (arch.key === "Ex-bigtech engineer"){
-      oneliner = ctx.role + " at " + ctx.co + " for " + ctx.yrs + " years; infra depth, now circling an idea in " + ctx.space + ".";
-      bio = ctx.yrs + " years at " + ctx.co + ", most recently as " + ctx.role + ". Deep " + ctx.space + " exposure and a public repo (" + ctx.repo + ") that keeps growing. Based in {CITY}.";
-    } else if (arch.key === "ML researcher"){
-      oneliner = "Researcher (" + ctx.uni + ") behind \"" + ctx.paper + "\"; code and citations both trending.";
-      bio = "Researcher affiliated with " + ctx.uni + ". Recent work on " + ctx.paper.toLowerCase() + " has clear startup surface area, and the reference implementation is picking up practitioner adoption. Based in {CITY}.";
-    } else if (arch.key === "Second-time founder"){
-      var ex = pick(r, EXITCOS);
-      oneliner = "Founded and sold " + ex + "; the usual post-exit restlessness is showing in the usual places.";
-      bio = "Previously founded " + ex + ". Sat out the earnout, kept the network warm, and is now exhibiting the standard pre-company behaviours: domains, scout follows, quiet coffees. Based in {CITY}.";
-    } else if (arch.key === "Fintech operator"){
-      oneliner = ctx.role + " at " + ctx.co + "; operators like this rarely leave without a thesis in hand.";
-      bio = ctx.role + " at " + ctx.co + " with " + ctx.yrs + " years in " + ctx.space + ". Owns a problem space end to end and has started talking about it in the first person. Based in {CITY}.";
-    } else if (arch.key === "PhD spinout"){
-      oneliner = ctx.uni + " PhD; \"" + ctx.paper + "\" plus a lab with founder-friendly IP terms.";
-      bio = "PhD candidate at " + ctx.uni + ". Thesis work on " + ctx.paper.toLowerCase() + " is patent-adjacent, and the group has spun out companies before. Based in {CITY}.";
-    } else {
-      oneliner = "Indie builder; ships monthly, latest project is " + ctx.title + ".";
-      bio = "Prolific indie builder: " + ctx.title + " is the latest of many. Small audience, real users, no company yet. Based in {CITY}.";
-    }
-    var city = pick(r, CITIES);
-    var srcs = []; signals.forEach(function(s){ var f = FOUND_SRC[s.t]; if (f && srcs.indexOf(f) < 0) srcs.push(f); });
-    out.push({ id:"g"+i, name:name, handle:handle, city:city, archetype:arch.key, prior:arch.prior,
-      oneliner:oneliner, bio:bio.replace("{CITY}", city), found:srcs, signals:signals });
-  }
-  return out;
-}
-var CANDS = HEROES.concat(genCandidates());
+var CANDS = [];  /* real-only: filled by the live X and HN pulls */
 
 /* ---------- state ---------- */
 var LS = "founder_radar_v2";
-var WF_DEFAULTS = ["deLeyritzluc", "HarryStebbings", "shl"];
+var WF_DEFAULTS = ["deLeyritzluc", "HarryStebbings", "shl", "saranormous", "eriktorenberg", "rauchg", "garrytan", "packyM"];
 var S = load();
 function daysSinceKey(key){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || "");
@@ -3258,13 +3083,16 @@ function load(){
       if (!raw.hn) raw.hn = [];
       if (!Array.isArray(raw.xf)) raw.xf = [];
       if (!Array.isArray(raw.watch)) raw.watch = WF_DEFAULTS.slice();
+      else WF_DEFAULTS.forEach(function(d){   /* widen an older 3-account list up to the 8 defaults */
+        if (!raw.watch.some(function(a){ return String(a).toLowerCase() === d.toLowerCase(); })) raw.watch.push(d);
+      });
       if (!raw.wfPulls) raw.wfPulls = {};
       /* real signals carry their calendar date; re-age them on every load */
       raw.xf.forEach(function(c){
         (c.signals || []).forEach(function(s){ if (s.abs) s.d = -daysSinceKey(s.abs); });
       });
       raw.demo = 0; /* the clock-simulation UI is gone; always render today */
-      raw.tab = "live"; /* real people first: every load opens on the LIVE tab */
+      if (raw.tab !== "watchlist" && raw.tab !== "contacted") raw.tab = "all"; /* real-only: All is the default */
       return raw;
     }
   }catch(e){}
@@ -3272,16 +3100,8 @@ function load(){
 }
 function fresh(){
   var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xf:[], xval:{},
-             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"live", sel:null, hnPull:null };
-  var likely = CANDS.filter(function(c){ return isVisible(c,0) && scoreAt(c,0) >= LIKELY_MIN; }).length;
-  var visible = CANDS.filter(function(c){ return isVisible(c,0); }).length;
-  st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered. Live: Show HN and watched X follows. Sample connectors: GitHub, arXiv, domains, job changes, demo day lists." });
-  st.feed.push({ tag:"SCORE", day:0, msg:"Scored <b>" + visible + " profiles</b>; " + likely + " are likely (60+). Ranked inbox rebuilt." });
-  var top = CANDS.filter(function(c){ return isVisible(c,0); }).sort(function(a,b){ return scoreAt(b,0)-scoreAt(a,0); })[0];
-  if (top){
-    st.drafts[top.id] = { text: draftOutreachFor(top, 0), day: 0 };
-    st.feed.push({ tag:"DRAFT", day:0, cid: top.id, msg:"Top of queue: <b>" + esc(top.name) + "</b> (" + scoreAt(top,0) + "). Outreach drafted and ready." });
-  }
+             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"all", sel:null, hnPull:null };
+  st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered: <b>" + WF_DEFAULTS.length + " X scout accounts</b> and Show HN. Real candidates land here as the daily pulls run." });
   return st;
 }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
@@ -3459,9 +3279,10 @@ function findRealByHandle(h){
   }
   return null;
 }
-var BUILDER_RE = /(build|founder|co-?founder|stealth|day zero|something new|pre-?launch|prototype|working on|starting|new company|new startup|0 ?to ?1|launching)/i;
-function realSig(t, detail, short){
-  var s = sig(t, 0, detail, short);
+var BUILDER_RE = /(build|founder|co-?founder|stealth|day zero|something new|pre-?launch|prototype|working on|starting|new company|new startup|0 ?to ?1|launching|shipping)/i;
+var TWEET_BUILD_RE = /(launch|shipping|shipped|building|we built|just built|now live|going live|beta|waitlist|stealth|introducing|excited to (?:launch|share|announce|build)|day zero|prototype|early access|sign ?up)/i;
+function realSig(t, detail, short, w){
+  var s = sig(t, 0, detail, short, w);
   s.abs = todayKey();
   return s;
 }
@@ -3470,20 +3291,47 @@ function xAgeDays(created){
   var t = Date.parse(created);
   return isNaN(t) ? null : Math.max(0, Math.round((Date.now() - t) / 864e5));
 }
-function deriveRealSignals(u){
+/* profile-derived real signals: builder bio, new-ish account, and a sizeable
+   audience (weighted up when that audience sits on a young account). */
+function profileSignals(u){
   var out = [];
   var bio = String(u.bio || "");
   if (BUILDER_RE.test(bio)){
     out.push(realSig("x_bio_builder", 'X bio says "' + trunc(bio, 90) + '"', "the builder words in your bio"));
   }
   var age = xAgeDays(u.created_at || u.created);
-  if (age != null && age < 365){
+  var young = age != null && age < 365;
+  if (young){
     out.push(realSig("x_account_new", "X account created " + (age < 45 ? age + " days" : Math.round(age / 30) + " months") + " ago", "the fresh X account"));
   }
-  if ((u.followers || 0) >= 500){
-    out.push(realSig("x_audience", fmtNum(u.followers) + " followers on X", "the audience you built"));
+  var foll = u.followers || 0;
+  if (foll >= 2000){
+    out.push(realSig("x_audience",
+      fmtNum(foll) + " followers on X" + (young ? ", on a young account" : ""),
+      "the audience you built" + (young ? " fast" : ""),
+      young ? 14 : 8));   /* a real audience on a young account is the strong version */
   }
   return out;
+}
+/* recent-posts signal: scan live tweets for build / launch language */
+function tweetBuilderSignal(tweets){
+  var hits = [];
+  (tweets || []).forEach(function(t){
+    var tx = String((t && t.text) || "").replace(/\s+/g, " ").trim();
+    if (tx && !/^RT\s/.test(tx) && TWEET_BUILD_RE.test(tx)) hits.push(tx);
+  });
+  if (!hits.length) return null;
+  return realSig("x_tweet_builder",
+    'Recent post: "' + trunc(hits[0], 90) + '"' + (hits.length > 1 ? " (and " + (hits.length - 1) + " more building posts)" : ""),
+    "you have been posting about building");
+}
+/* rebuild a real candidate's signals: keep the watched-follow stack, refresh the
+   profile signals, and (re)compute the tweet-builder signal when tweets are on hand. */
+function rebuildRealSignals(c, u, tweets){
+  var follows = c.signals.filter(function(s){ return s.t === "watched_follow"; });
+  var tsig = tweets ? tweetBuilderSignal(tweets)
+                    : (c.signals.filter(function(s){ return s.t === "x_tweet_builder"; })[0] || null);
+  c.signals = follows.concat(profileSignals(u)).concat(tsig ? [tsig] : []);
 }
 function xprofFrom(u){
   return {
@@ -3498,7 +3346,7 @@ function makeRealCandidate(u, via, from){
   var handle = String(u.handle || "").replace(/^@/, "");
   var sigs = [];
   if (via) sigs.push(realSig("watched_follow", "Followed by @" + via + " (watched account)", "a follow from @" + via));
-  sigs = sigs.concat(deriveRealSignals(u));
+  sigs = sigs.concat(profileSignals(u));
   return {
     id: (via ? "xf-" : "dl-") + handle.toLowerCase(),
     src: "x", live: true, xhandle: handle,
@@ -3519,7 +3367,7 @@ function pullFollowings(acc){
   var key = acc.toLowerCase();
   var rec = S.wfPulls[key];
   if (rec && rec.date === todayKey()) return Promise.resolve(-1);   /* daily cache */
-  return fetch(API + "/api/x/followings?handle=" + encodeURIComponent(acc) + "&count=20")
+  return fetch(API + "/api/x/followings?handle=" + encodeURIComponent(acc) + "&count=30")
     .then(function(r){ return r.json(); })
     .then(function(j){
       if (j && j.configured === false){ xfState = "offline"; return -1; }
@@ -3527,13 +3375,14 @@ function pullFollowings(acc){
       xfState = "";
       var added = 0;
       (j.followings || []).forEach(function(u){
-        if (added >= 6 || !u || !u.handle || !WF_HANDLE_RE.test(u.handle)) return;
+        if (added >= 8 || !u || !u.handle || !WF_HANDLE_RE.test(u.handle)) return;
         var ex = findRealByHandle(u.handle);
         if (ex){
           var line = "watched follow: @" + acc;
           if (ex.src === "x" && ex.found.indexOf(line) < 0){
             ex.found.push(line);
-            ex.signals.push(realSig("watched_follow", "Followed by @" + acc + " (watched account)", "a follow from @" + acc));
+            /* stacking: each ADDITIONAL watch-account follow adds +8, the strongest real signal */
+            ex.signals.push(realSig("watched_follow", "Also followed by @" + acc + " (watched account)", "another follow, from @" + acc, 8));
           }
           return;
         }
@@ -3579,8 +3428,7 @@ function enrichFromX(c){
       c.oneliner = bioLine(u.bio) || c.oneliner;
       c.xprof = xprofFrom(u);
       c.needsEnrich = false;
-      var keep = c.signals.filter(function(s){ return s.t === "watched_follow"; });
-      c.signals = keep.concat(deriveRealSignals(u));
+      rebuildRealSignals(c, u, null);   /* refresh profile signals; keep follow stack + any tweet signal */
       feedPush("PULL", "X enrich for <b>" + esc(c.name) + "</b> (@" + esc(c.xhandle) + "): " + fmtNum(u.followers || 0) + " followers, live profile confirmed.");
       save(); renderAll();
     })
@@ -3601,13 +3449,13 @@ function deepLinkBoot(){
       S.xf.push(c);
       feedPush("SCAN", "Deep link: <b>" + esc(c.name) + "</b> (@" + esc(handle) + ")" + (from ? " via " + esc(from) : "") + " added to the queue.");
     }
-    S.tab = "live"; S.sel = c.id;
+    S.tab = "all"; S.sel = c.id;
     save();
     enrichFromX(c);
     return true;
   } else if (person){
     var t = allCands().filter(function(x){ return String(x.name).toLowerCase() === person.toLowerCase(); })[0];
-    if (t){ S.tab = isReal(t) ? "live" : "all"; S.sel = t.id; save(); return true; }
+    if (t){ S.tab = "all"; S.sel = t.id; save(); return true; }
   }
   return false;
 }
@@ -3694,8 +3542,7 @@ function applyLiveX(c, handle, user, tweets){
   c.xprof = xprofFrom(user);
   if (user.name) c.name = user.name;
   if (user.bio){ c.bio = String(user.bio).trim(); c.oneliner = bioLine(user.bio) || c.oneliner; }
-  var keepSigs = c.signals.filter(function(s){ return s.t === "watched_follow"; });
-  c.signals = keepSigs.concat(deriveRealSignals(user));
+  rebuildRealSignals(c, user, tweets);   /* profile signals + tweet-builder scan from the live posts */
   XP = { cid:c.id, mode:"live" };
   feedPush("XVAL", "X check (live, @" + esc(handle) + ") for <b>" + esc(c.name) + "</b>: " + followers + " followers, " + (ppw == null ? "insufficient cadence data" : ppw + " posts/week") + ". Adjustment +" + S.xval[c.id].adj.total + ".");
   save(); renderAll();
@@ -3827,10 +3674,9 @@ function renderXSection(c, b){
 }
 
 /* ---------- list / tabs / ask ---------- */
-/* LIVE (real people only) is the default view; SAMPLE holds the fictional
-   set; ALL mixes both. Likely folded away: the live/sample split was the
-   problem it papered over, and scores are visible on every card. */
-var TABS = [ ["live","Live"], ["sample","Sample"], ["all","All"], ["watchlist","Watchlist"], ["contacted","Contacted"] ];
+/* Everyone in the queue is real now, so there is no live/sample split.
+   ALL is the default; Watchlist and Contacted hold the triaged sets. */
+var TABS = [ ["all","All"], ["watchlist","Watchlist"], ["contacted","Contacted"] ];
 function askQuery(){ var el = document.getElementById("frAskInput"); return (el.value || "").trim().toLowerCase(); }
 var STOPWORDS = ["who","whos","what","which","that","this","the","a","an","is","are","was","were","has","have","had","did","does","do","just","any","anyone","in","on","at","of","for","me","my","show","find","recently","with","and","or","to","from"];
 function askTokens(){
@@ -3846,12 +3692,9 @@ function haystack(c){
 }
 function tabMatch(c){
   var s = st(c);
-  if (S.tab === "live") return s !== "ignored" && isReal(c);
-  if (S.tab === "sample") return s !== "ignored" && !isReal(c);
-  if (S.tab === "all") return s !== "ignored";
   if (S.tab === "watchlist") return s === "watchlist";
   if (S.tab === "contacted") return s === "contacted" || s === "meeting";
-  return true;
+  return s !== "ignored";   /* All */
 }
 function listOrder(){
   var toks = askTokens();
@@ -3891,7 +3734,9 @@ function renderHeader(){
   var vis = allCands().filter(function(c){ return isVisible(c, S.demo); });
   var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
   document.getElementById("frClearedTxt").textContent = cleared + " of " + vis.length + " cleared";
-  document.getElementById("frSplitTxt").textContent = tabCount("live") + " live · " + tabCount("sample") + " sample";
+  var xfCount = vis.filter(function(c){ return c.src === "x"; }).length;
+  var hnCount = vis.filter(function(c){ return c.src === "hn"; }).length;
+  document.getElementById("frSplitTxt").textContent = xfCount + " from follows · " + hnCount + " from HN";
   var stamp = document.getElementById("frHnStamp");
   if (hnOffline && S.hnPull){
     stamp.textContent = "HN offline, showing cached"; stamp.className = "stamp off";
@@ -3938,24 +3783,32 @@ function renderList(){
   } else ans.style.display = "none";
   var el = document.getElementById("frList");
   if (!arr.length){
-    var em = "Nothing here." + (S.tab !== "all" ? " Try the All tab." : "");
-    if (S.tab === "live" && !q){
-      em = xfState === "offline"
-        ? "No live candidates yet. The X connector is offline; start the local server to pull watched follows."
-        : "No live candidates yet. Watched follows and Show HN pulls land here.";
-    }
-    el.innerHTML = '<div class="empty">' + em + "</div>";
+    var em;
+    if (S.tab === "watchlist") em = "Nothing on the watchlist yet. Star people from the queue.";
+    else if (S.tab === "contacted") em = "No outreach yet. Draft one from a candidate.";
+    else if (q) em = "Nothing matches &quot;" + esc(q) + "&quot;.";
+    else if (xfState === "offline") em = "No one in the queue yet. The X connector is offline; start the local server so the daily pull can fill this in.";
+    else em = "No one in the queue yet. Add watch accounts in settings, or the daily pull will fill this in.";
+    var gear = (!q && S.tab === "all");
+    el.innerHTML = '<div class="empty">' + em +
+      (gear ? '<div style="margin-top:12px"><button class="mini" id="frEmptyGear" title="Open the watch-accounts settings">Watch accounts</button></div>' : "") +
+      "</div>";
+    var eg = document.getElementById("frEmptyGear");
+    if (eg) eg.onclick = function(){ toggleWatchPop(true); };
   } else {
     el.innerHTML = arr.map(function(c){
       var sc = scoreAt(c, S.demo), s = st(c);
       var f = freshLabel(c);
+      var handleHtml = c.xhandle
+        ? '<a class="xlink" href="https://x.com/' + encodeURIComponent(c.xhandle) + '" target="_blank" rel="noopener" title="Open @' + esc(c.xhandle) + ' on X">' + XSVG + esc(c.handle) + "</a> &middot; "
+        : (isReal(c) ? esc(c.handle) + " &middot; " : "");
       return '<div class="cand' + (c.id === S.sel ? " sel" : "") + '" data-id="' + esc(c.id) + '">' +
         '<div class="top"><span class="nm">' + esc(c.name) + '</span><span class="sc ' + heat(sc) + '">' + sc + "</span></div>" +
-        '<div class="hd">' + (isReal(c) ? esc(c.handle) + " &middot; " : "") + esc(c.city) + (c.company && window.GS && GS.hasCompany(c.company) ? ' &middot; <span class="colink" data-gocompany="' + esc(c.company) + '">' + esc(c.company) + "</span>" : "") + "</div>" +
+        '<div class="hd">' + handleHtml + esc(c.city) + (c.company && window.GS && GS.hasCompany(c.company) ? ' &middot; <span class="colink" data-gocompany="' + esc(c.company) + '">' + esc(c.company) + "</span>" : "") + "</div>" +
         '<div class="ln">' + esc(c.oneliner) + "</div>" +
         '<div class="mt"><span class="atag">' + esc(c.archetype) + '</span><span class="fresh' + (f === "today" ? " new" : "") + '">&#9679; ' + f + "</span>" +
         (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-        (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : '<span class="smpl">SAMPLE</span>') +
+        (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : "") +
         "</div></div>";
     }).join("");
   }
@@ -3999,7 +3852,7 @@ function renderDetail(){
   h += '<div class="dhandle mono">' + esc(c.city) + '<span class="sep">|</span>first seen ' + fmtDay(firstSeenDay(c)) + coLink + "</div>";
   h += '<div class="dbadges"><span class="atag">' + esc(c.archetype) + '</span><span class="atag">' + esc(b.prior.label) + ' &times;' + b.prior.mult.toFixed(2) + "</span>" +
        (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-       (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : '<span class="smpl">SAMPLE</span>') + "</div>";
+       (isReal(c) ? '<span class="srcstamp">' + esc(stampTxt(c)) + "</span>" : "") + "</div>";
   h += '<p class="dline">' + esc(c.oneliner) + "</p>";
   h += '<div class="stagebar"><div class="pipe">' + PIPE.map(function(p, i){
     return '<span class="st' + (i === stage ? " cur" : i < stage ? " done" : "") + '" data-stg="' + i + '" title="Set pipeline stage">' + p.toUpperCase() + "</span>";
@@ -4021,10 +3874,9 @@ function renderDetail(){
     var xu = "https://x.com/" + encodeURIComponent(c.xhandle);
     h += '<div class="xctl"><a class="xicon" href="' + xu + '" target="_blank" rel="noopener" title="Open @' + esc(c.xhandle) + ' on X">' + XSVG + "</a>" +
          '<a class="xh" href="' + xu + '" target="_blank" rel="noopener">' + esc(c.handle) + "</a></div>";
-  } else if (isReal(c)){
-    h += '<div class="xctl"><span class="xh">' + esc(c.handle) + "</span></div>";
   } else {
-    h += '<div class="xctl"><span class="xh dim">sample profile, no public handle</span></div>';
+    /* real profile without a confirmed X handle (e.g. a Show HN author): plain handle, no link */
+    h += '<div class="xctl"><span class="xh dim">' + esc(c.handle) + "</span></div>";
   }
   h += '<div class="gauge" id="scoreGauge" title="' + (scoreOpen ? "Hide receipt" : "Show receipt") + '"><svg width="96" height="96" viewBox="0 0 96 96">' +
     '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--line2)" stroke-width="7"/>' +
@@ -4208,7 +4060,7 @@ function fallbackCopy(txt){
 
 /* ---------- modal ---------- */
 function buildModal(){
-  var order = ["left_job","cofounder_search","preprint","github_spike","bio_change","show_hn","domain_registered","x_bio_builder","watched_follow","hn_traction","demo_day_post","x_account_new","x_audience"];
+  var order = ["watched_follow","x_bio_builder","x_tweet_builder","show_hn","hn_traction","x_account_new","x_audience"];
   document.getElementById("wTable").innerHTML = order.map(function(k){
     return "<tr><td>" + esc(SIG_LABEL[k]) + '</td><td class="w">' + WEIGHTS[k] +
       '</td><td class="note">' + esc(SIG_HOW[k]) +
@@ -4279,6 +4131,8 @@ document.addEventListener("click", function(e){
     toggleWatchPop(false);
   }
   if (!(el.closest && el.closest("#viewPeople"))) return;
+  /* the X handle link opens x.com in a new tab: let the browser handle it, do not reselect */
+  if (el.closest("a.xlink")) return;
   var gc = el.closest("[data-gocompany]");
   if (gc){
     e.preventDefault();
@@ -4367,14 +4221,14 @@ window.FR = {
         feedPush("SCAN", "Cross-link: <b>" + esc(c.name) + "</b> (@" + esc(handle) + ") via growth-scout added to the queue.");
       }
       if (fromCompany && !c.company) c.company = fromCompany;
-      S.tab = "live"; S.sel = c.id;
+      S.tab = "all"; S.sel = c.id;
       save(); renderAll();
       enrichFromX(c);
     } else if (person){
       var t = allCands().filter(function(x){ return String(x.name).toLowerCase() === String(person).toLowerCase(); })[0];
       if (t){
         if (fromCompany && !t.company && isReal(t)) t.company = fromCompany;
-        S.tab = isReal(t) ? "live" : "all"; S.sel = t.id;
+        S.tab = "all"; S.sel = t.id;
         save(); renderAll();
       } else {
         toast("No verified public X handle for " + person + "; nothing to enrich", true);
