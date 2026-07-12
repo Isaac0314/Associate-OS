@@ -222,9 +222,9 @@ function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e)
 /* The three sourcing views merged into one Radar page; names stay as
    provenance labels, links go to the merged view. */
 var VIEW = {
-  fr: { name: "Founder Radar", href: "../radar/" },
-  gs: { name: "Growth Scout", href: "../radar/" },
-  br: { name: "Breakout Radar", href: "../radar/" },
+  fr: { name: "Radar", href: "../radar/" },
+  gs: { name: "Radar", href: "../radar/" },
+  br: { name: "Radar", href: "../radar/" },
   ao: { name: "Associate OS", href: "../associate-os/" }
 };
 
@@ -413,7 +413,7 @@ function actItems(fr, gs, br, ao, pipe){
 
   /* 2. drafts ready to send */
   if (fr && fr.draftsReady > 0){
-    items.push({ txt: pl(fr.draftsReady, "outreach draft is", "outreach drafts are") + " written and ready to send in Founder Radar.", view: "fr" });
+    items.push({ txt: pl(fr.draftsReady, "outreach draft is", "outreach drafts are") + " written and ready to send in Radar.", view: "fr" });
   }
   var aoDrafts = aosDraftsPending(ao);
   if (aoDrafts != null && aoDrafts > 0){
@@ -422,7 +422,7 @@ function actItems(fr, gs, br, ao, pipe){
 
   /* 3. new real people in the queue */
   if (fr && fr.inboxReal.length){
-    var s = pl(fr.inboxReal.length, "real person is", "real people are") + " waiting in the Founder Radar queue";
+    var s = pl(fr.inboxReal.length, "real person is", "real people are") + " waiting in the Radar queue";
     if (fr.joinedToday) s += ", " + fr.joinedToday + " joined today";
     s += ": " + listNames(fr.inboxReal, 2) + ".";
     items.push({ txt: s, view: "fr", stamp: fr.hnStamp });
@@ -447,17 +447,17 @@ function actItems(fr, gs, br, ao, pipe){
     var asOf = (gs.snapDate && gs.snapDate !== t) ? ", as of " + keyLabel(gs.snapDate) : "";
     if (gs.topMover){
       var d = gs.topMover.delta;
-      items.push({ txt: esc(gs.topMover.name) + " moved " + (d > 0 ? "+" : "") + d + " to " + gs.topMover.score + " on the Growth Scout board" + asOf + ".", view: "gs" });
+      items.push({ txt: esc(gs.topMover.name) + " moved " + (d > 0 ? "+" : "") + d + " to " + gs.topMover.score + " on the Radar board" + asOf + ".", view: "gs" });
     } else {
-      items.push({ txt: esc(gs.leader.name) + " leads the Growth Scout board at " + gs.leader.score + asOf + ".", view: "gs" });
+      items.push({ txt: esc(gs.leader.name) + " leads the Radar board at " + gs.leader.score + asOf + ".", view: "gs" });
     }
   }
   if (br && (br.newBreakouts.length || br.riser)){
     var asOf2 = (br.snapDate && br.snapDate !== t) ? ", as of " + keyLabel(br.snapDate) : "";
     if (br.newBreakouts.length){
-      items.push({ txt: listNames(br.newBreakouts, 2) + " crossed the breakout line in Breakout Radar" + asOf2 + ".", view: "br" });
+      items.push({ txt: listNames(br.newBreakouts, 2) + " started breaking out in Radar" + asOf2 + ".", view: "br" });
     } else {
-      items.push({ txt: esc(br.riser.name) + " rose +" + br.riser.delta + " to index " + br.riser.index + " in Breakout Radar" + asOf2 + ".", view: "br" });
+      items.push({ txt: esc(br.riser.name) + " rose +" + br.riser.delta + " to index " + br.riser.index + " in Radar" + asOf2 + ".", view: "br" });
     }
   }
 
@@ -483,9 +483,9 @@ function buildAct(fr, gs, br, ao, pipe){
   var html = items.map(renderActRow).join("");
   if (!items.length) html += quietLine("Nothing to act on yet. Open the views and the queue will build itself.");
   /* empty stores degrade to plain nothing-yet lines */
-  if (!fr) html += quietLine("Nothing yet from Founder Radar.");
-  if (!gs) html += quietLine("Nothing yet from Growth Scout.");
-  if (!br) html += quietLine("Nothing yet from Breakout Radar.");
+  if (!fr) html += quietLine("Nothing waiting in the Radar queue.");
+  if (!gs) html += quietLine("No movement on the Radar board yet.");
+  if (!br) html += quietLine("No breakouts yet.");
   if (!ao) html += quietLine("Nothing yet from Associate OS.");
   if (!pipe || !pipe.length) html += quietLine("Nothing yet from the shared pipeline.");
   return html;
@@ -567,7 +567,7 @@ function buildWeek(fr, gs, br, ao, pipe){
     if (moves.length) parts.push(moves.join(", "));
     html += parts.length ? wkLine("FOUNDER RADAR", parts.join(". ") + ".")
                          : wkLine("FOUNDER RADAR", "Open, no stored activity yet.");
-  } else html += wkQuiet("FOUNDER RADAR", "Founder Radar");
+  } else html += wkQuiet("RADAR / PEOPLE", "the Radar queue");
 
   if (gs){
     var gp = [];
@@ -576,7 +576,7 @@ function buildWeek(fr, gs, br, ao, pipe){
     if (gs.sigWeek) gp.push("signals refreshed for " + gs.sigWeek + " this week");
     var s0 = gp.join(", ") + ".";
     html += wkLine("GROWTH SCOUT", s0.charAt(0).toUpperCase() + s0.slice(1));
-  } else html += wkQuiet("GROWTH SCOUT", "Growth Scout");
+  } else html += wkQuiet("RADAR / COMPANIES", "the Radar board");
 
   if (br){
     var bp = [];
@@ -586,7 +586,7 @@ function buildWeek(fr, gs, br, ao, pipe){
     if (!bp.length) bp.push(br.snapDate ? "last snapshot " + keyLabel(br.snapDate) : "no snapshot yet");
     var s1 = bp.map(function(x){ return x.charAt(0).toUpperCase() + x.slice(1); }).join(". ") + ".";
     html += wkLine("BREAKOUT RADAR", s1);
-  } else html += wkQuiet("BREAKOUT RADAR", "Breakout Radar");
+  } else html += wkQuiet("RADAR / MOMENTUM", "Radar momentum");
 
   if (ao){
     var cs = aosCommitments(ao), ms = aosMeetings(ao);
@@ -622,8 +622,8 @@ function buildWeek(fr, gs, br, ao, pipe){
     if (weekly.length){
       var byFrom = {};
       weekly.forEach(function(e){
-        var n = { "founder-radar": "Founder Radar", "growth-scout": "Growth Scout",
-                  "breakout-radar": "Breakout Radar", "associate-os": "Associate OS" }[e.from] || "elsewhere";
+        var n = { "founder-radar": "Radar", "growth-scout": "Radar",
+                  "breakout-radar": "Radar", "associate-os": "Associate OS" }[e.from] || "elsewhere";
         byFrom[n] = (byFrom[n] || 0) + 1;
       });
       pp.push(pl(weekly.length, "entry", "entries") + " added this week (" +
