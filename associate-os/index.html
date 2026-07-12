@@ -97,6 +97,8 @@ a{color:var(--text)}
 .draftbox .toline{font:400 10px var(--mono);color:var(--muted);margin-bottom:6px}
 .draftbox .body{white-space:pre-wrap;color:var(--text2);font-size:12px;line-height:1.6}
 .dops{display:flex;gap:8px;margin-top:10px;align-items:center}
+.dops .prov{font:600 10px var(--mono);letter-spacing:.05em;color:var(--muted)}
+.dops .prov.ai{color:var(--agent)}
 .gmailbtn{display:inline-block;font:500 11px var(--sans);color:#fff;background:var(--agent);border-radius:4px;padding:4px 12px;text-decoration:none}
 .gmailbtn:hover{background:#D04430;color:#fff}
 .copybtn{font:400 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:4px;padding:3px 10px;background:transparent}
@@ -119,6 +121,7 @@ a{color:var(--text)}
 .mrow .co{font-size:11.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tag{font:400 8.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;border:1px solid var(--line);border-radius:2px;padding:1.5px 6px;white-space:nowrap;color:var(--text2);background:transparent}
 .tag.sample{color:var(--muted)}
+.tag.real{color:var(--agent);border-color:var(--agent-line)}
 .srcstamp{font:400 10px var(--mono);letter-spacing:.08em;color:var(--muted);white-space:nowrap}
 .mrow .cnum{font:400 9.5px var(--mono);color:var(--muted);margin-left:auto;flex-shrink:0}
 .mrow .cnum .od{color:var(--bad)}
@@ -310,6 +313,26 @@ table.rt{width:100%;border-collapse:collapse}
 .toast{background:var(--text);border-radius:4px;padding:8px 15px;font-size:12.5px;color:var(--bg);animation:tin .18s ease-out}
 @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .empty-sm{color:var(--muted);font-style:italic;font-size:12px;padding:6px 2px}
+/* ---------- investment brief ---------- */
+.briefsect .sect-h .spacer{flex:1}
+.briefprov{font:600 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.briefprov.ai{color:var(--agent)}
+.briefprov.fb{color:var(--bad)}
+.brief-wrap{border:1px solid var(--line);border-left:2px solid var(--agent-line);border-radius:0 4px 4px 0;background:var(--panel);padding:4px 16px 6px}
+.brief-s{padding:13px 0;border-top:1px solid var(--line)}
+.brief-s:first-child{border-top:none}
+.brief-l{font:600 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text2);margin-bottom:6px}
+.brief-b{font-size:12.5px;line-height:1.6;color:var(--text)}
+.brief-b p{margin:0 0 7px}
+.brief-b p:last-child{margin-bottom:0}
+.brief-b ul{margin:2px 0 0;padding-left:0;list-style:none}
+.brief-b li{position:relative;padding-left:15px;margin-bottom:5px}
+.brief-b li:last-child{margin-bottom:0}
+.brief-b li::before{content:"";position:absolute;left:2px;top:8px;width:4px;height:4px;border-radius:50%;background:var(--agent-line)}
+.brief-b .nd{color:var(--muted)}
+.brief-load{display:flex;align-items:center;gap:9px;padding:16px 2px;color:var(--text2);font-size:12.5px}
+.brief-dot{width:7px;height:7px;border-radius:50%;background:var(--agent);animation:bpulse 1s ease-in-out infinite}
+@keyframes bpulse{0%,100%{opacity:.3}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -428,7 +451,7 @@ table.rt{width:100%;border-collapse:collapse}
 
 <div class="modal" id="modalGranola">
   <div class="mh"><span class="t">Import from Granola</span><button class="x" data-close>&times;</button></div>
-  <div class="gnote">Private local data. Reveal meeting titles only off-screen.</div>
+  <div class="gnote">Runs on your machine. Your real meeting titles stay hidden until you reveal them, so reveal off-screen if you are sharing.</div>
   <div id="gList" style="max-height:380px;overflow-y:auto"></div>
   <div class="gfoot">
     <button class="btn pri" id="gReveal">Reveal titles</button>
@@ -513,6 +536,7 @@ function draftBoxHtml(d, copyId){
     '<div class="dops">' +
       (d.noGmail ? '' : '<a class="gmailbtn" href="' + esc(gmailHref(d.to, d.subject, d.body)) + '" target="_blank" rel="noopener">Open in Gmail</a>') +
       '<button class="copybtn" data-copy="' + copyId + '">Copy</button>' +
+      (d.prov ? '<span class="prov' + (d.prov === 'k2.7' ? ' ai' : '') + '">' + (d.prov === 'k2.7' ? 'drafted by K2.7' : 'template draft') + '</span>' : '') +
     '</div></div>';
 }
 
@@ -766,7 +790,21 @@ function loadState(){
   }catch(e){}
   return null;
 }
-function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+// The Flowie call is injected at runtime from the local /api/demo-seed and marked
+// demoSeed:true. It is deliberately stripped before persisting so the private real
+// transcript never lands in localStorage (and, by construction, never in the HTML
+// that is copied to the public bundle). It is re-fetched from the local server on
+// every load, so it stays reproducible and local-only.
+const DEMO_MEETING_IDS = new Set();
+function save(){
+  try{
+    const persist = DEMO_MEETING_IDS.size ? Object.assign({}, S, {
+      meetings: S.meetings.filter(m => !m.demoSeed),
+      commitments: S.commitments.filter(c => !DEMO_MEETING_IDS.has(c.meetingId))
+    }) : S;
+    localStorage.setItem(LS_KEY, JSON.stringify(persist));
+  }catch(e){}
+}
 let S = loadState();
 if (!S){ S = seed(); S.seededOn = REAL_TODAY; save(); }
 const UI = {tab:'meetings', sel:null, draftTab:'followup', showTranscript:false, hlQuote:null, granolaSel:{}, granolaList:[], passTarget:null, briefBusy:false, visited:{meetings:true}};
@@ -885,16 +923,149 @@ function pathTo(targetId){
 
 // ---------- drafts (templates filled only with computed facts) ----------
 function plRec(company){ const q = (company||'').toLowerCase(); return S.pipeline.find(p => p.company.toLowerCase() === q) || S.pipeline.find(p => p.company.toLowerCase().includes(q)); }
+// K2.7 pre-generated follow-up bodies, keyed by meeting id, this session only.
+// draftFollowup prefers the model body when present and always falls back to the
+// deterministic template below (filled only with computed commitments and dates).
+const AIFU = {};
+const _fuInflight = {};
 function draftFollowup(m){
   const mine = commitmentsOf(m.id).filter(c => c.who === 'mine');
   const theirs = commitmentsOf(m.id).filter(c => c.who === 'theirs');
   const to = counterpartName(m);
+  const cpP = (m.attendees||[]).map(personById).filter(Boolean)[0];
+  const subject = 'Follow-up: ' + m.title.replace(/,.*$/,'') + ', ' + nice(m.date);
+  const ai = AIFU[m.id];
+  if (ai && ai.body){ return {subject, body: ai.body, to: emailFor(cpP), prov:'k2.7'}; }
   let b = 'Hi ' + first(to) + ',\n\nGreat speaking on ' + niceFull(m.date) + '. Locking in what we each took away:\n';
   if (mine.length){ b += '\nOn my side:\n' + mine.map(c => '- ' + c.text + (c.status === 'done' ? ' (sent)' : ', by ' + nice(c.due))).join('\n') + '\n'; }
   if (theirs.length){ b += '\nFrom your side:\n' + theirs.map(c => '- ' + c.text + (c.duePhrase ? ' (you mentioned "' + c.duePhrase + '", so I have ' + nice(c.due) + ' pencilled)' : ' (' + nice(c.due) + ' pencilled)')).join('\n') + '\n'; }
   b += '\nShout if any of the dates need moving.\n\nBest,\nIsaac';
-  const cpP = (m.attendees||[]).map(personById).filter(Boolean)[0];
-  return {subject:'Follow-up: ' + m.title.replace(/,.*$/,'') + ', ' + nice(m.date), body:b, to: emailFor(cpP)};
+  return {subject, body:b, to: emailFor(cpP), prov:'template'};
+}
+// Pre-generate the K2.7 follow-up when a meeting is opened or imported, grounded on
+// a short transcript excerpt plus the extracted commitments (with their quotes and
+// due dates). Cached so the draft is ready before Isaac opens the Follow-up tab.
+// Any error, timeout, or empty content leaves the deterministic template in place.
+async function pregenFollowup(m){
+  if (!m || !window.AOS_SERVER || !window.AOS_LIVE) return;
+  if (AIFU[m.id] || _fuInflight[m.id]) return;
+  const cs = commitmentsOf(m.id);
+  if (!cs.length) return;                     /* nothing to ground on: keep template */
+  _fuInflight[m.id] = true;
+  try{
+    const det = draftFollowup(m);             /* deterministic body (AIFU still empty) */
+    const quotes = cs.map(c => c.quote).filter(Boolean);
+    const tx = m.transcript || [];
+    const picked = [], seen = {};
+    for (const l of tx){ if (quotes.some(q => l.text === q) && !seen[l.text]){ picked.push(l); seen[l.text] = 1; } }
+    for (const l of tx.slice(0, 10)){ if (picked.length >= 14) break; if (!seen[l.text]){ picked.push(l); seen[l.text] = 1; } }
+    const j = await api('/api/followup', {
+      today: niceFull(today()),
+      title: m.title,
+      date: niceFull(m.date),
+      counterpart: counterpartName(m),
+      excerpt: picked.map(l => l.sp + ': ' + l.text).join('\n'),
+      commitments: cs.map(c => ({who: c.who, owner: c.owner, text: c.text, due: nice(c.due), quote: c.quote})),
+      draft: det.body
+    });
+    const msg = ((j && j.message) || '').trim();
+    if (msg){ AIFU[m.id] = {body: msg, prov:'k2.7'}; if (UI.tab === 'meetings' && UI.sel === m.id) renderMeetingDetail(); }
+  }catch(e){ /* keep the deterministic template silently */ }
+  finally{ delete _fuInflight[m.id]; }
+}
+// ---------- investment brief (the hero: real transcript -> K2.7 six-section brief) ----------
+// The displayed brief is the real model output from POST /api/investment-brief,
+// cached per meeting in localStorage. The deterministic fallback (the Flowie seed
+// structure from the server, or a generic placeholder) is only ever shown with a
+// visible "not model output" label, per the demo-integrity rule. Regenerate does a
+// live re-run so the cached result is provably reproducible.
+const BRIEF_LS = 'aos_brief_v1';
+const AIBRIEF = (function(){ try{ return JSON.parse(localStorage.getItem(BRIEF_LS)) || {}; }catch(e){ return {}; } })();
+const BRIEF_FALLBACK = {};   // meetingId -> server-delivered fallback sections (Flowie only)
+const _briefInflight = {};
+const _briefTried = {};
+const BRIEF_LABELS = ['THE PROMISE','MARKET','TRACTION','THE EDGE','FOUNDER','NEXT STEPS'];
+function saveBriefs(){ try{ localStorage.setItem(BRIEF_LS, JSON.stringify(AIBRIEF)); }catch(e){} }
+function genericFallbackBrief(){
+  const nd = 'Model brief unavailable. This deterministic placeholder is not model output. Open the transcript above to review the source material directly.';
+  return BRIEF_LABELS.map(l => ({label:l, body:nd}));
+}
+function fallbackBriefFor(m){
+  return (BRIEF_FALLBACK[m.id] && BRIEF_FALLBACK[m.id].length) ? BRIEF_FALLBACK[m.id] : genericFallbackBrief();
+}
+function briefBodyHtml(body){
+  const raw = (body || '').trim();
+  if (!raw) return '<p class="nd">not generated</p>';
+  const lines = raw.split(/\n+/).map(s => s.trim()).filter(Boolean);
+  const mark = s => esc(s).replace(/not disclosed on the call/gi, '<span class="nd">not disclosed on the call</span>');
+  const bullets = lines.filter(l => /^[-*]\s+/.test(l));
+  if (bullets.length && bullets.length >= lines.length - 1){
+    return '<ul>' + lines.map(l => '<li>' + mark(l.replace(/^[-*]\s+/,'')) + '</li>').join('') + '</ul>';
+  }
+  return lines.map(l => '<p>' + mark(l) + '</p>').join('');
+}
+function briefShell(headRight, inner){
+  return '<div class="sect briefsect"><div class="sect-h"><span class="t">Investment brief</span><span class="ln"></span>' +
+    headRight + '</div><div class="brief-wrap">' + inner + '</div></div>';
+}
+function renderBriefSection(m){
+  const entry = AIBRIEF[m.id];
+  const hasTx = (m.transcript || []).length > 0;
+  const healthPending = !window.__healthDone;
+  const loading = hasTx && (_briefInflight[m.id] || ((!entry) && !_briefTried[m.id] && (window.AOS_LIVE || healthPending)));
+  if (loading){
+    return briefShell('<button class="btn" data-act="briefregen" disabled>Regenerate</button>',
+      '<div class="brief-load"><span class="brief-dot"></span>K2.7 is drafting the investment brief from the transcript...</div>');
+  }
+  let sections, prov;
+  if (entry && entry.sections && entry.sections.length){
+    sections = entry.sections;
+    prov = entry.prov === 'k2.7'
+      ? '<span class="briefprov ai">brief by K2.7</span>'
+      : '<span class="briefprov fb">deterministic fallback, not model output</span>';
+  } else {
+    sections = fallbackBriefFor(m);
+    prov = '<span class="briefprov fb">deterministic fallback, not model output</span>';
+  }
+  const regenOff = !window.AOS_LIVE || _briefInflight[m.id];
+  const inner = sections.map(s => '<div class="brief-s"><div class="brief-l">' + esc(s.label) + '</div><div class="brief-b">' + briefBodyHtml(s.body) + '</div></div>').join('');
+  return briefShell(prov + '<button class="btn" data-act="briefregen"' + (regenOff ? ' disabled' : '') + '>Regenerate</button>', inner);
+}
+// Generate (or regenerate) the K2.7 brief for a meeting, grounded on its transcript.
+// Non-force: runs once per meeting per session and never overwrites a cached model
+// brief. Any error, timeout, or empty answer leaves a clearly-labeled fallback.
+async function pregenBrief(m, force){
+  if (!m || !window.AOS_SERVER || !window.AOS_LIVE) return;
+  if (!(m.transcript || []).length) return;
+  if (!force){
+    if (AIBRIEF[m.id] && AIBRIEF[m.id].prov === 'k2.7') return;
+    if (_briefTried[m.id]) return;
+  }
+  if (_briefInflight[m.id]) return;
+  _briefInflight[m.id] = true;
+  _briefTried[m.id] = true;
+  if (force && UI.tab === 'meetings' && UI.sel === m.id) renderMeetingDetail();
+  try{
+    const j = await api('/api/investment-brief',
+      {transcript: m.transcript, company: m.company || counterpartName(m)}, 120000);
+    if (j && j.ok && Array.isArray(j.sections) && j.sections.length >= 4){
+      AIBRIEF[m.id] = {sections: j.sections, prov:'k2.7', model: j.model || window.AOS_MODEL || '', at: today()};
+    } else {
+      AIBRIEF[m.id] = {sections: fallbackBriefFor(m), prov:'template', at: today()};
+    }
+  }catch(e){
+    AIBRIEF[m.id] = {sections: fallbackBriefFor(m), prov:'template', at: today()};
+  }finally{
+    saveBriefs();
+    delete _briefInflight[m.id];
+    if (UI.tab === 'meetings' && UI.sel === m.id) renderMeetingDetail();
+  }
+}
+function regenBrief(){
+  const m = meetingById(UI.sel);
+  if (!m) return;
+  if (!window.AOS_LIVE){ toast('Live model not reachable.', 'warn'); return; }
+  pregenBrief(m, true);
 }
 function draftIntroFor(fromP, toP){
   const rec = S.pipeline.find(p => p.founder === fromP.id);
@@ -1038,7 +1209,15 @@ function renderChrome(){
 }
 
 // ---------- rendering: meetings ----------
-function sortedMeetings(){ return [...S.meetings].filter(m => diffDays(m.date, today()) >= 0).sort((a,b) => diffDays(a.date, b.date)); }
+function sortedMeetings(){
+  // Real seeded calls (the Flowie founder call) pin to the top; everything else
+  // sorts most-recent first as before.
+  return [...S.meetings].filter(m => diffDays(m.date, today()) >= 0).sort((a,b) => {
+    const ra = a.real ? 1 : 0, rb = b.real ? 1 : 0;
+    if (ra !== rb) return rb - ra;
+    return diffDays(a.date, b.date);
+  });
+}
 function renderMeetingList(){
   const ms = sortedMeetings();
   $('#mCount').textContent = ms.length;
@@ -1048,7 +1227,7 @@ function renderMeetingList(){
     const od = cs.filter(c => cState(c) === 'overdue').length;
     return '<div class="mrow' + (UI.sel === m.id ? ' on' : '') + '" data-m="' + m.id + '">' +
       '<div class="r1"><span class="who">' + esc(counterpartName(m)) + '</span><span class="dt">' + nice(m.date) + '</span></div>' +
-      '<div class="r2"><span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span><span class="co">' + esc(m.company) + '</span>' +
+      '<div class="r2">' + (m.real ? '<span class="tag real">real call</span>' : '') + '<span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span><span class="co">' + esc(m.company) + '</span>' +
       '<span class="cnum">' + (od ? '<span class="od">' + od + ' overdue</span>' : (open ? open + ' open' : (cs.length ? 'all closed' : 'no items'))) + '</span></div></div>';
   }).join('') || '<div class="empty-sm" style="padding:14px">No meetings yet.</div>';
 }
@@ -1101,11 +1280,13 @@ function renderMeetingDetail(){
   let html = '<div class="md-h"><div class="t">' + esc(m.title) + '</div>' +
     '<div class="meta"><span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span>' +
     '<span class="d mono">' + niceFull(m.date) + '</span><span class="p">with ' + esc(who) + '</span>' +
-    (m.granola ? '<span class="srcstamp">GRANOLA' + (m.srcTime ? ' ' + esc(m.srcTime) : '') + '</span>' : '<span class="tag sample">sample</span>') + '</div>' +
+    (m.real ? '<span class="srcstamp">REAL CALL</span>'
+            : (m.granola ? '<span class="srcstamp">GRANOLA' + (m.srcTime ? ' ' + esc(m.srcTime) : '') + '</span>' : '<span class="tag sample">sample</span>')) + '</div>' +
     '<div class="md-actions">' +
       '<button class="btn" data-act="toggletx">' + (UI.showTranscript ? 'Hide transcript' : 'Show transcript') + '</button>' +
       '<button class="btn' + (m.logged ? '' : ' pri') + '" data-act="logpipe"' + (m.logged ? ' disabled' : '') + '>' + (m.logged ? 'Logged to pipeline' : 'Log to pipeline') + '</button>' +
     '</div></div>';
+  html += renderBriefSection(m);
   if (UI.showTranscript){
     html += '<div class="sect"><div class="sect-h"><span class="t">Transcript</span><span class="ln"></span></div><div class="transcript" id="txBox">' +
       m.transcript.map(l => {
@@ -1133,6 +1314,8 @@ function renderMeetingDetail(){
     '</div>';
   $('#mDetail').innerHTML = html;
   if (UI.hlQuote){ const el = $('#hlLine'); if (el) el.scrollIntoView({block:'center'}); }
+  pregenBrief(m);      /* background K2.7 investment brief; fallback labeled until it lands */
+  pregenFollowup(m);   /* background K2.7 follow-up; template stays until it lands */
 }
 
 // ---------- rendering: relationships ----------
@@ -1515,11 +1698,11 @@ async function doAsk(q){
 }
 
 // ---------- server bridge ----------
-const API_BASE = location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8766';
+const API_BASE = location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8123';
 window.AOS_LIVE = false; window.AOS_SERVER = false; window.AOS_MODEL = ''; window.AOS_LOCAL_ONLY = false;
-async function api(path, body){
+async function api(path, body, timeoutMs){
   const ctl = new AbortController();
-  const to = setTimeout(() => ctl.abort(), body ? 45000 : 3500);
+  const to = setTimeout(() => ctl.abort(), timeoutMs || (body ? 45000 : 3500));
   try{
     const r = await fetch(API_BASE + path, body ? {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body), signal: ctl.signal} : {signal: ctl.signal});
     if (!r.ok) throw new Error('http ' + r.status);
@@ -1534,9 +1717,57 @@ async function healthCheck(){
     window.AOS_LIVE = !!(j.key && j.live);
     window.AOS_MODEL = j.model || '';
     window.AOS_LOCAL_ONLY = !!j.local_only;
+    // Boot order runs renderAll() before this health check resolves, so the
+    // follow-up pregen for the meeting open on load bails out before AOS_LIVE is
+    // known. Kick it here once the server is confirmed live (idempotent: cached
+    // drafts and in-flight calls are skipped, so the 60s interval is a no-op).
+    if (window.AOS_LIVE && UI.tab === 'meetings' && UI.sel){
+      const m = meetingById(UI.sel);
+      if (m){ pregenBrief(m); pregenFollowup(m); }
+    }
   }catch(e){
     window.AOS_SERVER = false; window.AOS_LIVE = false;
+  }finally{
+    window.__healthDone = true;
+    // If a meeting is open but the model is not reachable, drop any pending brief
+    // loading state to the labeled fallback instead of spinning forever.
+    if (!window.AOS_LIVE && UI.tab === 'meetings' && UI.sel) renderMeetingDetail();
   }
+}
+// The real Flowie founder call is LOCAL ONLY: fetched from the local server at
+// runtime and injected at the top of the inbox. The public static copy has no
+// server, so /api/demo-seed fails there and the inbox stays fully synthetic.
+async function loadDemoSeed(){
+  let j;
+  try{ j = await api('/api/demo-seed'); }catch(e){ return; }
+  if (!j || !j.ok || !j.meeting || !(j.meeting.transcript || []).length) return;
+  const mid = 'flowie';
+  if (S.meetings.some(x => x.id === mid)) return;
+  const mt = j.meeting;
+  const meeting = {
+    id: mid, date: mt.date || today(), type:'intro',
+    company: mt.company || 'Flowie', title: mt.title || 'Founder call',
+    attendees: [], counterpart: mt.counterpart || 'Founder',
+    real: true, demoSeed: true, logged: false, transcript: mt.transcript
+  };
+  DEMO_MEETING_IDS.add(mid);
+  if (Array.isArray(j.fallback) && j.fallback.length) BRIEF_FALLBACK[mid] = j.fallback;
+  S.meetings.unshift(meeting);
+  // Extract commitments the same honest deterministic way a Granola import does,
+  // so the real call is a full first-class meeting (commitments + follow-up + brief).
+  try{
+    for (const e of extractLocal(meeting.transcript)){
+      S.commitments.push({id: uid(), meetingId: mid, who: e.who === 'mine' ? 'mine' : 'theirs',
+        owner: e.who === 'mine' ? 'Isaac' : (e.owner || meeting.counterpart), text: e.text,
+        quote: e.quote || e.text, duePhrase: e.due_phrase || '',
+        due: parseDatePhrase(e.due_phrase || '', meeting.date), status:'open',
+        doneOn:null, snoozeUntil:null, lastEscalation:null, intro:null});
+    }
+  }catch(e){}
+  UI.sel = mid; UI.showTranscript = false; UI.hlQuote = null; UI.draftTab = 'followup';
+  renderAll();
+  pregenBrief(meeting);
+  pregenFollowup(meeting);
 }
 
 // ---------- granola import ----------
@@ -1550,7 +1781,7 @@ function openDraftModal(title, draft){
 }
 function openGranola(){
   openModal('#modalGranola');
-  $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px"><b>Private.</b> The next step reveals real meeting titles.</div>';
+  $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px"><b>Hidden.</b> Reveal loads your real meetings from the local Granola cache.</div>';
   $('#gStatus').textContent = '';
   $('#gReveal').style.display = '';
   $('#gImport').style.display = 'none';
@@ -1571,7 +1802,7 @@ async function loadGranolaList(){
     $('#gReveal').style.display = 'none';
     $('#gImport').style.display = '';
   }catch(e){
-    $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px">Granola connector offline, start server.py</div>';
+    $('#gList').innerHTML = '<div class="empty-sm" style="padding:12px">Local server not reachable. Run start-signal-os.cmd, then open Signal OS at 127.0.0.1:8123. Granola runs on your machine only, so it is off on the hosted copy.</div>';
     $('#gStatus').textContent = '';
   }finally{
     $('#gReveal').disabled = false;
@@ -1670,6 +1901,7 @@ document.addEventListener('click', e => {
   const act = t.dataset.act;
   if (!act) return;
   if (act === 'toggletx'){ UI.showTranscript = !UI.showTranscript; if (!UI.showTranscript) UI.hlQuote = null; renderMeetingDetail(); }
+  if (act === 'briefregen'){ regenBrief(); return; }
   if (act === 'logpipe'){
     const m = meetingById(UI.sel); if (!m || m.logged) return;
     m.logged = true;
@@ -1805,7 +2037,7 @@ document.addEventListener('keydown', e => {
 UI.sel = sortedMeetings()[0] ? sortedMeetings()[0].id : null;
 renderAll();
 writeDailySnapshot();
-healthCheck();
+healthCheck().then(loadDemoSeed);
 setInterval(healthCheck, 60000);
 if (!localStorage.getItem('aos_intro_seen')){
   localStorage.setItem('aos_intro_seen', '1');

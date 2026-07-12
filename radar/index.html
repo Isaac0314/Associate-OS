@@ -230,6 +230,19 @@ header button{height:28px;border-radius:var(--r-sm)}
 .gsv .round .a{font-size:12px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .gsv .round .s{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gsv .round .u{font-size:11.5px;color:var(--faint);font-style:italic}
+/* verification provenance: a second agent verified the fact before it shows.
+   Quiet mono label; CONFIRMED reads in the calm confirm green, other verdicts muted. */
+.gsv .vbadge{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:9px;font:600 10px/1.5 var(--mono);letter-spacing:.05em;color:var(--muted)}
+.gsv .vbadge .vlead{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:var(--r-sm);border:1px solid var(--line-strong);background:var(--panel-2);white-space:nowrap}
+.gsv .vbadge.vok .vlead{color:var(--green);border-color:var(--green-line);background:var(--green-bg)}
+.gsv .vbadge .vsrcs{display:inline-flex;flex-wrap:wrap;gap:7px}
+.gsv .vbadge .vsrcs a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.gsv .vbadge .vsrcs a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.gsv .vchip{flex:none;font:700 8px/1 var(--mono);color:var(--green);border:1px solid var(--green-line);background:var(--green-bg);border-radius:99px;padding:2px 4px 1px;letter-spacing:.02em}
+.gsv .vchip.vmut{color:var(--muted);border-color:var(--line-strong);background:var(--panel-2)}
+.gsv .chip.proc.on{border-bottom-color:var(--ink);color:var(--ink)}
+.gsv #procNote{padding:2px 20px 8px;font:400 11px/1.4 var(--grotesk);color:var(--muted)}
+.gsv #procNote b{font:700 9px/1 var(--mono);letter-spacing:.12em;color:var(--ink);text-transform:uppercase;margin-right:4px}
 .gsv .sigs{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
 .gsv .sig{
     display:inline-flex;align-items:center;gap:4px;
@@ -626,6 +639,8 @@ header button{height:28px;border-radius:var(--r-sm)}
     padding:8px 13px;border-top:1px solid var(--line2);
     font:400 9.5px/1.6 var(--mono);letter-spacing:.03em;color:var(--faint);display:flex;gap:10px;flex-wrap:wrap;
   }
+.frv .draftcard .dfoot .prov{color:var(--ember-ink);letter-spacing:.06em;font-weight:600}
+.frv .draftcard .dfoot .prov.tpl{color:var(--faint);font-weight:400}
 .frv .draftcard .dh{
     display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid var(--line2);
   }
@@ -841,6 +856,7 @@ header button{height:28px;border-radius:var(--r-sm)}
   <span id="sectorChips" style="display:flex;gap:16px;flex-wrap:wrap"></span>
   <input type="text" id="q" placeholder="Search company, city, sector" style="width:220px" />
 </div>
+<div id="procNote" style="display:none"></div>
 
 <div class="layout">
   <div class="card">
@@ -915,8 +931,8 @@ header button{height:28px;border-radius:var(--r-sm)}
 <div class="pop" id="frWatchPop" style="display:none">
   <div class="pt">Watched X accounts</div>
   <div id="frWatchList"></div>
-  <div class="pa"><input id="frWatchInput" placeholder="add a handle, e.g. jasonlk" autocomplete="off"/><button class="mini" id="frWatchAdd">Add</button></div>
-  <div class="pn">People these accounts recently followed land in the queue as real candidates, pulled once a day.</div>
+  <div class="pa"><input id="frWatchInput" placeholder="add a handle, e.g. matthewclifford" autocomplete="off"/><button class="mini" id="frWatchAdd">Add</button></div>
+  <div class="pn">European early-stage VCs by default. People these accounts recently follow land in the queue as real candidates, pulled once a day.</div>
 </div>
 
 <div class="toasts" id="frToasts"></div>
@@ -932,7 +948,7 @@ header button{height:28px;border-radius:var(--r-sm)}
       <p>The Companies tab ranks European growth-stage companies by live signals: open roles, Hacker News mentions, GitHub stars, founder posting cadence on X, and sourced funding events. Starring a company holds it on the Watch tab and pushes it into the shared pipeline. Founder names open that person on the People tab.</p>
     </div>
     <div class="ipanel"><b>2 &middot; People</b>
-      <p>The People tab ranks people who look like they are about to start a company. Every candidate is real: the recent follows of your watched X accounts and Show HN authors, each enriched from the live X and HN APIs. Every person carries live numbers and a real X or HN link. There are no sample profiles.</p>
+      <p>The People tab ranks people who look like they are about to start a company. Every candidate is real, from three inflows: watched follows (the recent follows of your European VC scout accounts), Show HN authors, and, when connected, officers of newly incorporated UK companies from Companies House. Each is enriched from the live X, HN and Companies House APIs. Every person carries live numbers and a real link. There are no sample profiles.</p>
     </div>
     <div class="ipanel"><b>3 &middot; Scoring</b>
       <p>Recent, strong signals add more points; older signals fade out over weeks. A company score is the score for this period of time, and the score history chart in the company panel shows how it moved over time. Click any score for its receipt. Every number comes from code and carries its source and pull time; the model only drafts prose.</p>
@@ -1466,6 +1482,186 @@ const FOUNDERS={
 };
 COMPANIES.forEach(c=>{c.founders=FOUNDERS[c.id]||[];});
 
+/* =====================================================================
+   Agent-verified facts (real search + verify pipeline outputs, cached).
+   Two inputs, both real agent runs (contract rules I and J: numbers and
+   stages are real verified data with real sources, never generated):
+   (1) verified_facts.json  -> enriches 11 companies already in the set that
+       displayed "undisclosed" (Omnea is enriched below with the procurement
+       run instead, so it is not repeated here).
+   (2) agentic_search_procurement.json -> a thesis-search discovery set,
+       European AI-native B2B procurement/spend/trade automation. This set is
+       the proof that the agentic thesis-search ran: it is isolated by the
+       AGENTIC PROCUREMENT chip. Omnea and Tacto already existed, so they are
+       flagged and enriched in place rather than duplicated.
+   Each record carries {verified:{verdict,confidence,sources[]}} shown as a
+   provenance badge in the detail pane and a subtle check chip in the list.
+   ===================================================================== */
+(function(){
+  function cleanUrl(u){u=String(u==null?'':u).split(/\s/)[0];return /^https?:\/\//i.test(u)?u:null;}
+  function fundingEvent(o){
+    if(!o.round||!o.round.date)return [];
+    var lbl=o.round.label+(o.round.lead?' led by '+o.round.lead:'');
+    return [ev(o.round.date,'funding',lbl,o.round.src,o.sourceUrl||(o.round&&o.round.url)||null)];
+  }
+  /* (1) 11 existing companies that showed "undisclosed", matched by id */
+  var UPD={
+    stytch:{stage:'Acquired',hq:'San Francisco',
+      round:{label:'Acquired by Twilio, Nov 2025',lead:'',date:'2025-11-14',src:'Twilio / Stytch, Nov 2025',amt:null},
+      sourceUrl:'https://www.twilio.com/en-us/blog/company/news/twilio-to-acquire-stytch',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://www.twilio.com/en-us/blog/company/news/twilio-to-acquire-stytch','https://changelog.stytch.com/announcements/2025-11-14-a-new-chapter-begins-stytch-joins-twilio','https://changelog.stytch.com/announcements/2025-10-30-stytch-is-joining-twilio-same-product-bigger-mission','https://www.twilio.com/en-us/press/releases/third-quarter-2025','https://techcrunch.com/2021/11/18/stytch-api-passwordless-unicorn/','https://www.pymnts.com/news/investment-tracker/2021/stytch-raises-90m-in-series-b-funding-at-1b-valuation/','https://stytch.com/blog/announcing-series-b/']}},
+    browserbase:{stage:'Series B',
+      round:{label:'$40M Series B',lead:'Notable Capital',date:'2025-06-17',src:'PR Newswire, 17 Jun 2025',amt:40},
+      sourceUrl:'https://www.prnewswire.com/news-releases/browserbase-launches-director-to-automate-the-web-for-everyone-announces-40m-series-b-302483761.html',
+      verified:{verdict:'CONFIRMED',confidence:94,sources:['https://www.prnewswire.com/news-releases/browserbase-launches-director-to-automate-the-web-for-everyone-announces-40m-series-b-302483761.html','https://www.builtinsf.com/articles/browserbase-announces-40m-series-b-funding-20250618','https://siliconangle.com/2025/06/17/browserbase-reels-40m-browser-automation-tools/','https://traded.co/vc/deal/browserbase-secures-40-million-in-series-b-round-led-by-notable-capital-with-crv-and-kleiner-perkins/','https://www.upstartsmedia.com/p/browserbase-raises-40m-and-launches-director']}},
+    composio:{stage:'Series A',
+      round:{label:'$25M Series A',lead:'Lightspeed',date:'2025-07-22',src:'PR Newswire, 22 Jul 2025',amt:25},
+      sourceUrl:'https://www.prnewswire.com/news-releases/composio-raises-29m-to-solve-ais-learning-problem-building-skills-that-actually-improve-over-time-302510684.html',
+      verified:{verdict:'CONFIRMED',confidence:98,sources:['https://lsvp.com/stories/investing-in-composio-building-the-backbone-of-ai-agent-intelligence/','https://www.prnewswire.com/news-releases/composio-raises-29m-to-solve-ais-learning-problem-building-skills-that-actually-improve-over-time-302510684.html','https://www.finsmes.com/2025/07/composio-raises-25m-in-series-a-funding.html','https://yourstory.com/ai-story/composio-funding-round-raises-29m-led-by-lightspeed-venture-partners','https://vcnewsdaily.com/composio/venture-capital-funding/btbslcqhwm','https://startupwired.com/2025/07/22/composio-raises-25m-to-power-agentic-ai-workflow-tools/']}},
+    brightdata:{stage:'PE-backed',
+      round:{label:'EMK Capital majority stake, ~$200M',lead:'',date:'2017-08',src:'EMK Capital / Globes, Aug 2017',amt:200},
+      sourceUrl:'https://www.emkcapital.com/news/emk-acquires-luminati-the-worlds-largest-ip-proxy-network-which-brings-transparency-to-the-internet',
+      verified:{verdict:'CONFIRMED',confidence:90,sources:['https://en.wikipedia.org/wiki/Bright_Data','https://www.emkcapital.com/news/emk-acquires-luminati-the-worlds-largest-ip-proxy-network-which-brings-transparency-to-the-internet','https://www.mayerbrown.com/en/news/2022/02/mayer-brown-advises-emk-capital-and-bright-data-on-refinancing','https://www.privateequitywire.co.uk/2017/08/11/254953/emk-acquires-luminati','https://en.globes.co.il/en/article-emk-buys-majority-stake-in-luminati-at-200m-valuation-1001200869','https://mergr.com/transaction/emk-capital-acquires-bright-data']}},
+    exa:{stage:'Series C',
+      round:{label:'$250M Series C at $2.2B',lead:'a16z',date:'2026-05-20',src:'Exa / Bloomberg, 20 May 2026',amt:250},
+      sourceUrl:'https://exa.ai/blog/announcing-series-c',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://exa.ai/blog/announcing-series-c','https://www.bloomberg.com/news/articles/2026-05-20/andreessen-backed-ai-search-startup-exa-valued-at-2-2-billion','https://www.pymnts.com/artificial-intelligence-2/2026/exa-raises-250-million-for-ai-powered-search-infrastructure/','https://finance.yahoo.com/sectors/technology/articles/ai-search-startup-exa-labs-123022930.html','https://www.finsmes.com/2026/05/exa-labs-raises-250m-in-series-c-funding-at-2-2-billion-valuation.html']}},
+    skyvern:{stage:'Seed',
+      round:{label:'$2.7M seed',lead:'',date:'2025-12-18',src:'Skyvern / Tracxn, Dec 2025',amt:2.7},
+      sourceUrl:'https://www.skyvern.com/blog/skyvern-we-raised-2-7m-to-fix-browser-automation-open-source/',
+      verified:{verdict:'CONFIRMED',confidence:85,sources:['https://www.skyvern.com/blog/skyvern-we-raised-2-7m-to-fix-browser-automation-open-source/','https://tracxn.com/d/companies/skyvern/__joZNwZnvPpp5SWng14qfKwxCqqwKRt699DxAC4T5pfI/funding-and-investors','https://www.crunchbase.com/funding_round/skyvern-pre-seed--287ebbd1','https://www.ycombinator.com/companies/skyvern']}},
+    crossmint:{stage:'Series A',
+      round:{label:'$23.6M Series A',lead:'Ribbit Capital',date:'2025-03-18',src:'The Block / Crossmint, Mar 2025',amt:23.6},
+      sourceUrl:'https://www.crossmint.com/announcement/crossmint-raises-23-6m-led-by-ribbit-capital',
+      verified:{verdict:'CONFIRMED',confidence:93,sources:['https://www.crossmint.com/announcement/crossmint-raises-23-6m-led-by-ribbit-capital','https://www.theblock.co/post/346863/ribbit-capital-leads-23-6-million-funding-round-for-enterprise-blockchain-platform-crossmint','https://www.coindesk.com/business/2025/03/18/blockchain-firm-crossmint-used-by-adidas-red-bull-raises-usd23-6m-in-funding','https://tracxn.com/d/companies/crossmint/__MpQ-eroaAj9oHgOiaFrzySLnVt9xmA-As6fo0tmphAo/funding-and-investors']}},
+    rokt:{stage:'Pre-IPO',
+      round:{label:'$325M Series E at $1.95B',lead:'Tiger Global',date:'2021-12-16',src:'Forbes / Rokt, Dec 2021',amt:325},
+      sourceUrl:'https://www.forbes.com/sites/sharonedelson/2021/12/17/rokt-which-personalizes-transactions-with-ai-and-machine-learning-raises-325-million/',
+      verified:{verdict:'CONFIRMED',confidence:90,sources:['https://www.forbes.com/sites/sharonedelson/2021/12/17/rokt-which-personalizes-transactions-with-ai-and-machine-learning-raises-325-million/','https://www.pymnts.com/news/investment-tracker/2021/ai-ecommerce-tech-firm-rokt-raises-325m-at-1-95b-valuation/','https://www.rokt.com/blog/rokt-secures-usd325-million-series-e-funding-round-led-by-tiger-global','https://www.prnewswire.com/news-releases/rokt-announces-secondary-transaction-increasing-valuation-to-us3-5-billion-and-appointment-of-anita-sands-to-the-board-of-directors-302352792.html','https://www.bloomberg.com/news/articles/2025-01-16/rokt-s-valuation-hits-3-5-billion-after-secondary-share-sale']}},
+    rye:{stage:'Seed',
+      round:{label:'$14M seed',lead:'a16z crypto',date:'2022-10-11',src:'Forbes / CoinDesk, Oct 2022',amt:14},
+      sourceUrl:'https://www.forbes.com/sites/alexkonrad/2022/10/11/a16z-crypto-web3-commerce-rye-justin-kan/',
+      verified:{verdict:'CONFIRMED',confidence:93,sources:['https://www.forbes.com/sites/alexkonrad/2022/10/11/a16z-crypto-web3-commerce-rye-justin-kan/','https://www.coindesk.com/business/2022/10/11/a16z-leads-14m-funding-round-for-new-e-commerce-platform-from-twitch-co-founder','https://www.tribesilicon.com/2022/10/11/web3-ecommerce-infrastructure-startup-rye-raises-14-million-in-seed-funding/','https://tokeninsight.com/en/news/web3-shopping-platform-rye-raises-14m-led-by-a16z-crypto']}},
+    zip:{stage:'Series D',
+      round:{label:'$190M Series D at $2.2B',lead:'BOND',date:'2024-10-21',src:'BusinessWire, 21 Oct 2024',amt:190},
+      sourceUrl:'https://ziphq.com/blog/series-d',
+      verified:{verdict:'CONFIRMED',confidence:98,sources:['https://ziphq.com/blog/series-d','https://news.crunchbase.com/venture/ai-enhanced-procurement-startup-zip-series-d-bond/','https://www.fintechfutures.com/fintech/procurement-fintech-zip-raises-190m-series-d-at-2-2bn-valuation','https://www.pymnts.com/news/investment-tracker/2024/zip-valued-2-billion-dollars-after-funding-round/','https://x.com/theziphq/status/1848371350819553522']}},
+    levelpath:{stage:'Series B',
+      round:{label:'$55M+ Series B',lead:'Battery Ventures',date:'2025-06-27',src:'TechCrunch / BusinessWire, Jun 2025',amt:55},
+      sourceUrl:'https://techcrunch.com/2025/06/30/next-gen-procurement-platform-levelpath-nabs-55m/',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://techcrunch.com/2025/06/30/next-gen-procurement-platform-levelpath-nabs-55m/','https://www.goodwinlaw.com/en/news-and-events/news/2025/07/announcements-technology-goodwin-represents-levelpath-on-its-over','https://www.levelpath.com/blog/levelpath-raises-additional-55m-to-bring-ai-native-procurement-to-the-enterprise','https://www.thesaasnews.com/news/levelpath-raises-over-55-million-in-series-b','https://www.battery.com/blog/what-it-means-to-be-ai-native-our-investment-in-levelpath/']}}
+  };
+  Object.keys(UPD).forEach(function(id){
+    var c=COMPANIES.find(function(x){return x.id===id;});
+    if(!c){console.warn('verified-facts: no match for',id);return;}
+    var u=UPD[id];
+    if(u.stage)c.stage=u.stage;
+    if(u.hq)c.hq=u.hq;
+    if(u.round)c.round=u.round;
+    if(u.sourceUrl)c.sourceUrl=u.sourceUrl;
+    if(u.verified){u.verified.sources=(u.verified.sources||[]).map(cleanUrl).filter(Boolean);c.verified=u.verified;}
+    if(!c.events||!c.events.length)c.events=fundingEvent(c);
+  });
+
+  /* (2) thesis-search discovery set: European AI-native B2B procurement.
+     New rows get sector:'procurement' + procurement:true; Omnea and Tacto
+     already exist and are enriched in place (dedupe, never duplicated). */
+  var PROC=[
+    {id:'omnea',dedupe:true,name:'Omnea',hq:'London',stage:'Series B',tags:['Agentic procurement','Intake & orchestration'],
+      line:'AI-native procurement intake and orchestration, an agentic operating system for spend.',
+      round:{label:'$50M Series B',lead:'Insight Partners, Khosla Ventures',date:'2025-09-17',src:'Omnea / PR Newswire, Sep 2025',amt:50},
+      sourceUrl:'https://www.omnea.co/blog/series-b-announcement',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://www.omnea.co/blog/series-b-announcement','https://www.prnewswire.com/news-releases/omnea-raises-50m-to-make-procurement-every-cfos-competitive-advantage-302559153.html','https://www.insightpartners.com/ideas/omnea-raises-50m-to-make-procurement-every-cfos-competitive-advantage/','https://www.willkie.com/news/2025/09/willkie-advises-insight-partners-on-series-b-investment-in-omnea','https://techcrunch.com/2024/10/14/omnea-raises-25m-to-tackle-the-painfully-annoying-procurement-market/','https://www.thesaasnews.com/news/omnea-raises-50-million-in-series-b']}},
+    {id:'tacto',dedupe:true,name:'Tacto',hq:'Munich',stage:'Series A',tags:['Agentic procurement','Supply-chain sourcing'],
+      round:{label:'€50M round',lead:'Sequoia Capital, Index Ventures',date:'2023-12-12',src:'Tacto / tech.eu, Dec 2023',amt:50},
+      sourceUrl:'https://www.tacto.ai/en/resources-posts/tacto-secures-50-million-to-build-future-proof-supply-chains-for-the-mid-market',
+      verified:{verdict:'CONFIRMED',confidence:91,sources:['https://www.tacto.ai/en/resources-posts/tacto-secures-50-million-to-build-future-proof-supply-chains-for-the-mid-market','https://www.indexventures.com/perspectives/tacto-secures-50m-to-tackle-disruptions-and-bureaucracy-in-industrial-supply-chains/','https://www.uvcpartners.com/blog/tacto-secures-eu50m-to-tackle-disruptions-and-bureaucracy-in-industrial-supply-chains','https://www.munich-startup.de/en/96697/ai-startup-tacto-secures-50-million-euros/','https://tech.eu/2023/12/12/tacto-raises-eur50-million-for-ai-based-supply-chain-solutions/','https://www.crunchbase.com/funding_round/tacto-e620-series-a--6cc8bca4']}},
+    {id:'procureai',name:'Procure Ai',hq:'London',stage:'Seed',tags:['Agentic procurement','Autonomous procurement'],
+      line:'AI-native autonomous agents that run end-to-end sourcing, purchasing and invoice management.',
+      round:{label:'$13M Seed',lead:'Headline',date:'2025-11-05',src:'Procure Ai / SiliconANGLE, Nov 2025',amt:13},
+      sourceUrl:'https://www.procure.ai/blog/seed-funding-announcement',
+      verified:{verdict:'CONFIRMED',confidence:93,sources:['https://www.procure.ai/blog/seed-funding-announcement','https://www.uktech.news/ai/procure-ai-9-8m-seed-round-20251127','https://siliconcanals.com/londons-procure-ai-raises-11-2m/','https://siliconangle.com/2025/11/27/procure-ai-lands-13m-funding-automate-business-procurement-tasks/','https://c4v.com/news/procure-ai-secures-13m-seed-funding-to-transform-procurement-through-ai-native-autonomous-agents/','https://www.crunchbase.com/organization/procure-ai']}},
+    {id:'nvelop',name:'Nvelop',hq:'Helsinki',stage:'Seed',network:true,tags:['Agentic procurement','Sourcing / RFP'],
+      line:'Agentic-AI enterprise sourcing platform across the full RFP-to-contract lifecycle. Antler-incubated.',
+      round:{label:'€1.2M Seed',lead:'Failup Ventures',date:'2025-06-18',src:'Antler / EU-Startups, Jun 2025',amt:1.4},
+      sourceUrl:'https://www.antler.co/press-releases/nvelop-secures-eu1-2-million-seed-round-to-revolutionize-enterprise-procurement-with-agentic-ai',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://www.antler.co/press-releases/nvelop-secures-eu1-2-million-seed-round-to-revolutionize-enterprise-procurement-with-agentic-ai','https://www.eu-startups.com/2025/06/finnish-startup-nvelop-secures-e1-2-million-to-innovate-enterprise-procurement-with-agentic-ai','https://arcticstartup.com/nvelop-raises-e1-2m-seed/','https://www.vestbee.com/insights/articles/nvelop-secures-1-2-m','https://bebeez.eu/2025/06/18/helsinki-based-startup-nvelop-closes-seed-round-to-tackle-procurement-inefficiencies/','https://tracxn.com/d/companies/nvelop/__ghqk6NvEGOzlk68RkfMaa9KLASF_cuJLP3penWeYFGU']}},
+    {id:'pivot',name:'Pivot',hq:'Paris',stage:'Series B',tags:['Agentic procurement','Procure-to-pay'],
+      line:'AI operating system for enterprise procurement, agentic workflows built into the system of record.',
+      round:{label:'$40M Series B',lead:'Forestay Capital, Notion Capital',date:'2026-05-21',src:'SiliconANGLE / Tech.eu, May 2026',amt:40},
+      sourceUrl:'https://siliconangle.com/2026/05/21/pivot-pulls-40m-push-agentic-ai-deeper-enterprise-procurement/',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://siliconangle.com/2026/05/21/pivot-pulls-40m-push-agentic-ai-deeper-enterprise-procurement/','https://www.eu-startups.com/2026/05/paris-pivot-pockets-e34-4-million-to-power-enterprise-procurement-with-agentic-ai/','https://thenextweb.com/news/pivot-40m-series-b-agentic-ai-procurement-operating-system','https://techfundingnews.com/pivot-40m-forestay-notion-capital/','https://www.pivotapp.ai/blog/pivot-raises-40-million-series-b-to-replace-legacy-procurement-software-with-an-enterprise-ai-operating-system','https://tech.eu/2026/05/21/pivot-raises-40m-to-expand-ai-powered-enterprise-procurement-platform/']}},
+    {id:'digicust',name:'Digicust',hq:'Vienna',stage:'Pre-Series A',tags:['Agentic procurement','Customs automation'],
+      line:'AI platform automating end-to-end customs clearance and HS-code classification for trade.',
+      round:{label:'€2.3M Pre-Series A',lead:'Jet Investment',date:'2025-12-03',src:'Digicust / TechStartups, Dec 2025',amt:2.3},
+      sourceUrl:'https://digicust.com/en/blog/digicust-pre-series-a-financing-round-finalized',
+      verified:{verdict:'CONFIRMED',confidence:91,sources:['https://digicust.com/en/blog/digicust-pre-series-a-financing-round-finalized','https://techstartups.com/2025/12/18/austrian-ai-startup-digicust-raises-e2-3m-to-automate-customs-clearance-across-europe-using-ai/','https://www.vestbee.com/insights/articles/digicust-secures-2-3-m','https://www.thesaasnews.com/news/digicust-raises-2-3-million-in-funding','https://lookai.vc/digicust-secures-2-3m-to-automate-customs-processes/','https://www.finsmes.com/2025/12/digicust-raises-e2-3m-in-pre-series-a-funding.html']}},
+    {id:'archlet',name:'Archlet',hq:'Zurich',stage:'Series A',tags:['Agentic procurement','Sourcing optimization'],
+      line:'AI-native eSourcing with an agent, Spark, turning unstructured files into RFPs and award scenarios.',
+      round:{label:'$10M Series A',lead:'HV Capital',date:'2021-09-30',src:'Startupticker / Archlet, Sep 2021',amt:10},
+      sourceUrl:'https://www.archlet.io/blog/hv-capital-invests-10m-in-archlets-series-a',
+      verified:{verdict:'CONFIRMED',confidence:96,sources:['https://www.startupticker.ch/en/news/procurement-software-company-archlet-raises-10-million','https://siliconcanals.com/archlet-raises-8-6m/','https://www.archlet.io/blog/hv-capital-invests-10m-in-archlets-series-a','https://medium.com/senovovc/procurement-software-company-archlet-raises-10-million-to-disrupt-the-market-for-strategic-731622ba9e7','https://www.greaterzuricharea.com/en/news/archlet-raises-10-million-dollars-capital','https://pitchbook.com/profiles/company/432891-01']}},
+    {id:'payflows',name:'Payflows',hq:'Paris',stage:'Series A',tags:['Agentic procurement','Finance ops / spend'],
+      line:'AI-native finance operations platform unifying procure-to-pay, treasury and spend.',
+      round:{label:'€25M Series A',lead:'Balderton Capital',date:'2024-04-22',src:'Balderton, Apr 2024',amt:25},
+      sourceUrl:'https://www.balderton.com/news/payflows-raises-e25m-to-build-the-command-centre-for-finance-teams/',
+      verified:{verdict:'CONFIRMED',confidence:93,sources:['https://www.balderton.com/news/payflows-raises-e25m-to-build-the-command-centre-for-finance-teams/','https://techfundingnews.com/payflows-secures-e25m-funding-round-led-by-balderton-capital-to-transform-finance-team-operations/','https://siliconcanals.com/paris-based-payflows-raises-25m/','https://tracxn.com/d/companies/payflows/__w7sV7VM0UiD4x9hLWHjNkE-vsFf0UIDRZlm9EmsSKm8/funding-and-investors','https://www.startuphub.ai/startups/payflows']}},
+    {id:'light',name:'Light',hq:'Copenhagen',stage:'Series A',tags:['Agentic procurement','Finance / GL automation'],
+      line:'AI-native finance and accounting platform replacing legacy ERP for global company finances.',
+      round:{label:'$30M Series A',lead:'Balderton Capital',date:'2025-09-25',src:'CNBC / Balderton, Sep 2025',amt:30},
+      sourceUrl:'https://light.inc/light-announces-30-million-funding',
+      verified:{verdict:'CONFIRMED',confidence:97,sources:['https://light.inc/light-announces-30-million-funding','https://www.cnbc.com/2025/09/25/ai-finance-startup-light-raises-funding-from-revolut-backer-balderton.html','https://www.balderton.com/news/light-raises-30m-series-a-to-replace-legacy-finance-systems-with-ai-native-platform/','https://www.eu-startups.com/2025/09/light-raises-e25-million-to-replace-legacy-finance-systems-with-ai-native-platform/','https://seedcamp.com/views/light-secures-13m-scale-the-first-ai-powered-general-ledger-for-automating-global-company-finances/','https://arcticstartup.com/light-raises-e25-million/']}},
+    {id:'keelvar',name:'Keelvar',hq:'Cork',stage:'Series B',tags:['Agentic procurement','Sourcing automation'],
+      line:'AI-powered sourcing bots that run supplier bidding and award decisions on autopilot.',
+      round:{label:'$24M Series B',lead:'83North',date:'2022-05-16',src:'TechCrunch / BusinessWire, May 2022',amt:24},
+      sourceUrl:'https://www.keelvar.com/newsroom/series-b-24m',
+      verified:{verdict:'CONFIRMED',confidence:96,sources:['https://www.keelvar.com/newsroom/series-b-24m','https://techcrunch.com/2022/05/16/keelvar-raises-24m-to-automate-procurement-in-the-supply-chain/','https://tracxn.com/d/companies/keelvar-tech/__pgAn4-GmATY54zGFZtCMTjnXdNh0h48ggsS_JrEIVPE/funding-and-investors','https://www.siliconrepublic.com/start-ups/cork-keelvar-series-b-funding-ai-supply-us']}},
+    {id:'findmyfactory',name:'Find My Factory',hq:'Stockholm',stage:'Early stage',tags:['Agentic procurement','Supplier discovery'],
+      line:'Agentic AI search across millions of manufacturer profiles with AI-agent supplier vetting.',
+      round:{label:'SEK 13M round (~€1.18M)',lead:'',date:'2025-05-23',src:'FindMyFactory / ArcticStartup, May 2025',amt:1.18},
+      sourceUrl:'https://www.findmyfactory.eu/blog/fmf-raises-sek-13m',
+      verified:{verdict:'CONFIRMED',confidence:90,sources:['https://www.findmyfactory.eu/blog/fmf-raises-sek-13m','https://arcticstartup.com/find-my-factory-raises-e1-18-million/','https://www.distillintelligence.com/news/find-my-factory','https://www.findmyfactory.eu/blog/the-clas-ohlson-family-invests-in-the-heirs-ai-company','https://www.crunchbase.com/organization/find-my-factory','https://pitchbook.com/profiles/company/627151-15']}},
+    {id:'pactum',name:'Pactum AI',hq:'Tallinn',stage:'Series C',tags:['Agentic procurement','Autonomous negotiation'],
+      line:'Autonomous AI agents that independently negotiate and close supplier contracts at scale.',
+      round:{label:'$54M Series C',lead:'Insight Partners',date:'2025-06-09',src:'Pactum / SiliconANGLE, Jun 2025',amt:54},
+      sourceUrl:'https://pactum.com/blog/news-pactum-secures-54-million-in-series-c-funding-to-scale-agentic-ai-in-procurement',
+      verified:{verdict:'CONFIRMED',confidence:96,sources:['https://pactum.com/blog/news-pactum-secures-54-million-in-series-c-funding-to-scale-agentic-ai-in-procurement','https://estonianworld.com/business/estonian-ai-firm-pactum-secures-54m-in-funding-round-led-by-us-investor/','https://siliconangle.com/2025/06/09/pactum-raises-54m-procurement-automation-platform/','https://investinestonia.com/estonian-ai-startup-pactum-raises-54m/','https://pactum.com/blog/news-pactum-raises-20m']}},
+    {id:'nibble',name:'Nibble',hq:'London',stage:'Seed',tags:['Agentic procurement','Negotiation agents'],
+      line:'Autonomous AI negotiation agents for procurement, with Coupa and SAP Ariba integrations.',
+      round:{label:'$3.3M Seed',lead:'Venrex',date:'2022-03-29',src:'Nordic9 / Nibble, Mar 2022',amt:3.3},
+      sourceUrl:'https://blog.nibbletechnology.com/nibble-announces-fundraise-and-version-2-0-to-power-circular-economy/',
+      verified:{verdict:'CONFIRMED',confidence:89,sources:['https://nordic9.com/news/nibble-technology-raises-33-million-in-a-round-backed-by-venrex/','https://blog.nibbletechnology.com/nibble-announces-fundraise-and-version-2-0-to-power-circular-economy/','https://www.cbinsights.com/company/nibble-technology/financials','https://getlatka.com/companies/nibbletechnology.com','https://fortune.com/2024/07/16/negotiating-chatbot-nibble-ai-ecommerce/','https://pitchbook.com/profiles/company/470782-09']}},
+    {id:'mercanis',name:'Mercanis',hq:'Berlin',stage:'Series A',tags:['Agentic procurement','Procurement suite'],
+      line:'Agentic-AI procurement suite spanning spend analytics, sourcing, supplier and contract management.',
+      round:{label:'$20M+ Series A',lead:'Partech, AVP',date:'2025-06-18',src:'GlobeNewswire / Partech, Jun 2025',amt:20},
+      sourceUrl:'https://www.globenewswire.com/news-release/2025/06/18/3101175/0/en/mercanis-secures-over-20-million-in-series-a-round.html',
+      verified:{verdict:'CONFIRMED',confidence:93,sources:['https://www.globenewswire.com/news-release/2025/06/18/3101175/0/en/mercanis-secures-over-20-million-in-series-a-round.html','https://partechpartners.com/news/mercanis-secures-over-20m-in-series-a-round','https://avpcap.com/mercanis-secures-over-20-million-in-series-a-round/','https://www.eu-startups.com/2025/06/german-ai-startup-mercanis-raises-e17-3-million-for-its-agentic-ai-procurement-solution/','https://techfundingnews.com/mercanis-cements-over-20m-charting-the-future-of-ai-driven-procurement/','https://tracxn.com/d/companies/mercanis/__5RCqZ2gan4PC3Ui7BGphIi6oXN_xy6WjObhdzcVwofI']}}
+  ];
+  PROC.forEach(function(p){
+    p.verified.sources=(p.verified.sources||[]).map(cleanUrl).filter(Boolean);
+    var ex=COMPANIES.find(function(x){return x.id===p.id;});
+    if(ex){
+      ex.procurement=true;
+      if(p.stage)ex.stage=p.stage;
+      if(p.hq)ex.hq=p.hq;
+      if(p.tags)ex.tags=p.tags;
+      if(p.line)ex.line=p.line;
+      if(p.round)ex.round=p.round;
+      if(p.sourceUrl)ex.sourceUrl=p.sourceUrl;
+      if(p.network)ex.network=true;
+      ex.verified=p.verified;
+      if(!ex.events||!ex.events.length)ex.events=fundingEvent(ex);
+      return;
+    }
+    var c={id:p.id,name:p.name,hq:p.hq,sector:'procurement',procurement:true,
+      tags:p.tags||['Agentic procurement'],stage:p.stage||'Undisclosed',line:p.line||'',
+      round:p.round||null,sourceUrl:p.sourceUrl||null,verified:p.verified,
+      network:!!p.network,ats:null,gh:null,hn:null,founders:[],events:[]};
+    c.events=fundingEvent(c);
+    COMPANIES.push(c);
+  });
+})();
+
 /* ---------- constants ---------- */
 const SECTORS={ai:'AI',saas:'B2B SaaS',fintech:'Fintech',climate:'Climate & Energy',health:'Healthtech'};
 const TABS=[
@@ -1728,7 +1924,7 @@ function whyNow(c,p){
   if(c.round && c.round.date){
     const m=monthsSince(c.round.date);
     const days=Math.round(m*30.44);
-    if(days<=45)bits.push(days+' day'+(days===1?'':'s')+' since '+c.round.label+' led by '+c.round.lead);
+    if(days<=45)bits.push(days+' day'+(days===1?'':'s')+' since '+c.round.label+(c.round.lead?' led by '+c.round.lead:''));
     else if(m<3)bits.push(fmtEvDate(c.round.date)+': '+c.round.label+' ('+c.round.lead+')');
     else if(m>=15&&m<27)bits.push(Math.round(m)+'m post '+c.round.label+', inside the typical re-raise window');
     else bits.push(Math.round(m)+'m post '+c.round.label);
@@ -2074,6 +2270,7 @@ function visible(rows){
     if(ui.tab==='watch'&&!STARRED.has(c.id))return false;
     if(ui.sector){
       if(ui.sector==='agentic'){ if(!c.agentic)return false; }
+      else if(ui.sector==='procurement'){ if(!c.procurement)return false; }
       else if(c.sector!==ui.sector) return false;
     }
     if(ui.q){
@@ -2124,6 +2321,7 @@ function render(){
   const vis=sortRows(visible(rows));
   if(!ui.sel||!vis.some(r=>r.c.id===ui.sel))ui.sel=vis.length?vis[0].c.id:(rows[0]&&rows[0].c.id);
   renderTabs(rows);renderChips();renderHead();renderList(rows,vis);renderStamps();renderDetail(rows);
+  renderProcNote(vis);
   writeDailySnapshot(rows);
   recordHistory(rows);
 }
@@ -2142,7 +2340,22 @@ function renderChips(){
   /* Mathias's agentic-commerce market map: filters on the agentic flag, so it also
      catches Peec (sector ai) that carries the flag. */
   html+='<button class="chip agentic '+(ui.sector==='agentic'?'on':'')+'" data-sector="agentic" title="Isolate the agentic-commerce market map">AGENTIC COMMERCE</button>';
+  /* Discovered set: filters on the procurement flag, isolating the thesis-search
+     result (European AI-native B2B procurement), each verified by a second agent. */
+  html+='<button class="chip proc '+(ui.sector==='procurement'?'on':'')+'" data-sector="procurement" title="Isolate the thesis-search discovery set: European AI-native procurement">AGENTIC PROCUREMENT</button>';
   document.getElementById('sectorChips').innerHTML=html;
+}
+function renderProcNote(vis){
+  var pn=document.getElementById('procNote');
+  if(!pn)return;
+  if(ui.sector==='procurement'){
+    pn.style.display='block';
+    pn.innerHTML='<b>Discovered by thesis search</b> European AI-native B2B procurement, spend and trade automation. '+
+      vis.length+' companies surfaced by an agentic thesis-search, each verified by a second agent before listing.';
+  }else{
+    pn.style.display='none';
+    pn.innerHTML='';
+  }
 }
 function renderStamps(){
   const el=document.getElementById('stamps');
@@ -2181,11 +2394,11 @@ function renderList(rows,vis){
   document.getElementById('list').innerHTML=vis.map(({c,s},i)=>{
     const b=band(s.total);
     const round=c.round
-      ?'<div class="a">'+esc(c.round.label)+'</div><div class="s">'+esc(c.round.lead)+' · '+esc(c.round.src)+'</div>'
+      ?'<div class="a">'+esc(c.round.label)+'</div><div class="s">'+esc([c.round.lead,c.round.src].filter(Boolean).join(' · '))+'</div>'
       :'<div class="u">undisclosed / not tracked</div>';
     return '<div class="lrow'+(ui.sel===c.id?' sel':'')+'" data-id="'+c.id+'">'+
       '<span class="rk tnum">'+(i+1)+'</span>'+
-      '<div class="cname"><div class="n">'+starBtn(c.id)+esc(c.name)+
+      '<div class="cname"><div class="n">'+starBtn(c.id)+esc(c.name)+listVchip(c)+
         (c.network?'<span class="badge network">Network</span>':'')+
         (c.watch?'<span class="badge watch">Hold</span>':'')+
         (c.discovered?'<span class="badge disc">Discovered</span>':'')+
@@ -2293,7 +2506,7 @@ function renderDetail(rows){
 
   const roundSource=safeHttpUrl(c.sourceUrl);
   const roundCard=c.round
-    ?'<div class="factcard"><div class="a">'+esc(c.round.label)+' · led by '+esc(c.round.lead)+'</div><div class="s">Source: '+(roundSource?'<a href="'+esc(roundSource)+'" target="_blank" rel="noopener noreferrer">'+esc(c.round.src)+'</a>':esc(c.round.src))+'</div></div>'
+    ?'<div class="factcard"><div class="a">'+esc(c.round.label)+(c.round.lead?' · led by '+esc(c.round.lead):'')+'</div><div class="s">Source: '+(roundSource?'<a href="'+esc(roundSource)+'" target="_blank" rel="noopener noreferrer">'+esc(c.round.src)+'</a>':esc(c.round.src))+'</div></div>'
     :'<div class="factcard"><div class="a" style="color:var(--faint);font-style:italic;font-weight:500">No disclosed round tracked.</div></div>';
 
   const scoreBig='<div class="big"><div class="v s-'+b+' tnum" data-brk="1" title="Click to see how this score is built">'+s.total+'</div><div class="l">Momentum</div></div>';
@@ -2335,8 +2548,29 @@ function renderDetail(rows){
     '<div class="dsec"><h4>Live signals</h4>'+live+'</div>'+
     histSection(c)+
     receipt+
-    '<div class="dsec"><h4>Last disclosed round</h4>'+roundCard+'</div>'+
+    '<div class="dsec"><h4>Last disclosed round</h4>'+roundCard+verifiedBadge(c)+'</div>'+
     '<div class="dsec"><h4>Events</h4>'+evs+'</div>';
+}
+
+/* provenance badge: a second agent verified the fact before display.
+   Quiet mono label, CONFIRMED in the calm confirm green, other verdicts muted;
+   the N sources are real article links opening in a new tab. */
+function verifiedBadge(c){
+  if(!c.verified)return '';
+  const v=c.verified;
+  const ok=v.verdict==='CONFIRMED';
+  const urls=(v.sources||[]).map(safeHttpUrl).filter(Boolean);
+  const links=urls.map((u,i)=>'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" title="'+esc(u)+'">['+(i+1)+']</a>').join('');
+  return '<div class="vbadge '+(ok?'vok':'vmut')+'" title="A second agent verified this before it displayed">'+
+    '<span class="vlead">VERIFIED · '+esc(v.verdict)+' · '+esc(String(v.confidence))+'% · '+urls.length+' sources</span>'+
+    (links?'<span class="vsrcs">'+links+'</span>':'')+
+  '</div>';
+}
+/* subtle list chip: a check when a second agent has verified the row */
+function listVchip(c){
+  if(!c.verified)return '';
+  const ok=c.verified.verdict==='CONFIRMED';
+  return '<span class="vchip'+(ok?'':' vmut')+'" title="second-agent verified: '+esc(c.verified.verdict)+' '+esc(String(c.verified.confidence))+'%">&#10003;</span>';
 }
 
 /* founder names open that person in Founder Radar; the handle param is
@@ -2895,6 +3129,29 @@ setInterval(checkServer,60000);
 /* cross-view API for the RADAR shell and the People view */
 window.GS={
   hasCompany:function(n){return COMPANIES.some(function(c){return normName(c.name)===normName(n);});},
+  /* add a company-candidate from an external inflow (Companies House day-zero
+     incorporations). Deduped by name; persisted as a discovered row so it tracks
+     HN mentions like the press-scan finds. Returns true if a new row was added. */
+  addExternal:function(o){
+    if(!o||!o.name)return false;
+    if(COMPANIES.some(function(c){return normName(c.name)===normName(o.name);}))return false;
+    var tag=o.tag||'new UK incorporation';
+    var comp={
+      id:'ch-'+normName(o.name).slice(0,24)+'-'+(o.number?String(o.number):Date.now().toString(36)),
+      name:o.name,hq:o.hq||'United Kingdom',sector:'unclassified',
+      tags:[tag],stage:o.stage||'Newly incorporated',discovered:true,
+      line:o.line||'Newly incorporated UK company (Companies House).',
+      sourceUrl:o.number?('https://find-and-update.company-information.service.gov.uk/company/'+encodeURIComponent(o.number)):null,
+      round:null,ats:null,gh:null,hn:'"'+String(o.name).replace(/"/g,'')+'"',
+      founders:Array.isArray(o.founders)?o.founders:[],x:o.x||null,events:[],
+      from:o.from||'companies-house'
+    };
+    COMPANIES.push(comp);
+    saveDiscovered();
+    if(!SIG.hn[comp.id]){fetchHN(comp).then(function(){saveSig();render();}).catch(function(){});}
+    render();
+    return true;
+  },
   openCompany:function(n){
     const c=COMPANIES.find(function(x){return normName(x.name)===normName(n);});
     if(!c)return;
@@ -2913,9 +3170,10 @@ window.GS={
 "use strict";
 /* =====================================================================
    Founder Radar - single-file app (real-only).
-   Two live inflows: Show HN (HN Algolia, free) and watched follows
-   (recent follows of the watch accounts via the local X connector,
-   cached per day per account). Every candidate is a real profile and
+   Three live inflows: watched follows (recent follows of the European VC
+   scout accounts via the local X connector, cached per day per account),
+   Show HN (HN Algolia, free), and Companies House (new UK incorporations,
+   the European day-zero signal; silent until a key is set). Every candidate is a real profile and
    scores only from real observables. There is no synthetic data.
    Scores are deterministic; see the intro modal.
    ===================================================================== */
@@ -2983,6 +3241,7 @@ var SCORE_CAP = 99;
    stays x1.00 for reals, so the range is never faked by a multiplier). */
 var WEIGHTS = {
   watched_follow: 24,      /* strongest real tell; each EXTRA watch-account follow adds +8 (set on the signal) */
+  ch_incorporation: 22,    /* just registered a new UK company (Companies House) - the European day-zero tell */
   show_hn: 18,             /* shipped a Show HN (HN Algolia) */
   x_bio_builder: 16,       /* builder language in the live X bio */
   x_tweet_builder: 14,     /* recent posts talk about building or launching */
@@ -2992,6 +3251,7 @@ var WEIGHTS = {
 };
 var SIG_LABEL = {
   watched_follow:"followed by a trusted account",
+  ch_incorporation:"registered a new UK company",
   show_hn:"posted Show HN",
   x_bio_builder:"builder words in X bio",
   x_tweet_builder:"posting about building on X",
@@ -3002,6 +3262,7 @@ var SIG_LABEL = {
 /* how each signal is tracked, one honest line for the scoring modal (all wired) */
 var SIG_HOW = {
   watched_follow:"recent follows of your watch accounts, pulled daily from the X API; each extra watch-account follow stacks +8",
+  ch_incorporation:"recent incorporations from the Companies House API; the officer just filed a new UK company",
   show_hn:"live pull from the HN Algolia API",
   x_bio_builder:"bio text from the X API, scanned for builder language",
   x_tweet_builder:"recent posts from the X API, scanned for build and launch language",
@@ -3010,12 +3271,12 @@ var SIG_HOW = {
   x_audience:"follower count from the X API; counts more on a young account"
 };
 var SIG_WIRED = {
-  watched_follow:true, show_hn:true, x_bio_builder:true, x_tweet_builder:true,
+  watched_follow:true, ch_incorporation:true, show_hn:true, x_bio_builder:true, x_tweet_builder:true,
   hn_traction:true, x_account_new:true, x_audience:true
 };
-/* restrained ink-and-coral palette: coral marks the two strongest tells */
+/* restrained ink-and-coral palette: coral marks the strongest tells */
 var SIG_COLOR = {
-  watched_follow:"#E8543F", x_bio_builder:"#E8543F", show_hn:"#16181B",
+  watched_follow:"#E8543F", ch_incorporation:"#E8543F", x_bio_builder:"#E8543F", show_hn:"#16181B",
   x_tweet_builder:"#16181B", hn_traction:"#16181B", x_account_new:"#6B7280", x_audience:"#6B7280"
 };
 var PRIORS = {
@@ -3063,7 +3324,13 @@ var CANDS = [];  /* real-only: filled by the live X and HN pulls */
 
 /* ---------- state ---------- */
 var LS = "founder_radar_v2";
-var WF_DEFAULTS = ["deLeyritzluc", "HarryStebbings", "shl", "saranormous", "eriktorenberg", "rauchg", "garrytan", "packyM"];
+/* European-primary scout set. Each handle is verified live via /api/x/user and
+   resolves to the named early-stage European investor. HarryStebbings (20VC) and
+   deLeyritzluc (Re7) anchor London; the rest span London, Berlin and the Nordics. */
+var WF_DEFAULTS = ["deLeyritzluc", "HarryStebbings", "matthewclifford", "cee", "cape", "sonalidr", "filipdames", "chrija", "magnusgrimeland", "fdestin"];
+/* retired US-heavy seed; used once to upgrade older installs to the European set */
+var WF_LEGACY = ["shl", "saranormous", "eriktorenberg", "rauchg", "garrytan", "packyM"];
+var WF_DEFAULTS_V = 2;   /* bump when the default scout set changes */
 var S = load();
 function daysSinceKey(key){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || "");
@@ -3083,9 +3350,18 @@ function load(){
       if (!raw.hn) raw.hn = [];
       if (!Array.isArray(raw.xf)) raw.xf = [];
       if (!Array.isArray(raw.watch)) raw.watch = WF_DEFAULTS.slice();
-      else WF_DEFAULTS.forEach(function(d){   /* widen an older 3-account list up to the 8 defaults */
-        if (!raw.watch.some(function(a){ return String(a).toLowerCase() === d.toLowerCase(); })) raw.watch.push(d);
-      });
+      else if (raw.wfDefaultsV !== WF_DEFAULTS_V){
+        /* one-time upgrade to the European-primary scout set: drop the retired
+           US-only defaults (never a user's own additions, which are not in the
+           legacy seed), then fold in every European default this install lacks */
+        raw.watch = raw.watch.filter(function(a){
+          return !WF_LEGACY.some(function(h){ return h.toLowerCase() === String(a).toLowerCase(); });
+        });
+        WF_DEFAULTS.forEach(function(d){
+          if (!raw.watch.some(function(a){ return String(a).toLowerCase() === d.toLowerCase(); })) raw.watch.push(d);
+        });
+      }
+      raw.wfDefaultsV = WF_DEFAULTS_V;
       if (!raw.wfPulls) raw.wfPulls = {};
       /* real signals carry their calendar date; re-age them on every load */
       raw.xf.forEach(function(c){
@@ -3100,8 +3376,8 @@ function load(){
 }
 function fresh(){
   var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xf:[], xval:{},
-             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"all", sel:null, hnPull:null };
-  st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered: <b>" + WF_DEFAULTS.length + " X scout accounts</b> and Show HN. Real candidates land here as the daily pulls run." });
+             watch: WF_DEFAULTS.slice(), wfDefaultsV: WF_DEFAULTS_V, wfPulls:{}, tab:"all", sel:null, hnPull:null };
+  st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered: <b>" + WF_DEFAULTS.length + " European VC scout accounts</b>, Show HN, and (when connected) Companies House. Real candidates land here as the daily pulls run." });
   return st;
 }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
@@ -3145,6 +3421,47 @@ fetch(API + "/api/health").then(function(r){ return r.ok ? r.json() : null; }).t
 }).catch(function(){}).finally(function(){
   renderHeader(); renderDetail();
 });
+
+/* ---------- pre-call outreach pre-generation (K2.7, background) ----------
+   When a candidate is selected (not on a button click), quietly draft the
+   outreach in the background, grounded on that person's real facts (name,
+   handle, bio, computed signals, company), and cache it on S.aiDrafts[id].
+   By the time Isaac clicks Outreach the K2.7 draft is already there, hiding
+   the ~1.7s round-trip. Any error, timeout, or empty content keeps the
+   deterministic template so the demo can never hang. */
+var _outreachInflight = {};
+function pregenOutreach(c){
+  if (!c || !LLM.live) return;
+  if (S.aiDrafts[c.id] || _outreachInflight[c.id]) return;
+  _outreachInflight[c.id] = true;
+  var b2 = breakdown(c, S.demo);
+  var payload = {
+    today: fmtLong(S.demo),
+    draft: draftOutreachFor(c, S.demo),
+    candidate: {
+      name: c.name,
+      handle: c.handle || (c.xhandle ? "@" + c.xhandle : ""),
+      archetype: c.archetype,
+      oneliner: c.oneliner,
+      bio: c.bio,
+      company: c.company || "",
+      signals: b2.rows.slice(0, 5).map(function(r2){ return r2.s.detail; })
+    }
+  };
+  var ctl = new AbortController();
+  var tm = setTimeout(function(){ ctl.abort(); }, 22000);
+  fetch(API + "/api/outreach", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), signal: ctl.signal })
+    .then(function(r){ return r.json().then(function(j){ if (!r.ok || j.error) throw new Error(j.error || "http"); return j; }); })
+    .then(function(j){
+      var msg = (j.message || "").trim();
+      if (!msg) return;                         /* empty content: keep the template */
+      S.aiDrafts[c.id] = { text: msg, day: S.demo, prov: "k2.7" };
+      save();
+      if (S.sel === c.id) renderDetail();
+    })
+    .catch(function(){ /* keep the deterministic template silently */ })
+    .finally(function(){ delete _outreachInflight[c.id]; clearTimeout(tm); });
+}
 
 /* ---------- feed ---------- */
 function feedPush(tag, msg, cid){
@@ -3254,6 +3571,83 @@ function pullHN(auto){
       if (btn){ btn.disabled = false; btn.classList.remove("busy"); }
       renderHeader();
     });
+}
+
+/* ---------- live pull: Companies House (UK day-zero incorporations) ----------
+   New endpoint /api/companies-house/recent. Returns {configured:false} until Isaac
+   adds COMPANIES_HOUSE_KEY; then a list of recently incorporated UK tech companies,
+   each with its officers. When configured, every officer becomes a real people-
+   candidate carrying one plain "registered a new UK company (Companies House)"
+   signal, and the company is handed to the Companies view tagged "new UK
+   incorporation". When configured:false we show nothing at all: no error, no
+   placeholder, no fake data. This is the European day-zero signal, so once a key
+   is set it is a primary inflow alongside watched follows and Show HN. */
+function chSlug(s){ return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+function makeCHPerson(name, co, off){
+  var nm = String(name || "").trim();
+  if (!nm) return null;
+  var coName = String((co && co.name) || "").trim();
+  var num = (co && (co.number || co.company_number)) || null;
+  var role = String((off && (off.role || off.officer_role)) || "director").trim() || "director";
+  var when = off && (off.appointed_on || off.appointed);
+  var sigs = [ realSig("ch_incorporation",
+      "Registered " + (coName || "a new UK company") + " at Companies House" + (when ? " (appointed " + when + ")" : ""),
+      "a fresh UK incorporation") ];
+  return {
+    id: "ch-" + (chSlug(nm) || "officer") + "-" + (num || chSlug(coName) || Date.now().toString(36)),
+    src: "ch", live: true,
+    name: nm,
+    handle: nm + " (Companies House)",
+    city: "United Kingdom",
+    archetype: "New UK company", prior: "none",
+    oneliner: role + " of " + (coName || "a newly incorporated UK company") + ".",
+    bio: "Registered as " + role + " of " + (coName || "a new UK company") + " at Companies House. Pulled live from the Companies House API; enrichment pending.",
+    found: ["Companies House: new UK incorporation" + (coName ? " (" + coName + ")" : "")],
+    ch: { company: coName, number: num, date: todayKey() },
+    company: coName || null,
+    signals: sigs
+  };
+}
+function pullCompaniesHouse(auto){
+  return fetch(API + "/api/companies-house/recent")
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      /* not connected (no key) or unexpected shape: silent no-op, nothing rendered */
+      if (!j || j.configured === false) return 0;
+      var list = j.companies || j.results || j.items || [];
+      if (!Array.isArray(list) || !list.length) return 0;
+      var addedPeople = 0, addedCos = 0;
+      list.forEach(function(co){
+        if (!co || !co.name) return;
+        var officers = Array.isArray(co.officers) ? co.officers : [];
+        /* hand the company to the Companies view tagged as a new UK incorporation */
+        if (window.GS && typeof GS.addExternal === "function"){
+          var ok = GS.addExternal({
+            name: co.name,
+            number: co.number || co.company_number || null,
+            tag: "new UK incorporation",
+            from: "companies-house",
+            stage: "Newly incorporated",
+            line: "Newly incorporated UK company (Companies House).",
+            founders: officers.map(function(o){ return { name: (o && (o.name || o.officer_name)) || "" }; })
+                              .filter(function(f){ return f.name; })
+          });
+          if (ok) addedCos++;
+        }
+        /* each officer becomes a real people-candidate (deduped by id) */
+        officers.forEach(function(off){
+          var cand = makeCHPerson(off && (off.name || off.officer_name), co, off);
+          if (cand && !byId(cand.id)){ S.xf.push(cand); addedPeople++; }
+        });
+      });
+      if (addedPeople || addedCos){
+        feedPush("PULL", "Companies House: <b>" + addedPeople + " new-company officer" + (addedPeople === 1 ? "" : "s") + "</b> and " + addedCos + " UK incorporation" + (addedCos === 1 ? "" : "s") + " added to the queue.");
+        if (!auto) toast(addedPeople + " day-zero founders in from Companies House");
+        save(); renderAll();
+      }
+      return addedPeople;
+    })
+    .catch(function(){ return 0; });   /* endpoint absent or unreachable: stay silent */
 }
 
 /* ---------- watched follows: real people via the local X connector ----------
@@ -3727,6 +4121,7 @@ function liveStamp(){
 }
 function stampTxt(c){
   if (c.src === "x" && c.pull) return "X " + (c.pull.date === todayKey() ? c.pull.time : keyLabel(c.pull.date));
+  if (c.src === "ch") return c.ch && c.ch.date ? "CH " + (c.ch.date === todayKey() ? "today" : keyLabel(c.ch.date)) : "CH live";
   if (isReal(c)) return liveStamp();
   return "";
 }
@@ -3736,7 +4131,10 @@ function renderHeader(){
   document.getElementById("frClearedTxt").textContent = cleared + " of " + vis.length + " cleared";
   var xfCount = vis.filter(function(c){ return c.src === "x"; }).length;
   var hnCount = vis.filter(function(c){ return c.src === "hn"; }).length;
-  document.getElementById("frSplitTxt").textContent = xfCount + " from follows · " + hnCount + " from HN";
+  var chCount = vis.filter(function(c){ return c.src === "ch"; }).length;
+  /* funnel note: honest source split. Companies House only appears once it is connected. */
+  document.getElementById("frSplitTxt").textContent =
+    xfCount + " from follows · " + hnCount + " from HN" + (chCount ? " · " + chCount + " from Companies House" : "");
   var stamp = document.getElementById("frHnStamp");
   if (hnOffline && S.hnPull){
     stamp.textContent = "HN offline, showing cached"; stamp.className = "stamp off";
@@ -3787,8 +4185,8 @@ function renderList(){
     if (S.tab === "watchlist") em = "Nothing on the watchlist yet. Star people from the queue.";
     else if (S.tab === "contacted") em = "No outreach yet. Draft one from a candidate.";
     else if (q) em = "Nothing matches &quot;" + esc(q) + "&quot;.";
-    else if (xfState === "offline") em = "No one in the queue yet. The X connector is offline; start the local server so the daily pull can fill this in.";
-    else em = "No one in the queue yet. Add watch accounts in settings, or the daily pull will fill this in.";
+    else if (xfState === "offline") em = "No one in the queue yet. People arrive from watched follows, Show HN, and (when connected) Companies House. The X connector is offline; start the local server so the daily pull can fill this in.";
+    else em = "No one in the queue yet. People arrive from watched follows, Show HN, and (when connected) Companies House. Add watch accounts in settings, or the daily pull will fill this in.";
     var gear = (!q && S.tab === "all");
     el.innerHTML = '<div class="empty">' + em +
       (gear ? '<div style="margin-top:12px"><button class="mini" id="frEmptyGear" title="Open the watch-accounts settings">Watch accounts</button></div>' : "") +
@@ -3839,6 +4237,7 @@ function renderDetail(){
   }
   var T = S.demo, b = breakdown(c, T), s = st(c);
   var stage = stageOf(c);
+  pregenOutreach(c);   /* background K2.7 draft on selection; template stays until it lands */
   var scoreOpen = scoreOpenFor === c.id;
   var h = "";
   h += '<div class="dhead"><div class="who">';
@@ -3936,6 +4335,9 @@ function renderDetail(){
   if (d){
     var draftTxt = ai ? ai.text : d.text;
     var real = isReal(c);
+    var provHtml = (ai && ai.prov === "k2.7")
+      ? '<span class="prov">drafted by K2.7</span>'
+      : '<span class="prov tpl">template draft</span>';
     h += '<div class="sect"><h3>Outreach draft</h3>';
     h += '<div class="draftcard"><div class="dh">' +
       '<div class="actions">' + (LLM.live && !ai ? '<button class="mini" id="aiRewrite">Rewrite with AI</button>' : "") +
@@ -3946,8 +4348,8 @@ function renderDetail(){
       "</div></div>" +
       "<pre>" + esc(draftTxt) + "</pre>" +
       (real
-        ? '<div class="dfoot"><span>no public email on file; copy the draft and send it yourself</span></div>'
-        : '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + '</span><span class="smpl">SAMPLE</span></div>') +
+        ? '<div class="dfoot">' + provHtml + '<span>no public email on file; copy the draft and send it yourself</span></div>'
+        : '<div class="dfoot">' + provHtml + '<span>to: ' + esc(emailFor(c)) + '</span><span class="smpl">SAMPLE</span></div>') +
       "</div></div>";
   }
   h += '<div style="height:8px"></div>';
@@ -4060,7 +4462,7 @@ function fallbackCopy(txt){
 
 /* ---------- modal ---------- */
 function buildModal(){
-  var order = ["watched_follow","x_bio_builder","x_tweet_builder","show_hn","hn_traction","x_account_new","x_audience"];
+  var order = ["watched_follow","ch_incorporation","x_bio_builder","x_tweet_builder","show_hn","hn_traction","x_account_new","x_audience"];
   document.getElementById("wTable").innerHTML = order.map(function(k){
     return "<tr><td>" + esc(SIG_LABEL[k]) + '</td><td class="w">' + WEIGHTS[k] +
       '</td><td class="note">' + esc(SIG_HOW[k]) +
@@ -4206,6 +4608,8 @@ if (!S.hnPull || S.hnPull.date !== todayKey()) pullHN(true);
 /* watched follows: one pull per watch account per calendar day,
    then the posts check runs itself for the top 10 real candidates */
 pullAllFollowings().then(function(){ autoPostsCheck(); });
+/* Companies House day-zero inflow: silent no-op until Isaac sets a key */
+pullCompaniesHouse(true);
 
 /* cross-view API: select-or-create a person from a company founder link
    (same behavior the ?person=&handle= deep links had) */

@@ -111,30 +111,68 @@ h1,h2{font-family:var(--grotesk);color:var(--ink);}
     <h2>After every call, commitments get made. Then they die in a transcript.</h2>
     <div class="job">
       <div class="job-kicker">The job</div>
-      <div class="job-row"><span class="num">01</span><span class="txt">Reads selected founder calls.</span></div>
-      <div class="job-row"><span class="num">02</span><span class="txt">Extracts commitments, verbatim quote attached.</span></div>
-      <div class="job-row"><span class="num">03</span><span class="txt">Drafts the follow-through: emails, intros, nudges.</span></div>
-      <div class="job-row"><span class="num">04</span><span class="txt">Keeps relationships warm and the pipeline honest.</span></div>
+      <div class="job-row"><span class="num">01</span><span class="txt">Reads the founder call.</span></div>
+      <div class="job-row"><span class="num">02</span><span class="txt">Turns it into an investor brief: promise, market, traction, edge, team.</span></div>
+      <div class="job-row"><span class="num">03</span><span class="txt">Pulls every commitment with its verbatim quote.</span></div>
+      <div class="job-row"><span class="num">04</span><span class="txt">Drafts the follow-through, ready to send.</span></div>
     </div>
     <div class="cue">DEMO: Associate OS</div>
   </section>
 
-  <!-- ===== SLIDE 3 / SOURCING ===== -->
+  <!-- ===== SLIDE 3 / SOURCING (RADAR, agentic search + verify) ===== -->
   <section class="slide setup" data-label="Sourcing" data-screen-label="05"
-    data-speaker-notes="Optional appendix only if the conversation turns to sourcing. Show one ranked company, the visible score receipt, and one fresh timestamp. Keep it under sixty seconds.">
-    <div class="kicker accent">Appendix / The sourcing queue</div>
-    <h2>Sourcing is a data problem before it is a network problem.</h2>
+    data-speaker-notes="Sourcing is not a curated list, it is a search. People come from real signals: watched X follows, Show HN, GitHub. Companies come from a thesis: you type it, agents go and find the companies themselves, then a second agent tries to break each fact before it shows. Show Radar: one live signal pull on a person, then a thesis result with the confidence and sources on a company.">
+    <div class="kicker accent">02 / The sourcing engine</div>
+    <h2>A thesis in. The companies come back verified.</h2>
     <div class="job">
       <div class="job-kicker">The job</div>
-      <div class="job-row"><span class="num">01</span><span class="txt">Watches public signals: X, job boards, GitHub, press.</span></div>
-      <div class="job-row"><span class="num">02</span><span class="txt">Enriches the people and companies behind them.</span></div>
-      <div class="job-row"><span class="num">03</span><span class="txt">Ranks with visible arithmetic, falsifiers included.</span></div>
-      <div class="job-row"><span class="num">04</span><span class="txt">Hands me a queue to act on.</span></div>
+      <div class="job-row"><span class="num">01</span><span class="txt">Watches real signals for people: X follows, Show HN, GitHub.</span></div>
+      <div class="job-row"><span class="num">02</span><span class="txt">Takes a thesis and discovers the companies itself.</span></div>
+      <div class="job-row"><span class="num">03</span><span class="txt">Researches each one, then a second agent tries to break it.</span></div>
+      <div class="job-row"><span class="num">04</span><span class="txt">Only what survives shows, with its confidence and sources.</span></div>
     </div>
-    <div class="cue">OPTIONAL LIVE: Growth Scout</div>
+    <div class="cue">DEMO: Radar</div>
   </section>
 
-  <!-- ===== SLIDE 5 / PRODUCTION PROOF ===== -->
+  <!-- ===== SLIDE 4 / INTEGRITY ===== -->
+  <section class="slide setup" data-label="Integrity" data-screen-label="06"
+    data-speaker-notes="This is the trust line. A VC will not tolerate a hallucinated number. So nothing here is hand-scripted: every fact is either live data or agent-researched and adversarially verified, and the model only ever writes the messages a human reviews and sends. If asked whether the agent or I wrote something, the answer is always: the agent, here are its sources, and I can re-run it live.">
+    <div class="kicker accent">The rule</div>
+    <h2>Live, or agent-verified. Nothing is scripted.</h2>
+    <div class="creeds" style="margin-top:auto;">
+      <div class="creed">Every number carries its sources. No fact shows until a second agent has tried to refute it.</div>
+      <div class="creed">The model writes only what a human sends. Facts come from live data and search, never a guess.</div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 5 / JUST A FOLDER (how an agent is defined) ===== -->
+  <section class="slide folder" data-label="Just a folder" data-screen-label="07"
+    data-speaker-notes="This is the demystifier. When people hear agent they picture something huge and autonomous. My version is small: a folder with the job, the tools, what it produced, and a log, and an LLM that loops over it. Nothing here is magic. It is a folder, a job, and a loop, run enough times.">
+    <div class="kicker accent">How all of this is built</div>
+    <h2>An agent is just a folder.</h2>
+    <div class="anatomy">
+      <div class="tree">
+        <span class="tree-name">radar/</span>
+        <span class="branch">├─ <b>instructions.md</b> &nbsp;<span class="desc">the job, in plain words</span></span><br>
+        <span class="branch">├─ <b>tools.md</b> &nbsp;<span class="desc">what it can call</span></span><br>
+        <span class="branch">├─ <b>outputs/</b> &nbsp;<span class="desc">what it produced</span></span><br>
+        <span class="branch">└─ <b>log.md</b> &nbsp;<span class="desc">what happened</span></span>
+      </div>
+      <div class="loop-chips">
+        <span class="chip">Read the job</span><span class="arrow">&#8594;</span>
+        <span class="chip">Gather context</span><span class="arrow">&#8594;</span>
+        <span class="chip">Do the work</span><span class="arrow">&#8594;</span>
+        <span class="chip">Write back</span>
+        <span class="again">&#8635; run it again</span>
+      </div>
+    </div>
+    <div class="creeds" style="margin-top:auto;">
+      <div class="creed">Point an LLM at it. Loop it. Have it write back what happened.</div>
+      <div class="creed">Not one big autonomous brain. Small folders, each doing one job well.</div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 6 / PRODUCTION PROOF ===== -->
   <section class="slide proof" data-label="Not a demo" data-screen-label="03"
     data-speaker-notes="The same architecture publishes a public AI brief every weekday: source scan, script, lint gate, voice, publish. The public feed is proof of operation, not another live demo.">
     <div class="kicker accent">Not a demo</div>
@@ -436,7 +474,7 @@ function renderQR(canvas, text) {
    Deck runtime: fit-to-viewport scaling + keyboard navigation
    ============================================================ */
 const stage = document.getElementById("stage");
-const slideOrder = ["Signal OS", "Follow-through", "Not a demo", "Take it with you", "Sourcing"];
+const slideOrder = ["Signal OS", "Follow-through", "Sourcing", "Integrity", "Just a folder", "Not a demo", "Take it with you"];
 const slides = slideOrder.map(label => document.querySelector('#stage > section[data-label="' + label + '"]'));
 const counter = document.getElementById("counter");
 const notes = document.getElementById("notes");
