@@ -57,7 +57,7 @@
   button{
     font:inherit;cursor:pointer;
     border:1px solid var(--line-strong);
-    background:transparent;color:var(--ink2);
+    background:transparent;color:var(--ink);
     border-radius:var(--r-sm);
     padding:6px 11px;height:30px;
     font-weight:500;font-size:12.5px;
@@ -73,7 +73,7 @@
   button.primary:disabled{opacity:.65;cursor:default}
   button.ghost{border-color:transparent;background:transparent;color:var(--muted)}
   button.ghost:hover{background:var(--line2);color:var(--ink)}
-  button.mini{height:24px;padding:2px 8px;font-size:11.5px;border-radius:6px}
+  button.mini{height:24px;padding:2px 8px;font-size:11.5px;border-radius:var(--r-sm)}
   input[type=text]{
     font:inherit;border:1px solid var(--line);border-radius:var(--r-sm);
     padding:6px 10px;height:30px;color:var(--ink);background:#fff;
@@ -81,55 +81,50 @@
   }
   input[type=text]:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(22,24,27,.06)}
 
-  /* Signal OS nav */
-  .sgnav{height:40px;display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--bg);border-bottom:1px solid var(--line)}
-  .sgnav .wm{font:700 11px/1 var(--mono);letter-spacing:.16em;color:var(--ink);text-decoration:none;white-space:nowrap}
-  .sgnav .nl{font:400 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;padding-bottom:2px;border-bottom:1px solid transparent}
-  .sgnav a.nl:hover{color:var(--ink)}
-  .sgnav .nl.cur{color:var(--ink);border-bottom-color:var(--ink)}
-  .sgnav .sep{color:var(--line-strong)}
+  /* Signal OS nav (shell contract, verbatim) */
+.sos-nav{position:sticky;top:0;z-index:80;height:42px;display:flex;align-items:center;gap:28px;padding:0 20px;background:#FCFCFA;border-bottom:1px solid #E7E5E0;font-family:"Space Mono","Cascadia Mono",Consolas,monospace}
+.sos-brand{font-size:11px;font-weight:700;letter-spacing:.24em;color:#16181B;text-decoration:none}
+.sos-links{display:flex;gap:24px;margin-left:auto}
+.sos-links a,.sos-links span{font-size:10.5px;font-weight:400;letter-spacing:.16em;color:#6B7280;text-decoration:none;line-height:42px}
+.sos-links a:hover{color:#16181B}
+.sos-links [aria-current="page"]{color:#16181B;font-weight:700;border-bottom:2px solid #16181B}
 
-  /* header */
+  /* view header row (uniform across Signal OS views) */
   header{
     background:var(--bg);
     border-bottom:1px solid var(--line);
-    height:54px;display:flex;align-items:center;gap:12px;
-    padding:0 18px;position:sticky;top:0;z-index:40;
+    height:48px;display:flex;align-items:center;gap:12px;
+    padding:0 20px;position:sticky;top:42px;z-index:40;
   }
-  .brand{display:flex;align-items:center;gap:10px;flex:none}
-  .logo{
-    width:26px;height:26px;border-radius:5px;flex:none;
-    background:var(--ink);
-    color:#fff;display:flex;align-items:center;justify-content:center;
-    font:700 10px/1 var(--mono);
-  }
-  .brand .nm{font:500 16px/1.1 var(--grotesk);letter-spacing:-.01em;white-space:nowrap}
-  .brand .sub{font-size:11px;color:var(--muted);font-weight:400;margin-top:1px;white-space:nowrap}
+  .vh-name{font:400 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.18em;color:var(--ink);white-space:nowrap}
+  .vh-scope{font-size:13px;color:var(--muted);white-space:nowrap}
+  .vh-stamps{font:400 10px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em;white-space:nowrap}
+  .vh-stamps b{font-weight:400;color:var(--muted)}
+  header button{height:28px;border-radius:var(--r-sm)}
   .spacer{flex:1}
 
-  /* toolbar */
-  .toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px 10px;flex-wrap:wrap}
-  .tabs{display:inline-flex;background:transparent;border:1px solid var(--line);border-radius:var(--r-sm);padding:2px;gap:2px}
-  .tabs button{border:0;background:transparent;color:var(--muted);height:24px;padding:2px 10px;border-radius:3px;
-    font:400 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em}
-  .tabs button:hover{background:var(--panel-2);color:var(--ink)}
-  .tabs button.on{background:var(--ink);color:#fff}
+  /* toolbar: tabs and filters share one convention (mono uppercase, active = ink + 2px ink underline) */
+  .toolbar{display:flex;align-items:center;gap:16px;padding:14px 20px 10px;flex-wrap:wrap}
+  .tabs{display:inline-flex;background:transparent;border:0;padding:0;gap:16px}
+  .tabs button{border:0;background:transparent;color:var(--muted);height:28px;padding:0 1px;border-radius:0;
+    border-bottom:2px solid transparent;
+    font:400 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em}
+  .tabs button:hover{background:transparent;color:var(--ink)}
+  .tabs button.on{background:transparent;color:var(--ink);border-bottom-color:var(--ink)}
   .tabs button .n{color:var(--faint);margin-left:5px;font-size:9.5px}
-  .tabs button.on .n{color:rgba(255,255,255,.55)}
+  .tabs button.on .n{color:var(--muted)}
   .chip{
-    font:400 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;
-    height:24px;padding:0 10px;border-radius:var(--r-sm);
-    border:1px solid var(--line);background:transparent;color:var(--muted);
+    font:400 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;
+    height:28px;padding:0 1px;border-radius:0;
+    border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);
     cursor:pointer;display:inline-flex;align-items:center;
     transition:.12s;
   }
-  .chip:hover{border-color:var(--line-strong);color:var(--ink)}
-  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
-  .stamps{font:400 10px/1.4 var(--mono);color:var(--faint);padding:0 18px 8px;letter-spacing:.02em}
-  .stamps b{color:var(--muted);font-weight:400}
+  .chip:hover{background:transparent;color:var(--ink)}
+  .chip.on{background:transparent;border-bottom-color:var(--ink);color:var(--ink)}
 
   /* layout */
-  .layout{display:grid;grid-template-columns:minmax(0,1fr) 428px;gap:14px;padding:0 18px 54px;align-items:start}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 428px;gap:14px;padding:0 20px 54px;align-items:start}
   @media (max-width:1080px){.layout{grid-template-columns:1fr}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
   .card-h{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line)}
@@ -144,7 +139,7 @@
     padding:9px 16px;border-bottom:1px solid var(--line2);
     cursor:pointer;transition:background .1s;
   }
-  .lrow:hover{background:var(--panel-2)}
+  .lrow:hover{background:var(--accent-soft)}
   .lrow.sel{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
   .lrow:last-child{border-bottom:0}
   .lhead{
@@ -182,22 +177,22 @@
   .sig.fresh{border-color:var(--line-strong)}
   .sig.none{color:var(--faint);font-weight:500;font-style:italic;border-style:dashed}
   .scorec{display:flex;align-items:center;gap:8px;justify-content:flex-end}
-  .scoren{font:500 16px/1 var(--grotesk);font-variant-numeric:lining-nums tabular-nums;width:26px;text-align:right}
-  .s-hi{color:var(--green)} .s-mid{color:var(--amber)} .s-lo{color:var(--faint)}
+  .scoren{font:700 15px/1 var(--mono);font-variant-numeric:lining-nums tabular-nums;width:26px;text-align:right;color:var(--ink)}
+  .s-hi,.s-mid,.s-lo{color:var(--ink)}
   .sbar{width:44px;height:4px;border-radius:99px;background:var(--line2);overflow:hidden;flex:none}
   .sbar i{display:block;height:100%;border-radius:99px}
   .s-hi + .sbar i, .sbar i.hi{background:var(--green)}
   .sbar i.mid{background:var(--amber)} .sbar i.lo{background:#C6CAD1}
 
   /* detail pane */
-  .det{position:sticky;top:68px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 84px);overflow:auto;padding-bottom:2px}
+  .det{position:sticky;top:104px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 120px);overflow:auto;padding-bottom:2px}
   @media (max-width:1080px){.det{position:static;max-height:none}}
   .dhead{padding:16px 18px 14px;border-bottom:1px solid var(--line)}
   .dhead .t{display:flex;align-items:flex-start;gap:10px}
   .dhead h3{margin:0;font:500 20px/1.15 var(--grotesk);letter-spacing:-.02em}
   .dhead .meta{font-size:11.5px;color:var(--muted);margin-top:3px}
   .dhead .big{margin-left:auto;text-align:right;flex:none}
-  .dhead .big .v{font:500 30px/1 var(--grotesk);font-variant-numeric:lining-nums tabular-nums;cursor:pointer;border-bottom:1px dashed transparent}
+  .dhead .big .v{font:700 28px/1 var(--mono);font-variant-numeric:lining-nums tabular-nums;cursor:pointer;border-bottom:1px dashed transparent}
   .dhead .big .v:hover{border-bottom-color:var(--faint)}
   .dhead .big .l{font:400 9px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:3px}
   .fdrs{margin-top:7px;font-size:12px;color:var(--ink2);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -287,7 +282,7 @@
 
   /* modals */
   .mback{
-    position:fixed;inset:0;background:rgba(22,24,27,.38);z-index:60;
+    position:fixed;inset:0;background:rgba(22,24,27,.38);z-index:100;
     display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;
   }
   .mback.open{display:flex}
@@ -316,14 +311,14 @@
   .tree .dir{font-weight:700;color:var(--ink)}
   .tree .c{color:var(--faint);font-family:"Segoe UI",system-ui,sans-serif;font-size:11.5px}
   /* toasts */
-  #toasts{position:fixed;right:16px;bottom:16px;z-index:80;display:flex;flex-direction:column;gap:8px;max-width:360px}
+  #toasts{position:fixed;right:16px;bottom:16px;z-index:120;display:flex;flex-direction:column;gap:8px;max-width:360px}
   .toast{
     background:var(--ink);color:#F5F4F0;border-radius:var(--r-sm);
     padding:9px 13px;font-size:12px;line-height:1.45;
     box-shadow:var(--shadow-md);
     animation:tin .18s ease-out;
   }
-  .toast.err{background:#7c2d24}
+  .toast.err{background:var(--ink)}
   .toast.ok{background:var(--ink)}
   @keyframes tin{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
 
@@ -364,31 +359,31 @@
 </head>
 <body>
 
-<nav class="sgnav">
-  <a class="wm" href="../">SIGNAL OS</a>
-  <a class="nl" href="../founder-radar/">FOUNDER RADAR</a>
-  <span class="sep">·</span>
-  <span class="nl cur">GROWTH SCOUT</span>
-  <span class="sep">·</span>
-  <a class="nl" href="../breakout-radar/">BREAKOUT RADAR</a>
-  <span class="sep">·</span>
-  <a class="nl" href="../associate-os/">ASSOCIATE OS</a>
+<nav class="sos-nav">
+  <a class="sos-brand" href="../">SIGNAL OS</a>
+  <div class="sos-links">
+    <a href="../founder-radar/">FOUNDER RADAR</a>
+    <span aria-current="page">GROWTH SCOUT</span>
+    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <a href="../associate-os/">ASSOCIATE OS</a>
+  </div>
 </nav>
 
 <header>
-  <div class="brand"><span class="sub">European growth signals</span></div>
-  <div class="spacer"></div>
-  <button id="btnHow" title="How scoring works" aria-label="How scoring works" style="width:30px;padding:0;justify-content:center">?</button>
-  <button id="btnBrief">Daily brief</button>
-  <button id="btnRefresh" class="primary">Refresh signals</button>
+  <span class="vh-name">GROWTH SCOUT</span>
+  <span class="vh-scope">european growth signals</span>
+  <span class="spacer"></span>
+  <span class="vh-stamps" id="stamps">No live pull yet.</span>
+  <button id="btnRefresh" title="Refresh signals" aria-label="Refresh signals" style="min-width:28px;padding:0 6px;justify-content:center">&#8635;</button>
+  <button id="btnBrief" class="primary">Daily brief</button>
+  <button id="btnHow" title="How scoring works" aria-label="How scoring works" style="width:28px;padding:0;justify-content:center">?</button>
 </header>
 
 <div class="toolbar">
   <div class="tabs" id="tabs"></div>
-  <span id="sectorChips" style="display:flex;gap:5px;flex-wrap:wrap"></span>
+  <span id="sectorChips" style="display:flex;gap:16px;flex-wrap:wrap"></span>
   <input type="text" id="q" placeholder="Search company, city, sector" style="width:220px" />
 </div>
-<div class="stamps" id="stamps">No live pull yet.</div>
 
 <div class="layout">
   <div class="card">
@@ -758,6 +753,37 @@ function loadJSON(k,fb){
   try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?fb:v;}catch(e){return fb;}
 }
 function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+/* ---------- shared Signal OS pipeline store (sos.pipeline.v1, same-origin) ---------- */
+const SOS_PIPE_KEY='sos.pipeline.v1';
+function sosPipeGet(){
+  try{
+    const v=JSON.parse(localStorage.getItem(SOS_PIPE_KEY)||'[]');
+    return Array.isArray(v)?v:[];
+  }catch(e){return [];}
+}
+function sosPipeSet(list){
+  try{localStorage.setItem(SOS_PIPE_KEY,JSON.stringify(Array.isArray(list)?list:[]));}catch(e){}
+}
+function sosPipeAdd(entry){
+  if(!entry||!entry.name)return null;
+  const list=sosPipeGet();
+  const key=String(entry.name).trim().toLowerCase();
+  if(list.some(x=>x&&typeof x.name==='string'&&x.name.trim().toLowerCase()===key))return null;
+  const e={
+    id:'sos-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),
+    name:String(entry.name).trim(),
+    kind:entry.kind==='person'?'person':'company',
+    from:entry.from||'',
+    stage:entry.stage||'Sourced',
+    note:entry.note||'',
+    at:Date.now()
+  };
+  list.push(e);
+  sosPipeSet(list);
+  return e;
+}
+
 let DAILY=loadJSON(DAILY_KEY,{});
 let X_DAILY=loadJSON(X_DAILY_KEY,{});
 let WIRE=loadJSON(WIRE_KEY,null);
@@ -769,7 +795,12 @@ let ui={tab:'all',sector:null,q:'',sel:null,showBrk:false,serverLive:false,provi
 let STARRED=new Set(loadJSON(STAR_KEY,[]));
 function saveStars(){saveJSON(STAR_KEY,[...STARRED]);}
 function toggleStar(id){
-  if(STARRED.has(id))STARRED.delete(id);else STARRED.add(id);
+  if(STARRED.has(id))STARRED.delete(id);   /* unstar keeps pipeline history */
+  else{
+    STARRED.add(id);
+    const c=COMPANIES.find(x=>x.id===id);
+    if(c)sosPipeAdd({name:c.name,kind:'company',from:'growth-scout',stage:'Sourced'});
+  }
   saveStars();render();
 }
 function starBtn(id,big){
@@ -1287,9 +1318,9 @@ function renderChips(){
 function renderStamps(){
   const el=document.getElementById('stamps');
   const parts=[];
-  if(lastStamp.jobs)parts.push('<b>Jobs</b> '+hhmm(lastStamp.jobs));
+  if(lastStamp.jobs)parts.push('<b>JOBS</b> '+hhmm(lastStamp.jobs));
   if(lastStamp.hn)parts.push('<b>HN</b> '+hhmm(lastStamp.hn));
-  if(lastStamp.gh)parts.push('<b>GitHub</b> '+hhmm(lastStamp.gh));
+  if(lastStamp.gh)parts.push('<b>GITHUB</b> '+hhmm(lastStamp.gh));
   if(lastStamp.x)parts.push('<b>X</b> '+hhmm(lastStamp.x));
   el.innerHTML=parts.length?parts.join(' &nbsp;·&nbsp; '):'No live pull yet.';
 }
@@ -1780,6 +1811,7 @@ function addDiscovered(i){
   COMPANIES.push(comp);
   d.added=true;
   STARRED.add(comp.id);saveStars();
+  sosPipeAdd({name:comp.name,kind:'company',from:'growth-scout',stage:'Sourced'});
   saveDiscovered();
   saveJSON(SCAN_KEY,{date:todayKey(),disc:DISC});
   ui.sel=comp.id;ui.tab='all';ui.sector=null;
@@ -1874,6 +1906,7 @@ function addCustom(){
   };
   COMPANIES.push(comp);
   STARRED.add(comp.id);saveStars();
+  sosPipeAdd({name:comp.name,kind:'company',from:'growth-scout',stage:'Sourced'});
   saveCustom();
   ['addName','addX','addSlug'].forEach(id=>{document.getElementById(id).value='';});
   ui.sel=comp.id;

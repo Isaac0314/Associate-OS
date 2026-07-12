@@ -46,9 +46,9 @@
   button{
     font:inherit;cursor:pointer;
     border:1px solid var(--line-2);
-    background:transparent;color:var(--ink-2);
+    background:transparent;color:var(--ink);
     border-radius:var(--r-sm);
-    padding:0 12px;height:30px;
+    padding:0 12px;height:28px;
     font-weight:500;font-size:12px;white-space:nowrap;
     display:inline-flex;align-items:center;gap:6px;
     transition:border-color .12s,background .12s,color .12s;
@@ -58,59 +58,57 @@
   button.primary:hover{background:#d64a36;border-color:#d64a36;color:#fff}
   button.ghost{background:transparent;border-color:transparent;color:var(--muted)}
   button.ghost:hover{background:var(--panel-2);color:var(--ink)}
-  button.peec{border-color:var(--accent);color:var(--accent);background:transparent;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:400}
-  button.peec:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
   button:disabled{opacity:.45;cursor:default}
   input{
     font:inherit;color:var(--ink);
     background:transparent;
     border:1px solid var(--line-2);border-radius:var(--r-sm);
-    padding:0 11px;height:30px;width:230px;
+    padding:0 11px;height:28px;width:230px;
     transition:border-color .12s;
   }
   input::placeholder{color:var(--faint)}
   input:focus{outline:none;border-color:var(--ink)}
 
-  /* ------- suite nav ------- */
-  .sigosnav{
-    position:sticky;top:0;z-index:45;
-    height:40px;display:flex;align-items:center;gap:12px;
-    padding:0 20px;background:var(--bg);border-bottom:1px solid var(--line);
-    overflow-x:auto;white-space:nowrap;
-  }
-  .sigosnav .swm{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ink);text-decoration:none;margin-right:8px}
-  .sigosnav a.nl{
-    font-family:var(--mono);font-size:9.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-    text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;
-  }
-  .sigosnav a.nl:hover{color:var(--ink)}
-  .sigosnav a.nl.cur{color:var(--ink);border-bottom-color:var(--ink)}
-  .sigosnav .dot{color:var(--faint);font-size:10px}
+  /* ------- suite nav (shell contract A, verbatim) ------- */
+.sos-nav{position:sticky;top:0;z-index:80;height:42px;display:flex;align-items:center;gap:28px;padding:0 20px;background:#FCFCFA;border-bottom:1px solid #E7E5E0;font-family:"Space Mono","Cascadia Mono",Consolas,monospace}
+.sos-brand{font-size:11px;font-weight:700;letter-spacing:.24em;color:#16181B;text-decoration:none}
+.sos-links{display:flex;gap:24px;margin-left:auto}
+.sos-links a,.sos-links span{font-size:10.5px;font-weight:400;letter-spacing:.16em;color:#6B7280;text-decoration:none;line-height:42px}
+.sos-links a:hover{color:#16181B}
+.sos-links [aria-current="page"]{color:#16181B;font-weight:700;border-bottom:2px solid #16181B}
 
-  /* ------- header ------- */
+  /* ------- view header (shell contract B) ------- */
   header{
-    position:sticky;top:40px;z-index:40;
+    position:sticky;top:42px;z-index:40;
     display:flex;align-items:center;gap:12px;
-    flex-wrap:wrap;row-gap:7px;
-    min-height:54px;padding:8px 20px;
+    height:48px;padding:0 20px;
     background:var(--bg);
     border-bottom:1px solid var(--line);
   }
-  @media (max-width:1360px){header input{width:170px}}
-  .spacer{flex:1}
-
-  .tabs{display:inline-flex;gap:2px;flex:none}
-  .tabs button{border:0;background:transparent;color:var(--muted);height:30px;padding:0 10px;border-radius:0;border-bottom:2px solid transparent;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:400}
-  .tabs button:hover{color:var(--ink);background:transparent;border-bottom-color:transparent}
-  .tabs button.on{background:transparent;color:var(--ink);border-bottom-color:var(--ink)}
-  .tabs button .n{color:var(--faint);font-family:var(--mono);font-size:9.5px;margin-left:5px}
-  .tabs button.on .n{color:var(--accent)}
-
-  .clock{
-    display:inline-flex;align-items:center;height:30px;
+  .vh-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+  .vh-scope{font-family:var(--sans);font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stamp{
     font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--muted);white-space:nowrap;
   }
+  .qbtn{width:28px;flex:none;padding:0;justify-content:center;font-family:var(--mono);font-weight:700}
+  .spacer{flex:1}
+
+  /* ------- toolbar (tabs + filter, contract C tab style) ------- */
+  .toolbar{
+    position:sticky;top:90px;z-index:39;
+    display:flex;align-items:center;gap:12px;
+    height:44px;padding:0 20px;
+    background:var(--bg);border-bottom:1px solid var(--line);
+  }
+  @media (max-width:1360px){.toolbar input{width:170px}}
+
+  .tabs{display:inline-flex;gap:2px;flex:none}
+  .tabs button{border:0;background:transparent;color:var(--muted);height:28px;padding:0 10px;border-radius:0;border-bottom:2px solid transparent;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:400}
+  .tabs button:hover{color:var(--ink);background:transparent;border-bottom-color:transparent}
+  .tabs button.on{background:transparent;color:var(--ink);border-bottom-color:var(--ink)}
+  .tabs button .n{color:var(--faint);font-family:var(--mono);font-size:9.5px;margin-left:5px}
+  .tabs button.on .n{color:var(--muted)}
 
   /* ------- stat bar ------- */
   .statbar{
@@ -135,17 +133,18 @@
     transition:border-color .12s;
     animation:rise .4s ease both;
   }
-  .co:hover{border-color:var(--line-2)}
-  .co.brk:hover{border-color:var(--accent-line)}
+  .co:hover{background:var(--accent-soft)}
+  .co.sel{box-shadow:inset 2px 0 0 var(--accent)}
   @keyframes rise{from{opacity:0}to{opacity:1}}
   .co-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
   .arch{
     font-family:var(--mono);font-size:8.5px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;
     color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;
   }
-  .sampletag{
+  .tag{
     font-family:var(--mono);font-size:8.5px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--faint);white-space:nowrap;
+    color:var(--muted);border:1px solid var(--line-2);border-radius:3px;
+    padding:1px 4px;white-space:nowrap;
   }
   .star{
     margin-left:auto;border:0;background:none;color:var(--faint);
@@ -158,12 +157,11 @@
   .co-meta{display:flex;gap:8px;align-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
   .stagechip{font-size:9px;color:var(--ink-2);white-space:nowrap}
   .co-bot{display:flex;align-items:flex-end;gap:10px}
-  .idx{font-family:var(--mono);font-size:25px;font-weight:700;line-height:1;letter-spacing:-.02em;color:var(--ink)}
+  .idx{font-family:var(--mono);font-size:15px;font-weight:700;line-height:1;letter-spacing:-.02em;color:var(--ink)}
   .idx .brklbl{
     display:block;font-size:8px;letter-spacing:.16em;color:var(--accent);
     font-weight:400;margin-top:4px;
   }
-  .co.brk .idx{color:var(--accent)}
   .sparkwrap{flex:1;display:flex;justify-content:center}
   .delta{font-family:var(--mono);font-size:11px;font-weight:400;white-space:nowrap}
   .delta.up{color:var(--up)} .delta.dn{color:var(--down)} .delta.fl{color:var(--faint)}
@@ -173,7 +171,7 @@
   }
 
   /* ------- rail ------- */
-  .rail{display:flex;flex-direction:column;gap:26px;position:sticky;top:108px}
+  .rail{display:flex;flex-direction:column;gap:26px;position:sticky;top:148px}
   @media (max-width:1080px){.rail{position:static}}
   .card{background:transparent;border:0;border-radius:0}
   .card-h{display:flex;align-items:center;gap:8px;padding:0 0 9px;border-bottom:1px solid var(--line-2)}
@@ -200,33 +198,32 @@
   }
   .pingrow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
   a.gmailbtn{
-    display:inline-flex;align-items:center;height:24px;padding:0 10px;
+    display:inline-flex;align-items:center;height:28px;padding:0 10px;
     border-radius:var(--r-sm);background:var(--accent);color:#fff;
     font-size:11px;font-weight:600;text-decoration:none;
   }
   a.gmailbtn:hover{background:#d64a36}
-  .copybtn{height:24px;font-size:11px;padding:0 9px}
+  .copybtn{height:28px;font-size:11px;padding:0 9px}
   .copybtn.done{color:var(--up);border-color:rgba(14,125,94,.4)}
   .pingnote{font-size:9.5px;color:var(--faint);font-family:var(--mono)}
 
   /* ------- detail pane ------- */
-  .scrim{position:fixed;inset:0;background:rgba(26,29,33,.35);opacity:0;pointer-events:none;transition:opacity .18s;z-index:50}
+  .scrim{position:fixed;inset:0;background:rgba(26,29,33,.35);opacity:0;pointer-events:none;transition:opacity .18s;z-index:84}
   .scrim.on{opacity:1;pointer-events:auto}
   .detail{
-    position:fixed;top:0;right:0;bottom:0;width:min(520px,94vw);z-index:60;
+    position:fixed;top:0;right:0;bottom:0;width:min(520px,94vw);z-index:85;
     background:var(--panel);border-left:1px solid var(--line-2);
     transform:translateX(102%);transition:transform .22s ease;
     overflow-y:auto;box-shadow:var(--shadow);
   }
   .detail.on{transform:none}
   .d-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
-  .d-close{position:absolute;top:14px;right:14px;width:28px;height:28px;padding:0;justify-content:center;border-radius:7px}
+  .d-close{position:absolute;top:14px;right:14px;width:28px;height:28px;padding:0;justify-content:center;border-radius:var(--r-sm)}
   .d-name{font-size:20px;font-weight:500;letter-spacing:-.015em;margin:6px 0 2px}
   .d-one{color:var(--muted);font-size:12.5px}
   .d-idxrow{display:flex;align-items:center;gap:16px;margin-top:12px}
-  .d-idx{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1;cursor:pointer;border-radius:var(--r-sm);padding:2px 4px;margin:-2px -4px}
+  .d-idx{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;color:var(--ink);cursor:pointer;border-radius:var(--r-sm);padding:2px 4px;margin:-2px -4px}
   .d-idx:hover{background:var(--panel-2)}
-  .d-idx.hot{color:var(--accent)}
   .d-idxmeta{font-size:11px;color:var(--muted);line-height:1.5}
   .rcpthint{color:var(--faint);font-size:10px}
   .d-sec{padding:16px 20px;border-bottom:1px solid var(--line)}
@@ -258,7 +255,7 @@
   .tl .tx{font-size:11.5px;color:var(--ink-2);line-height:1.45}
 
   /* ------- replay overlay ------- */
-  .replay{position:fixed;inset:0;z-index:80;background:rgba(22,24,27,.45);display:none;overflow:auto;padding:26px 18px}
+  .replay{position:fixed;inset:0;z-index:86;background:rgba(22,24,27,.45);display:none;overflow:auto;padding:26px 18px}
   .replay.on{display:block}
   .rp{
     max-width:1120px;margin:0 auto;background:var(--panel);
@@ -267,10 +264,6 @@
   }
   .rp-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .rp-head .t{font-size:17px;font-weight:500;letter-spacing:-.01em}
-  .rp-tag{
-    font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:.14em;
-    color:var(--accent);text-transform:uppercase;
-  }
   .rp-head .disc{font-size:10.5px;color:var(--faint);width:100%;font-family:var(--mono)}
   .rp-body{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:0}
   @media (max-width:900px){.rp-body{grid-template-columns:1fr}}
@@ -286,8 +279,7 @@
   .rp-ev .src.real{color:var(--link)}
   .rp-ev.now .tx{color:var(--ink)}
   .rp-right{padding:16px 20px}
-  .rp-score{font-family:var(--mono);font-size:52px;font-weight:700;line-height:1;letter-spacing:-.02em}
-  .rp-score.hot{color:var(--accent)}
+  .rp-score{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;letter-spacing:-.02em;color:var(--ink)}
   .rp-score-meta{font-size:11px;color:var(--muted);margin:4px 0 14px;line-height:1.5}
   .leadbox{
     border-left:2px solid var(--accent);background:var(--accent-soft);
@@ -316,14 +308,14 @@
 
   /* ------- toast ------- */
   .toast{
-    position:fixed;left:50%;bottom:26px;z-index:100;
-    transform:translateX(-50%) translateY(8px);
-    background:var(--ink);color:#fff;font-size:12px;font-weight:500;
-    border-radius:var(--r-md);padding:8px 14px;opacity:0;pointer-events:none;
+    position:fixed;right:20px;bottom:20px;z-index:100;
+    transform:translateY(8px);
+    background:var(--ink);color:var(--bg);font-size:12px;font-weight:500;
+    border-radius:var(--r-sm);padding:8px 14px;opacity:0;pointer-events:none;
     transition:opacity .2s,transform .2s;box-shadow:var(--shadow);
   }
-  .toast.on{opacity:1;transform:translateX(-50%)}
-  .toast a{color:#fff;text-decoration:underline;pointer-events:auto}
+  .toast.on{opacity:1;transform:none}
+  .toast a{color:var(--bg);text-decoration:underline;pointer-events:auto}
 
   footer{padding:14px 20px 26px;font-size:10.5px;color:var(--faint);border-top:1px solid var(--line);line-height:1.6}
   footer b{color:var(--muted)}
@@ -337,24 +329,30 @@
 </head>
 <body>
 
-<nav class="sigosnav" aria-label="Signal OS">
-  <a class="swm" href="../">SIGNAL OS</a>
-  <a class="nl" href="../founder-radar/">FOUNDER RADAR</a>
-  <span class="dot">&middot;</span>
-  <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
-  <span class="dot">&middot;</span>
-  <a class="nl cur" aria-current="page" href="../breakout-radar/">BREAKOUT RADAR</a>
-  <span class="dot">&middot;</span>
-  <a class="nl" href="../associate-os/">ASSOCIATE OS</a>
+<nav class="sos-nav">
+  <a class="sos-brand" href="../">SIGNAL OS</a>
+  <div class="sos-links">
+    <a href="../founder-radar/">FOUNDER RADAR</a>
+    <a href="../growth-scout/">GROWTH SCOUT</a>
+    <span aria-current="page">BREAKOUT RADAR</span>
+    <a href="../associate-os/">ASSOCIATE OS</a>
+  </div>
 </nav>
 
 <header>
-  <nav class="tabs" id="tabs"></nav>
-  <input id="search" placeholder="Filter name, sector, geo" aria-label="Filter companies"/>
+  <span class="vh-name">BREAKOUT RADAR</span>
+  <span class="vh-scope">who is quietly breaking out across the portfolio</span>
   <div class="spacer"></div>
-  <div class="clock tnum" id="clock"></div>
-  <button id="replayBtn" class="peec">Replay: Peec AI</button>
+  <span class="stamp tnum" id="clock"></span>
+  <button id="replayBtn">Replay: Peec AI <span class="tag">PUBLIC TIMELINE</span></button>
+  <button id="introBtn" class="qbtn" title="How scoring works" aria-label="How scoring works">?</button>
 </header>
+
+<div class="toolbar">
+  <nav class="tabs" id="tabs"></nav>
+  <div class="spacer"></div>
+  <input id="search" placeholder="Filter name, sector, geo" aria-label="Filter companies"/>
+</div>
 
 <div class="statbar" id="statbar"></div>
 
@@ -395,6 +393,27 @@
 
 <script>
 'use strict';
+
+// ---------- shared Signal OS pipeline store (shell contract D) ----------
+const SOS_PIPE_KEY = 'sos.pipeline.v1';
+function sosPipeGet(){
+  try{
+    const v = JSON.parse(localStorage.getItem(SOS_PIPE_KEY));
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
+function sosPipeSet(list){
+  try{ localStorage.setItem(SOS_PIPE_KEY, JSON.stringify(Array.isArray(list) ? list : [])); }catch(e){}
+}
+function sosPipeAdd(entry){
+  if (!entry || !entry.name) return sosPipeGet();
+  const list = sosPipeGet();
+  if (!list.some(x => x && x.name === entry.name)){
+    list.push(entry);
+    sosPipeSet(list);
+  }
+  return list;
+}
 
 /* =========================================================
    Deterministic core. Everything numeric happens here.
@@ -759,12 +778,12 @@ function renderGrid(){
     const arrow=d>=3?'&#9650;':d<=-3?'&#9660;':'&#9642;';
     const dcls=d>=3?'up':d<=-3?'dn':'fl';
     const dtx=(d>0?'+':'')+d;
-    return '<div class="co'+(idx>=THRESHOLD?' brk':'')+'" data-id="'+c.id+'" style="animation-delay:'+Math.min(i*18,380)+'ms">'
+    return '<div class="co'+(idx>=THRESHOLD?' brk':'')+(state.detailId===c.id?' sel':'')+'" data-id="'+c.id+'" style="animation-delay:'+Math.min(i*18,380)+'ms">'
       +'<div class="co-top"><span class="arch">'+esc(c.arch)+'</span>'
       +'<button class="star'+(state.watch.has(c.n)?' on':'')+'" data-star="'+c.id+'" title="Toggle watchlist">'+(state.watch.has(c.n)?'&#9733;':'&#9734;')+'</button></div>'
       +'<div class="co-name">'+esc(c.n)+'</div>'
       +'<div class="co-one">'+esc(c.o)+'</div>'
-      +'<div class="co-meta"><span class="stagechip">'+esc(c.s.toUpperCase())+'</span><span>'+esc(c.g)+'</span><span class="sampletag">sample</span></div>'
+      +'<div class="co-meta"><span class="stagechip">'+esc(c.s.toUpperCase())+'</span><span>'+esc(c.g)+'</span><span class="tag">SAMPLE</span></div>'
       +'<div class="co-bot"><div class="idx tnum">'+idx+(idx>=THRESHOLD?'<span class="brklbl">BREAKOUT</span>':'')+'</div>'
       +'<div class="sparkwrap">'+sparkSvg(sparkVals(c,w),d)+'</div>'
       +'<div class="delta '+dcls+'">'+arrow+' '+dtx+'</div></div></div>';
@@ -833,9 +852,9 @@ function renderRail(){
     +'<div class="act-t">'+a.t+'</div>'
     +'<div class="act-b">'+a.html+'</div>'
     +(a.ping?'<pre class="ping">'+esc(a.ping.text)+'</pre>'
-      +'<div class="pingrow"><a class="gmailbtn" target="_blank" rel="noopener" href="'+esc(gmailHref(a.ping))+'">Open in Gmail</a>'
+      +'<div class="pingrow"><a class="gmailbtn" data-act="'+a.id+'" target="_blank" rel="noopener" href="'+esc(gmailHref(a.ping))+'">Open in Gmail</a>'
       +'<button class="copybtn" data-copy="'+a.id+'">Copy</button>'
-      +'<span class="pingnote">to '+esc(a.ping.to)+', sample address</span></div>':'')
+      +'<span class="pingnote">to '+esc(a.ping.to)+'</span><span class="tag">SAMPLE</span></div>':'')
     +'</div>'
   ).join('');
 }
@@ -853,7 +872,22 @@ function buildPing(c,idx,d){
     +suggestedAction(c,idx);
 }
 function pingFor(c,idx,d){
-  return {text:buildPing(c,idx,d),to:SAMPLE_TO,su:'Breakout flag: '+c.n+' (Index '+idx+')'};
+  return {text:buildPing(c,idx,d),to:SAMPLE_TO,su:'Breakout flag: '+c.n+' (Index '+idx+')',co:c.n,idx:idx};
+}
+/* Shell contract D: acting on a partner ping moves the company into the shared pipeline. */
+function pipeFromPing(p){
+  if(!p||!p.co)return;
+  const before=sosPipeGet().length;
+  const after=sosPipeAdd({
+    id:'breakout-radar:'+String(p.co).toLowerCase(),
+    name:p.co,
+    kind:'company',
+    from:'breakout-radar',
+    stage:'Diligence',
+    note:'Partner ping at Breakout Index '+p.idx,
+    at:Date.now()
+  }).length;
+  if(after>before)showToast(p.co+' added to pipeline (Diligence)');
 }
 /* Kept for reference; no UI references these two functions. */
 function skipTwoWeeks(){
@@ -906,7 +940,7 @@ function openDetail(id){
 
   el('detail').innerHTML=
     '<div class="d-head"><button class="d-close ghost" id="dClose" title="Close">&#10005;</button>'
-    +'<span class="arch">'+esc(c.arch)+'</span> <span class="sampletag">sample</span>'
+    +'<span class="arch">'+esc(c.arch)+'</span> <span class="tag">SAMPLE</span>'
     +'<div class="d-name">'+esc(c.n)+'</div><div class="d-one">'+esc(c.o)+'</div>'
     +'<div class="d-idxrow"><div class="d-idx tnum'+(idx>=THRESHOLD?' hot':'')+'" id="dIdx" role="button" tabindex="0" title="Show the score receipt" aria-expanded="'+(state.receiptOpen?'true':'false')+'">'+idx+'</div>'
     +'<div class="d-idxmeta">Breakout Index &middot; '+(d>0?'+':'')+d+' over 2 weeks<br>'+esc(c.s)+' &middot; '+esc(c.g)+(idx>=THRESHOLD?'<br><b style="color:var(--accent)">Above breakout threshold ('+THRESHOLD+')</b>':'')
@@ -917,6 +951,9 @@ function openDetail(id){
   el('detail').classList.add('on');
   el('scrim').classList.add('on');
   el('detail').scrollTop=0;
+  document.querySelectorAll('#grid .co.sel').forEach(n=>n.classList.remove('sel'));
+  const selCard=document.querySelector('#grid .co[data-id="'+id+'"]');
+  if(selCard)selCard.classList.add('sel');
   el('dClose').addEventListener('click',closeDetail);
   const di=el('dIdx');
   di.addEventListener('click',()=>{toggleReceipt();di.setAttribute('aria-expanded',state.receiptOpen?'true':'false');});
@@ -928,6 +965,7 @@ function closeDetail(){
   state.detailId=null;
   el('detail').classList.remove('on');
   el('scrim').classList.remove('on');
+  document.querySelectorAll('#grid .co.sel').forEach(n=>n.classList.remove('sel'));
 }
 
 /* ------- Peec replay ------- */
@@ -1016,8 +1054,8 @@ function renderReplay(){
     :'';
   el('replay').innerHTML=
     '<div class="rp">'
-    +'<div class="rp-head"><span class="t">Replay: Peec AI</span><span class="rp-tag">REAL PUBLIC TIMELINE</span>'
-    +'<button class="ghost" id="rpClose" style="margin-left:auto">Close</button>'
+    +'<div class="rp-head"><span class="t">Replay: Peec AI</span><span class="tag">PUBLIC TIMELINE</span>'
+    +'<button id="rpClose" style="margin-left:auto">Close</button>'
     +'<span class="disc">Public-timeline reconstruction, illustrative weights. Solid dots are sourced datapoints; hollow dots are interpolated months. Stage factor held at 1.0.</span></div>'
     +'<div class="rp-body"><div class="rp-left"><div class="rp-chart">'+peecChart(mi,flagM)+'</div>'
     +'<div class="rp-feed">'+feed+'</div></div>'
@@ -1030,7 +1068,7 @@ function renderReplay(){
     +'<div class="rp-foot">'
     +'<button class="primary" id="rpNext"'+(atEnd?' disabled':'')+'>Advance month</button>'
     +'<button id="rpAuto">'+(state.replay.timer?'Pause auto-play':'Auto-play')+'</button>'
-    +'<button class="ghost" id="rpRestart">Restart</button>'
+    +'<button id="rpRestart">Restart</button>'
     +'<span class="note">Sources cited inline: Antler, TechCrunch, Sifted, 20VC announcement, founder LinkedIn post.</span>'
     +'</div></div>';
   el('rpClose').addEventListener('click',closeReplay);
@@ -1092,13 +1130,20 @@ function init(){
     if(card)openDetail(+card.dataset.id);
   });
   el('actlist').addEventListener('click',e=>{
+    const g=e.target.closest('a.gmailbtn');
+    if(g){
+      const act=state.acts.find(x=>x.id===+g.dataset.act);
+      if(act&&act.ping)pipeFromPing(act.ping);
+      return;
+    }
     const b=e.target.closest('[data-copy]');if(!b)return;
     const a=state.acts.find(x=>x.id===+b.dataset.copy);
-    if(a&&a.ping)copyText(a.ping.text,b);
+    if(a&&a.ping){copyText(a.ping.text,b);pipeFromPing(a.ping);}
   });
   el('replayBtn').addEventListener('click',openReplay);
   el('scrim').addEventListener('click',closeDetail);
   el('introGotIt').addEventListener('click',closeIntro);
+  el('introBtn').addEventListener('click',openIntro);
   el('introLink').addEventListener('click',e=>{e.preventDefault();openIntro();});
 
   document.addEventListener('keydown',e=>{

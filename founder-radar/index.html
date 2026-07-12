@@ -59,9 +59,9 @@
   button{
     font:inherit;cursor:pointer;
     border:1px solid var(--line-strong);
-    background:var(--panel);color:var(--ink2);
-    border-radius:var(--r-sm);
-    padding:6px 11px;height:30px;
+    background:var(--panel);color:var(--ink);
+    border-radius:var(--r-md);
+    padding:6px 11px;height:28px;
     font-weight:500;font-size:12.5px;
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
     transition:background .12s,border-color .12s,color .12s;
@@ -77,7 +77,7 @@
   a.btnlink{
     cursor:pointer;text-decoration:none;
     border:1px solid var(--line-strong);background:var(--panel);color:var(--ink2);
-    border-radius:var(--r-sm);padding:2px 9px;height:24px;font-size:11px;font-family:inherit;font-weight:500;line-height:1;
+    border-radius:var(--r-md);padding:2px 9px;height:24px;font-size:11px;font-family:inherit;font-weight:500;line-height:1;
     display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
     transition:background .12s,border-color .12s,color .12s;
   }
@@ -92,44 +92,36 @@
   input::placeholder{color:var(--faint)}
   .mono{font-family:var(--mono)}
 
-  /* ---------- suite nav ---------- */
-  .sigosnav{
-    height:40px;display:flex;align-items:center;gap:12px;
-    padding:0 18px;background:var(--paper);border-bottom:1px solid var(--line);
-    overflow-x:auto;white-space:nowrap;
-  }
-  .sigosnav .wm{font:600 12px/1 var(--grotesk);letter-spacing:.06em;color:var(--ink);text-decoration:none;margin-right:8px}
-  .sigosnav a.nl{
-    font:400 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-    text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;
-  }
-  .sigosnav a.nl:hover{color:var(--ink)}
-  .sigosnav a.nl.cur{color:var(--ink);border-bottom-color:var(--ink)}
-  .sigosnav .dot{color:var(--faint);font-size:10px}
+  /* ---------- suite nav (Signal OS shell contract, verbatim) ---------- */
+.sos-nav{position:sticky;top:0;z-index:80;height:42px;display:flex;align-items:center;gap:28px;padding:0 20px;background:#FCFCFA;border-bottom:1px solid #E7E5E0;font-family:"Space Mono","Cascadia Mono",Consolas,monospace}
+.sos-brand{font-size:11px;font-weight:700;letter-spacing:.24em;color:#16181B;text-decoration:none}
+.sos-links{display:flex;gap:24px;margin-left:auto}
+.sos-links a,.sos-links span{font-size:10.5px;font-weight:400;letter-spacing:.16em;color:#6B7280;text-decoration:none;line-height:42px}
+.sos-links a:hover{color:#16181B}
+.sos-links [aria-current="page"]{color:#16181B;font-weight:700;border-bottom:2px solid #16181B}
 
-  /* ---------- header ---------- */
+  /* ---------- view header (uniform shell row) ---------- */
   header{
-    height:56px;display:flex;align-items:center;gap:10px;
-    padding:0 18px;border-bottom:1px solid var(--line);
+    height:48px;display:flex;align-items:center;gap:10px;
+    padding:0 20px;border-bottom:1px solid var(--line);
     background:var(--paper);
     position:relative;z-index:30;
   }
+  .vh-left{display:flex;align-items:baseline;gap:12px;min-width:0}
+  .vh-name{font:400 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+  .vh-scope{font:400 13px/1.4 var(--grotesk);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .spacer{flex:1}
-  .stamp{font:400 10px/1 var(--mono);color:var(--faint);white-space:nowrap;letter-spacing:.04em}
+  .stamp{font:400 10px/1 var(--mono);color:var(--muted);white-space:nowrap;letter-spacing:.04em}
   .stamp.off{color:var(--muted)}
   .iconbtn{
-    width:30px;padding:0;justify-content:center;color:var(--muted);
+    width:28px;height:28px;padding:0;justify-content:center;color:var(--muted);border-radius:var(--r-md);
   }
   .iconbtn svg{display:block}
   .iconbtn.busy svg{animation:spin 0.9s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .cleared{display:flex;flex-direction:column;gap:5px;align-items:flex-end;margin-right:4px}
-  .cleared .t{font:400 10.5px/1 var(--mono);color:var(--ink2);letter-spacing:.02em}
-  .cleared .bar{width:130px;height:2px;background:var(--line);overflow:hidden}
-  .cleared .bar i{display:block;height:100%;background:var(--ember);transition:width .3s}
 
   /* ---------- layout ---------- */
-  .app{display:grid;grid-template-columns:308px minmax(0,1fr) 344px;height:calc(100vh - 96px)}
+  .app{display:grid;grid-template-columns:300px minmax(0,1fr) 344px;height:calc(100vh - 90px)}
   .rail{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--paper)}
   .center{min-width:0;display:flex;flex-direction:column;min-height:0}
   .side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--paper)}
@@ -138,14 +130,13 @@
   .railhead{padding:14px 14px 0}
   .tabs{display:flex;border-bottom:1px solid var(--line);gap:2px}
   .tabs button{
-    flex:1;border:0;background:transparent;height:28px;padding:0 2px;
+    flex:1;border:0;border-bottom:2px solid transparent;background:transparent;height:28px;padding:0 2px;margin-bottom:-1px;
     border-radius:0;color:var(--muted);justify-content:center;gap:5px;
-    font:400 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    font:400 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
   }
   .tabs button:hover{color:var(--ink)}
   .tabs button .n{font:400 9px/1 var(--mono);color:var(--faint);letter-spacing:0}
-  .tabs button.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
-  .tabs button.on .n{color:var(--ember)}
+  .tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
   .askwrap{padding:11px 14px 8px;position:relative}
   .askwrap input{height:30px;font-size:12.5px;padding-left:28px;border-color:var(--line)}
   .askwrap input:focus{border-color:var(--ink)}
@@ -170,14 +161,14 @@
     cursor:pointer;position:relative;
     transition:background .1s;
   }
-  .cand:hover{background:var(--panel)}
+  .cand:hover{background:var(--ember-soft)}
   .cand.sel{background:var(--panel);box-shadow:inset 2px 0 0 var(--ember)}
   .cand.leaving{animation:leave .2s ease-in forwards}
   @keyframes leave{to{opacity:0;transform:translateX(26px)}}
   .cand .top{display:flex;align-items:baseline;gap:8px}
   .cand .nm{font:600 13px/1.3 var(--grotesk);letter-spacing:-.01em;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .cand .sc{font:700 13px/1 var(--mono);flex:none}
-  .sc.hot{color:var(--ember)} .sc.warmt{color:var(--ink)} .sc.coolt{color:var(--muted)}
+  .cand .sc{font:700 15px/1 var(--mono);flex:none}
+  .sc.hot,.sc.warmt,.sc.coolt{color:var(--ink)}
   .cand .hd{font:400 10px/1.5 var(--mono);color:var(--faint);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cand .ln{
     font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.45;
@@ -198,12 +189,9 @@
   .stb.watchlist{color:var(--ink2);border-color:var(--line-strong)}
   .stb.contacted{color:var(--positive);border-color:var(--positive-line)}
   .stb.meeting{color:var(--ember-ink);border-color:var(--ember-line)}
-  .livep{
-    font:700 8.5px/1 var(--mono);letter-spacing:.1em;
-    color:var(--ember-ink);border:1px solid var(--ember-line);padding:2.5px 5px;border-radius:2px;
-  }
+  .srcstamp{font:400 10px/1 var(--mono);color:var(--muted);letter-spacing:.05em;white-space:nowrap}
   .smpl{
-    font:400 9px/1 var(--mono);letter-spacing:.05em;color:var(--faint);
+    font:400 9px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
     border:1px solid var(--line);border-radius:2px;padding:2px 5px;white-space:nowrap;
   }
   .railfoot{
@@ -224,7 +212,6 @@
   .dhead{display:flex;align-items:flex-start;gap:18px}
   .dhead .who{flex:1;min-width:0}
   .dname{font:500 26px/1.15 var(--grotesk);letter-spacing:-.02em;color:var(--ink);margin:0}
-  .dname .live{vertical-align:6px;margin-left:8px}
   .dhandle{font:400 11px/1 var(--mono);color:var(--muted);margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .dhandle .sep{color:var(--line-strong);font-weight:400}
   .dbadges{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
@@ -245,7 +232,7 @@
   .xctl{display:flex;align-items:center;gap:7px}
   .xctl .xh{font:400 11px/1 var(--mono);color:var(--muted)}
   .xicon{
-    width:28px;height:28px;padding:0;justify-content:center;border-radius:var(--r-sm);color:var(--ink2);border-color:var(--line);
+    width:28px;height:28px;padding:0;justify-content:center;border-radius:var(--r-md);color:var(--ink2);border-color:var(--line);
   }
   .xicon svg{display:block}
   .sect{margin-top:30px}
@@ -312,7 +299,7 @@
     margin:0;padding:13px 15px;white-space:pre-wrap;
     font:12.5px/1.6 -apple-system,"Segoe UI",sans-serif;color:var(--ink3);
   }
-  .mini{height:24px;padding:2px 9px;font-size:11px;border-radius:var(--r-sm)}
+  .mini{height:24px;padding:2px 9px;font-size:11px;border-radius:var(--r-md)}
   .actionbar{
     border-top:1px solid var(--line);background:var(--panel);
     padding:12px 34px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;
@@ -383,7 +370,7 @@
   }
   .xbanner.live{border-color:var(--positive-line);color:var(--positive)}
   .smpltag{
-    display:inline-block;font:400 9.5px/1 var(--mono);letter-spacing:.05em;color:var(--faint);
+    display:inline-block;font:400 9.5px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
     border:1px solid var(--line);border-radius:2px;padding:3px 7px;margin-bottom:10px;
   }
   .xgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:12px}
@@ -406,13 +393,12 @@
   @media(max-width:1180px){.xgrid{grid-template-columns:repeat(2,1fr)}}
 
   /* ---------- toasts ---------- */
-  .toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center}
+  .toasts{position:fixed;bottom:18px;right:18px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
   .toast{
-    background:var(--ink);color:#F9FAFB;border-radius:var(--r-md);padding:9px 15px;
+    background:var(--ink);color:var(--paper);border-radius:var(--r-md);padding:9px 15px;
     font-size:12.5px;box-shadow:var(--shadow-md);display:flex;gap:12px;align-items:center;
     animation:pop .18s ease-out;max-width:520px;
   }
-  .toast.err{background:var(--negative)}
   .toast u{cursor:pointer;text-underline-offset:2px;font-weight:600}
   @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
@@ -464,7 +450,7 @@
   .modal .x:hover{color:var(--ink)}
 
   @media(max-width:1180px){
-    .app{grid-template-columns:280px minmax(0,1fr) 300px}
+    .app{grid-template-columns:300px minmax(0,1fr) 300px}
     .detail{padding:20px 22px}
     .actionbar{padding:11px 22px}
   }
@@ -478,22 +464,25 @@
 </head>
 <body>
 
-<nav class="sigosnav" aria-label="Signal OS">
-  <a class="wm" href="../">SIGNAL OS</a>
-  <a class="nl cur" aria-current="page" href="../founder-radar/">FOUNDER RADAR</a>
-  <span class="dot">&middot;</span>
-  <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
-  <span class="dot">&middot;</span>
-  <a class="nl" href="../breakout-radar/">BREAKOUT RADAR</a>
-  <span class="dot">&middot;</span>
-  <a class="nl" href="../associate-os/">ASSOCIATE OS</a>
+<nav class="sos-nav">
+  <a class="sos-brand" href="../">SIGNAL OS</a>
+  <div class="sos-links">
+    <span aria-current="page">FOUNDER RADAR</span>
+    <a href="../growth-scout/">GROWTH SCOUT</a>
+    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <a href="../associate-os/">ASSOCIATE OS</a>
+  </div>
 </nav>
 
 <header>
+  <div class="vh-left">
+    <span class="vh-name">FOUNDER RADAR</span>
+    <span class="vh-scope">people about to start companies, ranked from public signals</span>
+  </div>
   <div class="spacer"></div>
   <span class="stamp" id="hnStamp"></span>
   <button class="iconbtn" id="hnBtn" title="Refresh HN pull"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.7 8a5.7 5.7 0 1 1-1.7-4"/><path d="M13.7 1.3v3h-3"/></svg></button>
-  <div class="cleared"><span class="t mono" id="clearedTxt">0 of 0 cleared</span><span class="bar"><i id="clearedBar" style="width:0%"></i></span></div>
+  <button class="iconbtn" id="introBtn" title="How this works">?</button>
 </header>
 
 <div class="app">
@@ -504,6 +493,7 @@
     <div class="list" id="list"></div>
     <div class="railfoot">
       <span class="ig" id="howLink">how scoring works</span>
+      <span id="clearedTxt">0 of 0 cleared</span>
       <span class="ig right" id="igLink" style="display:none"></span>
     </div>
   </div>
@@ -597,6 +587,37 @@ function keyLabel(key){
   return WD[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()];
 }
 function mulberry32(a){ return function(){ a|=0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a>>>15, 1|a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0) / 4294967296; }; }
+
+/* ---------- Signal OS shared pipeline store (sos.pipeline.v1) ---------- */
+function sosPipeGet(){
+  try{
+    var v = JSON.parse(localStorage.getItem("sos.pipeline.v1"));
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
+function sosPipeSet(list){
+  try{ localStorage.setItem("sos.pipeline.v1", JSON.stringify(Array.isArray(list) ? list : [])); }catch(e){}
+}
+function sosPipeAdd(entry){
+  if (!entry || !entry.name) return null;
+  var list = sosPipeGet();
+  var nm = String(entry.name).trim().toLowerCase();
+  for (var i = 0; i < list.length; i++){
+    if (list[i] && String(list[i].name || "").trim().toLowerCase() === nm) return list[i];
+  }
+  var item = {
+    id: entry.id || "sos-" + Date.now().toString(36) + "-" + Math.floor(Math.random() * 1e8).toString(36),
+    name: String(entry.name).trim(),
+    kind: entry.kind === "company" ? "company" : "person",
+    from: entry.from || "",
+    stage: entry.stage || "Sourced",
+    note: entry.note || "",
+    at: Date.now()
+  };
+  list.push(item);
+  sosPipeSet(list);
+  return item;
+}
 function pick(r, arr){ return arr[Math.floor(r()*arr.length)]; }
 function rint(r, a, b){ return a + Math.floor(r()*(b-a+1)); }
 
@@ -1092,6 +1113,9 @@ function setStatus(c, status, opts){
     S.drafts[c.id] = { text: draftOutreachFor(c, S.demo), day: S.demo };
     feedPush("DRAFT", "Outreach drafted for <b>" + esc(c.name) + "</b> (" + scoreAt(c, S.demo) + "), personalized from " + breakdown(c, S.demo).rows.length + " signals.", c.id);
   }
+  if (status === "contacted"){
+    sosPipeAdd({ name: c.name, kind: "person", stage: "Outreach", from: "founder-radar", note: c.oneliner || "" });
+  }
   feedPush("TRIAGE", STATUS_VERB[status] + ": <b>" + esc(c.name) + "</b>" + (status === "ignored" ? " (cleared from queue)" : "") + ".");
   if (!opts.silent){
     if (status === "ignored"){
@@ -1362,7 +1386,7 @@ function renderXSection(c, b){
     h += '<div class="xbanner">No X data returned.</div>';
   } else if (xv){
     if (xv.sample){
-      h += '<div><span class="smpltag">sample profile &middot; sample numbers</span></div>';
+      h += '<div><span class="smpltag">SAMPLE</span></div>';
     } else {
       h += '<div class="xbanner live">X live &middot; ' + esc(xv.provider) + " &middot; @" + esc(xv.handle) + "</div>";
     }
@@ -1374,7 +1398,7 @@ function renderXSection(c, b){
     h += xcell("Engagement median", xv.engMed == null ? "insufficient" : xv.engMed + " likes", xv.engMed == null ? "no posts returned" : "per recent post");
     h += "</div>";
     if (xv.highlight){
-      h += '<div class="xhl"><b>Flagged highlight post' + (xv.sample ? " (sample)" : "") + "</b>&quot;" + esc(xv.highlight.text) + "&quot; &middot; " + xv.highlight.likes + " likes</div>";
+      h += '<div class="xhl"><b>Flagged highlight post</b>&quot;' + esc(xv.highlight.text) + "&quot; &middot; " + xv.highlight.likes + " likes</div>";
     }
     h += (xv.insufficient ? '<div class="xnote">Fewer than two dated posts came back. Cadence and engagement count 0 for now; audience still counts.</div>' : '');
     h += '<div class="xmath">X adjustment = cadence min(4, ' + (xv.ppw == null ? 'insufficient' : xv.ppw) + ") = " + xv.adj.cad +
@@ -1451,11 +1475,14 @@ function tabCount(key){
 }
 
 /* ---------- rendering ---------- */
+function liveStamp(){
+  if (!S.hnPull) return "HN live";
+  return "HN " + (S.hnPull.date === todayKey() ? S.hnPull.time : keyLabel(S.hnPull.date));
+}
 function renderHeader(){
   var vis = allCands().filter(function(c){ return isVisible(c, S.demo); });
   var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
   document.getElementById("clearedTxt").textContent = cleared + " of " + vis.length + " cleared";
-  document.getElementById("clearedBar").style.width = (vis.length ? Math.round(cleared / vis.length * 100) : 0) + "%";
   var stamp = document.getElementById("hnStamp");
   if (hnOffline && S.hnPull){
     stamp.textContent = "HN offline, showing cached"; stamp.className = "stamp off";
@@ -1504,7 +1531,7 @@ function renderList(){
         '<div class="ln">' + esc(c.oneliner) + "</div>" +
         '<div class="mt"><span class="atag">' + esc(c.archetype) + '</span><span class="fresh' + (f === "today" ? " new" : "") + '">&#9679; ' + f + "</span>" +
         (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-        (c.live ? '<span class="livep">HN LIVE</span>' : '<span class="smpl">sample</span>') +
+        (c.live ? '<span class="srcstamp">' + esc(liveStamp()) + "</span>" : '<span class="smpl">SAMPLE</span>') +
         "</div></div>";
     }).join("");
   }
@@ -1541,11 +1568,11 @@ function renderDetail(){
   var scoreOpen = scoreOpenFor === c.id;
   var h = "";
   h += '<div class="dhead"><div class="who">';
-  h += '<h1 class="dname">' + esc(c.name) + (c.live ? ' <span class="livep live">HN LIVE</span>' : "") + "</h1>";
+  h += '<h1 class="dname">' + esc(c.name) + "</h1>";
   h += '<div class="dhandle mono">' + esc(c.city) + '<span class="sep">|</span>first seen ' + fmtDay(firstSeenDay(c)) + "</div>";
   h += '<div class="dbadges"><span class="atag">' + esc(c.archetype) + '</span><span class="atag">' + esc(b.prior.label) + ' &times;' + b.prior.mult.toFixed(2) + "</span>" +
        (s !== "inbox" ? '<span class="stb ' + s + '">' + s + "</span>" : "") +
-       (c.live ? "" : '<span class="smpl">sample</span>') + "</div>";
+       (c.live ? '<span class="srcstamp">' + esc(liveStamp()) + "</span>" : '<span class="smpl">SAMPLE</span>') + "</div>";
   h += '<p class="dline">' + esc(c.oneliner) + "</p>";
   h += '<div class="pipe">' + PIPE.map(function(p, i){
     return '<span class="st' + (i === stage ? " cur" : i < stage ? " done" : "") + '" data-stg="' + i + '" title="Set pipeline stage">' + p.toUpperCase() + "</span>";
@@ -1556,12 +1583,12 @@ function renderDetail(){
   var col = b.score >= 70 ? "var(--ember)" : b.score >= 45 ? "var(--ink)" : "var(--faint)";
   h += '<div class="dright">';
   h += '<div class="xctl"><button class="xicon" id="xHeadBtn" title="' + (c.live ? "Check on X" : "Open sample X profile") + '">' + XSVG + "</button>" +
-       '<span class="xh">' + esc(c.handle) + "</span>" + (c.live ? "" : '<span class="smpl">sample</span>') + "</div>";
+       '<span class="xh">' + esc(c.handle) + "</span>" + (c.live ? "" : '<span class="smpl">SAMPLE</span>') + "</div>";
   h += '<div class="gauge" id="scoreGauge" title="' + (scoreOpen ? "Hide receipt" : "Show receipt") + '"><svg width="96" height="96" viewBox="0 0 96 96">' +
     '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--line2)" stroke-width="7"/>' +
     '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" ' +
       'stroke-dasharray="' + (circ * pct).toFixed(1) + " " + circ.toFixed(1) + '" transform="rotate(-90 48 48)"/>' +
-    '<text x="48" y="54" text-anchor="middle" font-family="Space Grotesk, Segoe UI, sans-serif" font-weight="600" font-size="26" fill="var(--ink)">' + b.score + "</text>" +
+    '<text x="48" y="57" text-anchor="middle" font-family="Space Mono, Cascadia Mono, Consolas, monospace" font-weight="700" font-size="28" fill="var(--ink)">' + b.score + "</text>" +
     '</svg><div class="cap">trigger score &middot; ' + (scoreOpen ? "hide receipt" : "tap for receipt") + "</div></div>";
   h += "</div>";
   h += "</div>";
@@ -1618,7 +1645,7 @@ function renderDetail(){
       '<a class="btnlink primary" href="' + esc(gmailUrl(c, draftTxt)) + '" target="_blank" rel="noopener">Open in Gmail</a>' +
       "</div></div>" +
       "<pre>" + esc(draftTxt) + "</pre>" +
-      '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + " (sample address)</span></div>" +
+      '<div class="dfoot"><span>to: ' + esc(emailFor(c)) + '</span><span class="smpl">SAMPLE</span></div>' +
       "</div></div>";
   }
   h += '<div style="height:8px"></div>';
@@ -1849,6 +1876,7 @@ document.addEventListener("click", function(e){
   }
 });
 document.getElementById("hnBtn").addEventListener("click", function(){ pullHN(false); });
+document.getElementById("introBtn").addEventListener("click", openHow);
 document.getElementById("howLink").addEventListener("click", openHow);
 document.getElementById("howClose").addEventListener("click", closeHow);
 document.getElementById("gotIt").addEventListener("click", closeHow);

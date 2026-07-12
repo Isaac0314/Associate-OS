@@ -22,24 +22,36 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--bg);color:var(--text);font:400 13px/1.55 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
-.app{display:grid;grid-template-rows:40px 48px 1fr 30px;height:100vh}
+.app{display:grid;grid-template-rows:42px 48px 40px 1fr 30px;height:100vh}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-thumb{background:#DAD8D2;border-radius:9px;border:2px solid var(--bg)}
 ::-webkit-scrollbar-track{background:transparent}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
-input,select,textarea{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:3px;padding:5px 9px;outline:none}
+input,select,textarea{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:5px 9px;outline:none}
 input:focus,select:focus{border-color:var(--text)}
 a{color:var(--text)}
 .mono{font-family:var(--mono)}
 .serif{font-family:var(--sans)}
 
-/* ---------- Signal OS nav ---------- */
-.sgnav{height:40px;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--line)}
-.sgnav .wm{font:700 11px/1 var(--mono);letter-spacing:.16em;color:var(--text);text-decoration:none;white-space:nowrap}
-.sgnav .nl{font:400 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text2);text-decoration:none;white-space:nowrap;padding-bottom:2px;border-bottom:1px solid transparent}
-.sgnav a.nl:hover{color:var(--text)}
-.sgnav .nl.cur{color:var(--text);border-bottom-color:var(--text)}
-.sgnav .sep{color:var(--line2)}
+/* ---------- Signal OS nav (shell contract A, verbatim) ---------- */
+.sos-nav{position:sticky;top:0;z-index:80;height:42px;display:flex;align-items:center;gap:28px;padding:0 20px;background:#FCFCFA;border-bottom:1px solid #E7E5E0;font-family:"Space Mono","Cascadia Mono",Consolas,monospace}
+.sos-brand{font-size:11px;font-weight:700;letter-spacing:.24em;color:#16181B;text-decoration:none}
+.sos-links{display:flex;gap:24px;margin-left:auto}
+.sos-links a,.sos-links span{font-size:10.5px;font-weight:400;letter-spacing:.16em;color:#6B7280;text-decoration:none;line-height:42px}
+.sos-links a:hover{color:#16181B}
+.sos-links [aria-current="page"]{color:#16181B;font-weight:700;border-bottom:2px solid #16181B}
+
+/* ---------- view header row (shell contract B) ---------- */
+.sos-viewhead{height:48px;display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.sos-viewhead .vh-name{font:700 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text);white-space:nowrap}
+.sos-viewhead .vh-scope{font:400 13px var(--sans);color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sos-viewhead .vh-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.sos-viewhead .vh-stamp{font:400 10px var(--mono);color:var(--muted);white-space:nowrap}
+.vh-btn{height:28px;display:inline-flex;align-items:center;padding:0 12px;border-radius:4px;border:1px solid var(--line2);background:var(--panel);font-size:12px;font-weight:500;color:var(--text);white-space:nowrap}
+.vh-btn:hover{border-color:var(--text)}
+.vh-btn.pri{background:var(--agent);border-color:var(--agent);color:#fff}
+.vh-btn.pri:hover{background:#D04430;border-color:#D04430}
+.vh-btn.q{width:28px;padding:0;justify-content:center;font-family:var(--mono)}
 
 /* ---------- top bar ---------- */
 .topbar{display:flex;align-items:center;gap:16px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--panel)}
@@ -48,15 +60,12 @@ a{color:var(--text)}
 .tab:hover{color:var(--text)}
 .tab.on{color:var(--text);border-bottom-color:var(--text)}
 .tab .n{font:400 10px var(--mono);color:var(--muted);margin-left:7px}
-.tab.on .n{color:var(--agent)}
-.spacer{flex:1}
-.btn{padding:5px 12px;border-radius:3px;border:1px solid var(--line2);background:var(--panel);font-size:12px;font-weight:500;color:var(--text)}
+.tab.on .n{color:var(--text2)}
+.btn{padding:5px 12px;border-radius:4px;border:1px solid var(--line2);background:var(--panel);font-size:12px;font-weight:500;color:var(--text)}
 .btn:hover{border-color:var(--text)}
-.btn.pri{background:var(--text);border-color:var(--text);color:#fff}
-.btn.pri:hover{background:#000;color:#fff}
+.btn.pri{background:var(--agent);border-color:var(--agent);color:#fff}
+.btn.pri:hover{background:#D04430;border-color:#D04430;color:#fff}
 .btn:disabled{opacity:.4;cursor:default}
-.datechip{display:flex;align-items:center}
-.datechip .d{font:400 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
 
 /* ---------- layout ---------- */
 .main{display:grid;grid-template-columns:1fr 318px;min-height:0}
@@ -88,20 +97,20 @@ a{color:var(--text)}
 .draftbox .toline{font:400 10px var(--mono);color:var(--muted);margin-bottom:6px}
 .draftbox .body{white-space:pre-wrap;color:var(--text2);font-size:12px;line-height:1.6}
 .dops{display:flex;gap:8px;margin-top:10px;align-items:center}
-.gmailbtn{display:inline-block;font:500 11px var(--sans);color:#fff;background:var(--agent);border-radius:3px;padding:4px 12px;text-decoration:none}
+.gmailbtn{display:inline-block;font:500 11px var(--sans);color:#fff;background:var(--agent);border-radius:4px;padding:4px 12px;text-decoration:none}
 .gmailbtn:hover{background:#D04430;color:#fff}
-.copybtn{font:400 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:3px;padding:3px 10px;background:transparent}
+.copybtn{font:400 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:4px;padding:3px 10px;background:transparent}
 .copybtn:hover{color:var(--text);border-color:var(--text)}
 
 /* ---------- meetings ---------- */
-.m-split{display:grid;grid-template-columns:305px 1fr;flex:1;min-height:0}
+.m-split{display:grid;grid-template-columns:300px 1fr;flex:1;min-height:0}
 .m-list{border-right:1px solid var(--line);overflow-y:auto;min-height:0}
 .m-list-h{position:sticky;top:0;background:var(--bg);padding:13px 14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;z-index:5}
 .m-list-h .t{font:400 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text2)}
 .m-list-h .n{font:400 10px var(--mono);color:var(--muted)}
 .mrow{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
-.mrow:hover{background:var(--panel2)}
-.mrow.on{background:var(--panel2)}
+.mrow:hover{background:var(--agent-dim)}
+.mrow.on{background:var(--agent-dim)}
 .mrow.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--agent)}
 .mrow .r1{display:flex;align-items:center;gap:7px}
 .mrow .who{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -110,6 +119,7 @@ a{color:var(--text)}
 .mrow .co{font-size:11.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tag{font:400 8.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;border:1px solid var(--line);border-radius:2px;padding:1.5px 6px;white-space:nowrap;color:var(--text2);background:transparent}
 .tag.sample{color:var(--muted)}
+.srcstamp{font:400 10px var(--mono);letter-spacing:.08em;color:var(--muted);white-space:nowrap}
 .mrow .cnum{font:400 9.5px var(--mono);color:var(--muted);margin-left:auto;flex-shrink:0}
 .mrow .cnum .od{color:var(--bad)}
 .m-detail{overflow-y:auto;min-height:0;padding:22px 28px 48px;background:var(--panel)}
@@ -151,11 +161,11 @@ a{color:var(--text)}
 .lc .why{font:400 11px/1.5 var(--sans);color:var(--muted);margin-top:2px}
 .lc .why b{color:var(--text2);font-weight:500}
 .cc .ops{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.mini{font:400 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:3px;padding:2.5px 9px;background:transparent;white-space:nowrap}
+.mini{font:400 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--line2);border-radius:4px;padding:2.5px 9px;background:transparent;white-space:nowrap}
 .mini:hover{color:var(--text);border-color:var(--text)}
 .mini.good:hover{color:var(--ok);border-color:var(--ok)}
 .dtabs{display:flex;gap:18px;margin-bottom:11px;border-bottom:1px solid var(--line)}
-.dtab{padding:0 1px 6px;font-size:12px;font-weight:500;color:var(--text2);border-bottom:1.5px solid transparent;margin-bottom:-1px}
+.dtab{padding:0 1px 6px;font:400 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px}
 .dtab:hover{color:var(--text)}
 .dtab.on{color:var(--text);border-bottom-color:var(--text)}
 .transcript{border:1px solid var(--line);border-radius:3px;background:var(--panel);padding:10px 13px;max-height:340px;overflow-y:auto}
@@ -183,7 +193,7 @@ a{color:var(--text)}
 table.rt{width:100%;border-collapse:collapse}
 .rt th{font:400 9px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:7px 10px;border-bottom:1px solid var(--line2);white-space:nowrap}
 .rt td{padding:10px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
-.rt tr:hover td{background:var(--panel)}
+.rt tr:hover td{background:var(--agent-dim)}
 .pcell{display:flex;align-items:center;gap:9px}
 .av{width:24px;height:24px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font:700 9px var(--mono);color:var(--text);background:var(--panel3);flex-shrink:0}
 .pcell .nm{font-weight:600}
@@ -202,6 +212,15 @@ table.rt{width:100%;border-collapse:collapse}
 
 /* ---------- pipeline ---------- */
 .p-wrap{flex:1;min-height:0;overflow:auto;padding:22px 28px 30px}
+.fromsrc{max-width:1030px;margin-bottom:24px}
+.fromsrc .sect-h{margin-bottom:2px}
+.fsrow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.fsrow:hover{background:var(--agent-dim)}
+.fsrow .nm{font-weight:600;font-size:12.5px;white-space:nowrap}
+.fsrow a.tag{text-decoration:none}
+.fsrow a.tag:hover{color:var(--text);border-color:var(--text)}
+.fsstage{font:400 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text2);padding:2.5px 6px;border-radius:4px}
+.fsnote{flex:1;min-width:0;font:italic 400 11.5px var(--sans);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .board{display:grid;grid-template-columns:repeat(5,minmax(196px,1fr));gap:20px;min-width:1030px}
 .col .col-h{display:flex;align-items:center;gap:7px;padding:2px 0 8px;border-bottom:1px solid var(--line)}
 .col .col-h .t{font:400 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text2)}
@@ -244,7 +263,7 @@ table.rt{width:100%;border-collapse:collapse}
 .modal .mh .x{margin-left:auto;color:var(--muted);font-size:17px;padding:2px 7px;border-radius:3px}
 .modal .mh .x:hover{color:var(--text);background:var(--panel2)}
 .gmrow{display:flex;align-items:center;gap:10px;padding:8px 9px;border-bottom:1px solid var(--line);cursor:pointer}
-.gmrow:hover{background:var(--panel2)}
+.gmrow:hover{background:var(--agent-dim)}
 .gmrow input[type=checkbox]{width:14px;height:14px;accent-color:var(--agent)}
 .gmrow .t{font-weight:500;font-size:12.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gmrow .d{font:400 10px var(--mono);color:var(--muted);flex-shrink:0}
@@ -266,10 +285,8 @@ table.rt{width:100%;border-collapse:collapse}
 .footer{display:flex;align-items:center;gap:16px;padding:0 16px;border-top:1px solid var(--line);background:var(--panel);font:400 10px var(--mono);letter-spacing:.05em;color:var(--muted)}
 .footer .lnk{color:var(--muted);font:inherit;letter-spacing:inherit}
 .footer .lnk:hover{color:var(--text)}
-.toasts{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:7px;align-items:center}
-.toast{background:var(--panel);border:1px solid var(--line2);border-radius:3px;padding:8px 15px;font-size:12.5px;color:var(--text);box-shadow:0 8px 24px rgba(22,24,27,.10);animation:tin .18s ease-out}
-.toast.warn{border-color:rgba(180,35,24,.4);color:var(--bad)}
-.toast.ok{border-color:var(--line2)}
+.toasts{position:fixed;bottom:44px;right:20px;z-index:200;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.toast{background:var(--text);border-radius:4px;padding:8px 15px;font-size:12.5px;color:var(--bg);animation:tin .18s ease-out}
 @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .empty-sm{color:var(--muted);font-style:italic;font-size:12px;padding:6px 2px}
 </style>
@@ -277,21 +294,28 @@ table.rt{width:100%;border-collapse:collapse}
 <body>
 <div class="app">
 
-  <nav class="sgnav">
-    <a class="wm" href="../">SIGNAL OS</a>
-    <a class="nl" href="../founder-radar/">FOUNDER RADAR</a>
-    <span class="sep">·</span>
-    <a class="nl" href="../growth-scout/">GROWTH SCOUT</a>
-    <span class="sep">·</span>
-    <a class="nl" href="../breakout-radar/">BREAKOUT RADAR</a>
-    <span class="sep">·</span>
-    <span class="nl cur">ASSOCIATE OS</span>
-  </nav>
+<nav class="sos-nav">
+  <a class="sos-brand" href="../">SIGNAL OS</a>
+  <div class="sos-links">
+    <a href="../founder-radar/">FOUNDER RADAR</a>
+    <a href="../growth-scout/">GROWTH SCOUT</a>
+    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <span aria-current="page">ASSOCIATE OS</span>
+  </div>
+</nav>
+
+  <div class="sos-viewhead">
+    <span class="vh-name">ASSOCIATE OS</span>
+    <span class="vh-scope">founder calls in, follow-through out</span>
+    <div class="vh-right">
+      <span class="vh-stamp" id="todayTxt"></span>
+      <button class="vh-btn pri" id="btnGranola">Import from Granola</button>
+      <button class="vh-btn q" id="howLink" title="How this view works">?</button>
+    </div>
+  </div>
 
   <div class="topbar">
     <nav class="tabs" id="tabs"></nav>
-    <div class="spacer"></div>
-    <div class="datechip"><span class="d" id="todayTxt"></span></div>
   </div>
 
   <div class="main">
@@ -302,8 +326,6 @@ table.rt{width:100%;border-collapse:collapse}
           <div class="m-list">
             <div class="m-list-h">
               <span class="t">Meetings</span><span class="n" id="mCount"></span>
-              <span style="flex:1"></span>
-              <button class="btn pri" id="btnGranola" style="padding:3px 9px;font-size:11px">Import from Granola</button>
             </div>
             <div id="mRows"></div>
           </div>
@@ -330,7 +352,10 @@ table.rt{width:100%;border-collapse:collapse}
       </div>
 
       <div class="view" id="view-pipeline">
-        <div class="p-wrap"><div class="board" id="board"></div></div>
+        <div class="p-wrap">
+          <div class="fromsrc" id="fromSourcing"></div>
+          <div class="board" id="board"></div>
+        </div>
       </div>
 
       <div class="view" id="view-brief">
@@ -360,7 +385,6 @@ table.rt{width:100%;border-collapse:collapse}
 
   <div class="footer">
     <span style="flex:1"></span>
-    <button class="lnk" id="howLink">how it works</button>
     <button class="lnk" id="btnReset">Reset</button>
   </div>
 </div>
@@ -707,6 +731,29 @@ if (!S){ S = seed(); S.seededOn = REAL_TODAY; save(); }
 const UI = {tab:'meetings', sel:null, draftTab:'followup', showTranscript:false, hlQuote:null, granolaSel:{}, granolaList:[], passTarget:null, briefBusy:false, visited:{meetings:true}};
 window.__COPY = {};
 
+// ---------- shared Signal OS pipeline store (shell contract D) ----------
+const SOS_PIPE_KEY = 'sos.pipeline.v1';
+function sosPipeGet(){
+  try{
+    const v = JSON.parse(localStorage.getItem(SOS_PIPE_KEY));
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
+function sosPipeSet(list){
+  try{ localStorage.setItem(SOS_PIPE_KEY, JSON.stringify(Array.isArray(list) ? list : [])); }catch(e){}
+}
+function sosPipeAdd(entry){
+  if (!entry || !entry.name) return sosPipeGet();
+  const list = sosPipeGet();
+  if (!list.some(x => x && x.name === entry.name)){
+    list.push(entry);
+    sosPipeSet(list);
+  }
+  return list;
+}
+const SOS_STAGES = ['Sourced','Outreach','Meeting','Diligence','Passed'];
+const SOS_VIEW_LABEL = {'founder-radar':'FOUNDER RADAR', 'growth-scout':'GROWTH SCOUT', 'breakout-radar':'BREAKOUT RADAR', 'associate-os':'ASSOCIATE OS'};
+
 // ---------- derived facts ----------
 function meetingById(id){ return S.meetings.find(m => m.id === id); }
 function personById(id){ return S.people.find(p => p.id === id); }
@@ -1011,7 +1058,7 @@ function renderMeetingDetail(){
   let html = '<div class="md-h"><div class="t">' + esc(m.title) + '</div>' +
     '<div class="meta"><span class="tag ' + m.type + '">' + TYPE_LABEL[m.type] + '</span>' +
     '<span class="d mono">' + niceFull(m.date) + '</span><span class="p">with ' + esc(who) + '</span>' +
-    (m.granola ? '<span class="tag imported">imported from granola</span>' : '<span class="tag sample">sample</span>') + '</div>' +
+    (m.granola ? '<span class="srcstamp">GRANOLA' + (m.srcTime ? ' ' + esc(m.srcTime) : '') + '</span>' : '<span class="tag sample">sample</span>') + '</div>' +
     '<div class="md-actions">' +
       '<button class="btn" data-act="toggletx">' + (UI.showTranscript ? 'Hide transcript' : 'Show transcript') + '</button>' +
       '<button class="btn' + (m.logged ? '' : ' pri') + '" data-act="logpipe"' + (m.logged ? ' disabled' : '') + '>' + (m.logged ? 'Logged to pipeline' : 'Log to pipeline') + '</button>' +
@@ -1095,6 +1142,45 @@ function renderPath(){
   }
   box.innerHTML = html;
 }
+
+// ---------- rendering: pipeline, shared "From sourcing" section ----------
+function sosIncoming(){
+  const local = S.pipeline.map(p => (p.company || '').toLowerCase());
+  return sosPipeGet().filter(e => e && e.name && !local.includes(String(e.name).toLowerCase()));
+}
+function renderFromSourcing(){
+  const box = $('#fromSourcing');
+  if (!box) return;
+  const entries = sosIncoming();
+  box.innerHTML = '<div class="sect-h"><span class="t">From sourcing</span><span class="ln"></span></div>' +
+    (entries.map(e => {
+      const key = e.id != null ? String(e.id) : e.name;
+      const from = SOS_VIEW_LABEL[e.from] ? e.from : null;
+      const stage = SOS_STAGES.includes(e.stage) ? e.stage : SOS_STAGES[0];
+      return '<div class="fsrow">' +
+        '<span class="nm">' + esc(e.name) + '</span>' +
+        '<span class="tag">' + (e.kind === 'person' ? 'person' : 'company') + '</span>' +
+        (from ? '<a class="tag" href="../' + from + '/">' + SOS_VIEW_LABEL[from] + '</a>' : '') +
+        '<select class="fsstage" data-sosstage="' + esc(key) + '">' +
+          SOS_STAGES.map(s => '<option value="' + s + '"' + (s === stage ? ' selected' : '') + '>' + s + '</option>').join('') +
+        '</select>' +
+        (e.note ? '<span class="fsnote">' + esc(e.note) + '</span>' : '') +
+        '</div>';
+    }).join('') || '<div class="empty-sm">Nothing new from the other views.</div>');
+}
+function sosSetStage(key, stage){
+  if (!SOS_STAGES.includes(stage)) return;
+  const list = sosPipeGet();
+  const it = list.find(x => x && (String(x.id) === key || x.name === key));
+  if (!it) return;
+  it.stage = stage;
+  sosPipeSet(list);
+  renderFromSourcing();
+  toast(it.name + ' set to ' + stage + '.', 'ok');
+}
+window.addEventListener('storage', e => {
+  if (e.key === SOS_PIPE_KEY && UI.tab === 'pipeline') renderFromSourcing();
+});
 
 // ---------- rendering: pipeline ----------
 function renderPipeline(){
@@ -1216,7 +1302,7 @@ function renderAll(){
   renderChrome();
   if (UI.tab === 'meetings'){ renderMeetingList(); renderMeetingDetail(); }
   if (UI.tab === 'relationships') renderRelationships();
-  if (UI.tab === 'pipeline') renderPipeline();
+  if (UI.tab === 'pipeline'){ renderPipeline(); renderFromSourcing(); }
   if (UI.tab === 'brief') renderBrief();
   renderFeed();
 }
@@ -1432,7 +1518,7 @@ async function importGranola(){
       const mDate = (meta && meta.date) ? meta.date : today();
       const mid = 'g_' + id;
       const cp = (lines.find(l => !/isaac/i.test(l.sp)) || {}).sp || ((meta && meta.participants && meta.participants[0]) || 'Counterpart');
-      S.meetings.push({id: mid, date: mDate, type:'imported', company: (meta ? meta.title : 'Imported meeting').split(/[,|]/)[0].slice(0, 40), title: (meta ? meta.title : 'Imported meeting'), attendees: [], counterpart: cp, granola: true, logged: false, transcript: lines});
+      S.meetings.push({id: mid, date: mDate, type:'imported', company: (meta ? meta.title : 'Imported meeting').split(/[,|]/)[0].slice(0, 40), title: (meta ? meta.title : 'Imported meeting'), attendees: [], counterpart: cp, granola: true, srcTime: new Date().toTimeString().slice(0,5), logged: false, transcript: lines});
       for (const e of (ext || [])){
         S.commitments.push({id: uid(), meetingId: mid, who: e.who === 'mine' ? 'mine' : 'theirs', owner: e.who === 'mine' ? 'Isaac' : (e.owner || cp), text: e.text, quote: e.quote || e.text, duePhrase: e.due_phrase || '', due: parseDatePhrase(e.due_phrase || '', mDate), status:'open', doneOn:null, snoozeUntil:null, lastEscalation:null, intro:null});
       }
@@ -1557,6 +1643,7 @@ draftFromRef = function(ref){
 
 document.addEventListener('change', e => {
   if (e.target.matches('[data-gsel]')){ UI.granolaSel[e.target.getAttribute('data-gsel')] = e.target.checked; }
+  if (e.target.matches('[data-sosstage]')){ sosSetStage(e.target.getAttribute('data-sosstage'), e.target.value); }
   if (e.target.id === 'pathTarget') renderPath();
 });
 $('#btnGranola').addEventListener('click', openGranola);
