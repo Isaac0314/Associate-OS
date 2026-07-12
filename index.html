@@ -3,207 +3,104 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Signal OS</title>
+<title>Isaac's projects</title>
 <link rel="icon" href="data:,">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
   :root{
-    --bg:#FCFCFA;
-    --panel:#FFFFFF;
-    --ink:#16181B;
-    --ink-2:#374151;
-    --muted:#6B7280;
-    --faint:#9CA3AF;
-    --rule:#E7E5E0;
-    --rule-strong:#D6D3CD;
+    --bg:#FCFCFA; --panel:#FFFFFF; --ink:#16181B; --muted:#6B7280; --faint:#9CA3AF;
+    --rule:#E7E5E0; --rule-strong:#D6D3CD;
     --accent:#E8543F;
-    --accent-soft:rgba(232,84,63,.07);
-    --mono:"Space Mono","Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;
-    --sans:"Space Grotesk","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --mono:"Space Mono","Cascadia Mono",Consolas,monospace;
+    --sans:"Space Grotesk","Segoe UI",-apple-system,BlinkMacSystemFont,Arial,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
   body{
-    background:var(--bg);
-    color:var(--ink);
+    background:var(--bg); color:var(--ink);
     font:15px/1.6 var(--sans);
     -webkit-font-smoothing:antialiased;
-    display:flex;flex-direction:column;align-items:center;
+    display:flex;justify-content:center;
     padding:0 24px;
   }
-  ::selection{background:rgba(232,84,63,.16)}
-
-  .topnav{
-    align-self:stretch;margin:0 -24px;padding:0 24px;
-    min-height:40px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 26px;
-    background:var(--bg);border-bottom:1px solid var(--rule);
-    font-family:var(--mono);text-transform:uppercase;
-  }
-  .topnav .brand{
-    font-size:11px;font-weight:700;letter-spacing:.26em;
-    color:var(--ink);text-decoration:none;
-  }
-  .topnav .links{display:flex;flex-wrap:wrap;gap:6px 22px;margin-left:auto}
-  .topnav .links a{
-    font-size:10.5px;letter-spacing:.18em;color:var(--muted);
-    text-decoration:none;line-height:40px;transition:color .15s;
-  }
-  .topnav .links a:hover{color:var(--ink)}
-  .topnav .links a[aria-current="page"]{
-    color:var(--ink);text-decoration:underline;
-    text-decoration-color:var(--ink);text-underline-offset:5px;
-  }
-  @media (max-width:720px){
-    .topnav{padding-top:8px;padding-bottom:8px}
-    .topnav .links{margin-left:0;width:100%}
-    .topnav .links a{line-height:1.6}
-  }
-
-  .wrap{max-width:880px;width:100%;padding:96px 0 64px}
-
+  ::selection{background:rgba(232,84,63,.18)}
+  .wrap{max-width:880px;width:100%;padding:88px 0 72px}
   .kicker{
-    font-family:var(--mono);font-size:11px;letter-spacing:.32em;
-    text-transform:uppercase;color:var(--faint);
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted);
     animation:rise .5s ease both;
   }
   h1{
-    margin:26px 0 0;font-size:clamp(60px,11vw,104px);font-weight:500;
-    letter-spacing:-.03em;line-height:.95;
+    margin:14px 0 10px;font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1.02;
     animation:rise .5s .05s ease both;
   }
-  .sub{
-    margin:24px 0 0;color:var(--muted);font-size:17px;font-weight:300;
-    max-width:560px;line-height:1.55;
-    animation:rise .5s .1s ease both;
-  }
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .sub{color:var(--muted);font-size:15px;max-width:560px;animation:rise .5s .1s ease both}
+  @keyframes rise{from{transform:translateY(9px)}to{transform:none}}
 
-  .list{margin:80px 0 0;padding:0;list-style:none;animation:rise .5s .16s ease both}
+  .list{margin-top:56px;border-top:1px solid var(--rule);animation:rise .5s .16s ease both}
   .row{
-    display:grid;grid-template-columns:48px 1fr auto;gap:0 24px;align-items:baseline;
-    padding:24px 0;border-top:1px solid var(--rule);
+    display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:baseline;
+    padding:26px 4px;border-bottom:1px solid var(--rule);
     text-decoration:none;color:inherit;
   }
-  .list li:last-child .row{border-bottom:1px solid var(--rule)}
-  .idx{font-family:var(--mono);font-size:13px;color:var(--faint)}
-  .body{min-width:0}
-  .cat{
-    display:block;font-family:var(--mono);font-size:10px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--faint);margin-bottom:6px;
-  }
-  .name{
-    display:block;font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.1;color:var(--ink);
-  }
-  .desc{display:block;margin-top:6px;font-size:14px;font-weight:300;color:var(--muted);line-height:1.5}
+  a.row{cursor:pointer}
+  a.row:hover h2{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+  a.row:hover .go{color:var(--accent)}
+  .n{font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:700}
+  .row h2{margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-.015em}
+  .row p{margin:0;color:var(--muted);font-size:13.5px;max-width:520px}
   .go{
-    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;
     color:var(--muted);white-space:nowrap;transition:color .15s;
   }
-  .go .arr{display:inline-block;transition:transform .15s}
-  a.row:hover .go{color:var(--accent)}
-  a.row:hover .go .arr{transform:translateX(3px)}
-  a.row:hover .name{color:var(--accent)}
-  .note{
-    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--faint);white-space:nowrap;
+  .tag{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
+    color:var(--faint);border:1px solid var(--rule-strong);border-radius:3px;padding:3px 8px;white-space:nowrap;
   }
+  footer{margin-top:44px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint)}
   @media (max-width:640px){
-    .row{grid-template-columns:36px 1fr;gap:0 16px}
-    .go,.note{grid-column:2;margin-top:10px;justify-self:start}
-  }
-
-  footer{
-    margin-top:88px;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;
-    color:var(--faint);line-height:1.8;
-    animation:rise .5s .22s ease both;
+    h1{font-size:40px}
+    .row{grid-template-columns:1fr;gap:6px}
+    .n,.go,.tag{display:none}
   }
 </style>
 </head>
 <body>
-<nav class="topnav" aria-label="Signal OS">
-  <a class="brand" href="./">Signal OS</a>
-  <div class="links">
-    <a href="./founder-radar/">Founder Radar</a>
-    <a href="./growth-scout/">Growth Scout</a>
-    <a href="./breakout-radar/">Breakout Radar</a>
-    <a href="./associate-os/">Associate OS</a>
-  </div>
-</nav>
 <div class="wrap">
-  <div class="kicker">Source &middot; Diligence &middot; Knowledge</div>
-  <h1>Signal OS</h1>
-  <p class="sub">Agents for sourcing, diligence, and follow-through.</p>
+  <div class="kicker">Isaac Luo</div>
+  <h1>Isaac's projects</h1>
+  <p class="sub">Things I build and run.</p>
 
-  <ul class="list">
-    <li>
-      <a class="row" href="./founder-radar/">
-        <span class="idx">01</span>
-        <span class="body">
-          <span class="cat">Source</span>
-          <span class="name">Founder Radar</span>
-          <span class="desc">Ranks operators showing founder intent before a deck exists.</span>
-        </span>
-        <span class="go">Open <span class="arr">&#8594;</span></span>
-      </a>
-    </li>
-    <li>
-      <a class="row" href="./growth-scout/">
-        <span class="idx">02</span>
-        <span class="body">
-          <span class="cat">Source</span>
-          <span class="name">Growth Scout</span>
-          <span class="desc">European watchlist. Pulls jobs, GitHub, Hacker News, X, and press.</span>
-        </span>
-        <span class="go">Open <span class="arr">&#8594;</span></span>
-      </a>
-    </li>
-    <li>
-      <a class="row" href="./breakout-radar/">
-        <span class="idx">03</span>
-        <span class="body">
-          <span class="cat">Diligence</span>
-          <span class="name">Breakout Radar</span>
-          <span class="desc">Flags portfolio companies inflecting before the next round.</span>
-        </span>
-        <span class="go">Open <span class="arr">&#8594;</span></span>
-      </a>
-    </li>
-    <li>
-      <a class="row" href="./associate-os/">
-        <span class="idx">04</span>
-        <span class="body">
-          <span class="cat">Knowledge</span>
-          <span class="name">Associate OS</span>
-          <span class="desc">Turns founder calls into cited commitments, drafts, and memory.</span>
-        </span>
-        <span class="go">Open <span class="arr">&#8594;</span></span>
-      </a>
-    </li>
-    <li>
-      <div class="row">
-        <span class="idx">05</span>
-        <span class="body">
-          <span class="cat">Knowledge</span>
-          <span class="name">AI Investor Challenge</span>
-          <span class="desc">A 48-hour build screen around a real workflow bottleneck.</span>
-        </span>
-        <span class="note">Program &middot; PDF</span>
-      </div>
-    </li>
-    <li>
-      <a class="row" href="https://isaac0314.github.io/six-month-signal/" target="_blank" rel="noopener noreferrer">
-        <span class="idx">06</span>
-        <span class="body">
-          <span class="cat">Publishing</span>
-          <span class="name">The Six-Month Signal</span>
-          <span class="desc">A weekday AI brief with a dated public feed and audio.</span>
-        </span>
-        <span class="go">Feed <span class="arr">&#8594;</span></span>
-      </a>
-    </li>
-  </ul>
+  <div class="list">
+    <a class="row" href="./associate-os/">
+      <span class="n">01</span>
+      <span>
+        <h2>Signal OS</h2>
+        <p>Agents for venture work: founder-call follow-through, sourcing, a live watchlist, and portfolio breakout detection. One product, four views.</p>
+      </span>
+      <span class="go">OPEN &#8594;</span>
+    </a>
 
-  <footer>Built by Isaac Luo</footer>
+    <a class="row" href="https://isaac0314.github.io/six-month-signal/" target="_blank" rel="noopener noreferrer">
+      <span class="n">02</span>
+      <span>
+        <h2>The Six-Month Signal</h2>
+        <p>A weekday brief on frontier AI, written and published by an agent pipeline.</p>
+      </span>
+      <span class="go">PUBLIC FEED &#8594;</span>
+    </a>
+
+    <div class="row">
+      <span class="n">03</span>
+      <span>
+        <h2>AI Investor Challenge</h2>
+        <p>A screening program for investment candidates: build an agentic tool for a real fund bottleneck. The build is the audition.</p>
+      </span>
+      <span class="tag">PROGRAM</span>
+    </div>
+  </div>
+
+  <footer>Isaac Luo</footer>
 </div>
 </body>
 </html>
