@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Brief</title>
+<title>Plan my day</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,20 +96,51 @@
   }
   .linkbtn:hover{color:var(--ink);background:transparent;border:none}
 
-  /* ---------- brief body ---------- */
+  /* ---------- page body ---------- */
   main{max-width:760px;margin:0 auto;padding:26px 20px 64px}
-  .sec{margin:0 0 26px}
+  .sec{margin:0 0 30px}
   .sec-head{
     display:flex;align-items:baseline;gap:12px;
     padding:0 0 9px;border-bottom:1px solid var(--line);
   }
   .sec-label{font:700 10px/1 var(--mono);letter-spacing:.18em;color:var(--ink)}
   .sec-date{font:400 10px/1 var(--mono);letter-spacing:.06em;color:var(--muted)}
-  .vb{padding:11px 0 8px;border-bottom:1px solid var(--line2)}
-  .vb:last-child{border-bottom:none}
-  .vb-label{font:700 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ember-ink);margin:0 0 6px}
-  .vb p{margin:3px 0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
-  .vb p.quiet{color:var(--muted)}
+  p.quiet{margin:10px 0 0;font-size:12.5px;line-height:1.55;color:var(--muted)}
+
+  /* act-on-first rows */
+  .act-row{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line2)}
+  .act-row:last-of-type{border-bottom:none}
+  .act-num{font:700 11px/1 var(--mono);color:var(--ember-ink);min-width:20px;flex:none}
+  .act-txt{flex:1;font-size:13px;line-height:1.5;color:var(--ink2);min-width:0}
+  .act-side{flex:none;display:flex;align-items:baseline;gap:10px}
+  .act-link{
+    font:400 9.5px/1 var(--mono);letter-spacing:.12em;color:var(--muted);
+    text-decoration:underline;text-underline-offset:3px;white-space:nowrap;
+  }
+  .act-link:hover{color:var(--ink)}
+  .src-stamp{font:400 9.5px/1 var(--mono);letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+  .tag-sample{
+    font:400 8.5px/1 var(--mono);letter-spacing:.12em;color:var(--muted);
+    border:1px solid var(--line-strong);border-radius:var(--r-sm);
+    padding:2px 4px;white-space:nowrap;
+  }
+
+  /* meetings rows */
+  .mt-row{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line2);text-decoration:none;color:inherit}
+  .mt-row:last-of-type{border-bottom:none}
+  .mt-row:hover .mt-title{color:var(--ink)}
+  .mt-when{font:700 9px/1.4 var(--mono);letter-spacing:.1em;color:var(--ink3);min-width:104px;flex:none;text-transform:uppercase}
+  .mt-when.today{color:var(--ember-ink)}
+  .mt-when.held{color:var(--muted);font-weight:400}
+  .mt-title{flex:1;font-size:13px;line-height:1.45;color:var(--ink2);min-width:0}
+  .mt-kind{color:var(--muted)}
+  .mt-open{font:400 10px/1.4 var(--mono);letter-spacing:.06em;color:var(--ember-ink);white-space:nowrap}
+  .mt-open.clear{color:var(--muted)}
+
+  /* week-so-far lines */
+  .wk p{margin:9px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+  .wk p.quiet{color:var(--muted)}
+  .wk-lab{font:700 9px/1 var(--mono);letter-spacing:.14em;color:var(--ember-ink);margin-right:8px;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -117,9 +148,7 @@
 <nav class="sos-nav">
   <a class="sos-brand" href="../">SIGNAL OS</a>
   <div class="sos-links">
-    <a href="../founder-radar/">FOUNDER RADAR</a>
-    <a href="../growth-scout/">GROWTH SCOUT</a>
-    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <a href="../radar/">RADAR</a>
     <a href="../associate-os/">ASSOCIATE OS</a>
     <span aria-current="page">BRIEF</span>
   </div>
@@ -127,8 +156,8 @@
 
 <header>
   <div class="vh-left">
-    <span class="vh-name">Brief</span>
-    <span class="vh-scope">one daily update, one weekly debrief</span>
+    <span class="vh-name">Plan my day</span>
+    <span class="vh-scope">what to act on first, meetings ahead, the week so far</span>
   </div>
   <div class="spacer"></div>
   <span class="stamp" id="genStamp"></span>
@@ -137,20 +166,24 @@
 
 <main>
   <section class="sec">
-    <div class="sec-head"><span class="sec-label">TODAY</span><span class="sec-date" id="todayDate"></span></div>
-    <div id="todayBody"></div>
+    <div class="sec-head"><span class="sec-label">ACT ON FIRST</span><span class="sec-date" id="actDate"></span></div>
+    <div id="actBody"></div>
   </section>
   <section class="sec">
-    <div class="sec-head"><span class="sec-label">THIS WEEK</span><span class="sec-date" id="weekDate"></span></div>
-    <div id="weekBody"></div>
+    <div class="sec-head"><span class="sec-label">MEETINGS AHEAD</span><span class="sec-date" id="meetDate"></span></div>
+    <div id="meetBody"></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-label">THE WEEK SO FAR</span><span class="sec-date" id="weekDate"></span></div>
+    <div class="wk" id="weekBody"></div>
   </section>
 </main>
 
 <script>
 "use strict";
-/* The unified Brief. Composed client-side, read-only, from the same-origin
+/* Plan my day. Composed client-side, read-only, from the same-origin
    localStorage the four views already write. The only key this page writes
-   is its own per-day cache, sos.brief.v1. No network calls. */
+   is its own per-day cache, sos.planmyday.v1. No network calls. */
 
 /* ---------- small helpers ---------- */
 var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -158,121 +191,114 @@ var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","De
 function pad2(n){ return (n < 10 ? "0" : "") + n; }
 function keyOf(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
 function todayKey(){ return keyOf(new Date()); }
-function keyLabel(key){
+function pdKey(key){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || "");
-  var d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
+}
+function addDaysKey(key, n){ var d = pdKey(key); d.setDate(d.getDate() + n); return keyOf(d); }
+function daysBetween(aKey, bKey){ return Math.round((pdKey(bKey) - pdKey(aKey)) / 86400000); } /* b - a */
+function keyLabel(key){
+  var d = pdKey(key);
   return WD[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()];
 }
 function hhmm(ts){ var d = new Date(ts); return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
 function startOfToday(){ var d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
 function weekStart(){ return startOfToday() - 6 * 86400000; }
 function weekStartKey(){ return keyOf(new Date(weekStart())); }
-function stampWord(ts){
-  var k = keyOf(new Date(ts));
-  return k === todayKey() ? hhmm(ts) : keyLabel(k);
-}
 function esc(s){
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-function unesc(s){
-  return String(s).replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-}
 function pl(n, one, many){ return n + " " + (n === 1 ? one : many); }
+function listNames(arr, max){
+  var names = arr.slice(0, max).map(function(s){ return esc(s); });
+  var extra = arr.length - names.length;
+  return names.join(", ") + (extra > 0 ? " and " + pl(extra, "more", "more") : "");
+}
 function lsGet(k){
   try{ var v = JSON.parse(localStorage.getItem(k)); return v == null ? null : v; }catch(e){ return null; }
 }
 function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 
-var FROM_NAME = {
-  "founder-radar": "Founder Radar",
-  "growth-scout": "Growth Scout",
-  "breakout-radar": "Breakout Radar",
-  "associate-os": "Associate OS"
+/* The three sourcing views merged into one Radar page; names stay as
+   provenance labels, links go to the merged view. */
+var VIEW = {
+  fr: { name: "Founder Radar", href: "../radar/" },
+  gs: { name: "Growth Scout", href: "../radar/" },
+  br: { name: "Breakout Radar", href: "../radar/" },
+  ao: { name: "Associate OS", href: "../associate-os/" }
 };
-function fromName(f){ return FROM_NAME[f] || "another view"; }
 
 /* ---------- readers: one per store, every field guarded ---------- */
 
-/* founder_radar_v2: statuses, live HN candidates, the radar's own cached
-   daily brief (queue and likely counts, top of queue) and the HN pull stamp. */
+/* founder_radar_v2: statuses, outreach drafts, live people (Show HN + watched
+   X follows), the HN pull stamp, and the scored-queue feed line. */
 function readFounder(){
   var raw = lsGet("founder_radar_v2");
-  if (!raw || typeof raw !== "object") return null;
-  var o = { queue:null, likely:null, fromScan:false, briefDate:null, top:[],
-            hnTotal:0, hnNewToday:0, hnWeek:0, hnPull:null,
-            outreach:0, watchlist:0, meetings:0, ignored:0 };
-  var st = raw.statuses;
-  if (st && typeof st === "object"){
-    for (var k in st){
-      if (st[k] === "contacted") o.outreach++;
-      else if (st[k] === "watchlist") o.watchlist++;
-      else if (st[k] === "meeting") o.meetings++;
-      else if (st[k] === "ignored") o.ignored++;
+  if (!raw || typeof raw !== "object" || !raw.statuses) return null;
+  var t = todayKey();
+  var o = { draftsReady: 0, inboxReal: [], joinedToday: 0, hnStamp: null,
+            liveTotal: 0, queue: null, likely: null,
+            outreach: 0, watchlist: 0, meetings: 0, ignored: 0 };
+  var st = (raw.statuses && typeof raw.statuses === "object") ? raw.statuses : {};
+  function statusOf(id){ return st[id] || "inbox"; }
+  for (var k in st){
+    if (st[k] === "contacted") o.outreach++;
+    else if (st[k] === "watchlist") o.watchlist++;
+    else if (st[k] === "meeting") o.meetings++;
+    else if (st[k] === "ignored") o.ignored++;
+  }
+  /* drafts written but not yet queued for outreach */
+  var seenDraft = {};
+  [raw.drafts, raw.aiDrafts].forEach(function(bag){
+    if (!bag || typeof bag !== "object") return;
+    for (var id in bag){
+      if (seenDraft[id]) continue;
+      seenDraft[id] = 1;
+      var s = statusOf(id);
+      if (s === "inbox" || s === "watchlist") o.draftsReady++;
     }
-  }
-  if (Array.isArray(raw.hn)){
-    o.hnTotal = raw.hn.length;
-    raw.hn.forEach(function(c){
-      var sgs = (c && Array.isArray(c.signals)) ? c.signals : [];
-      for (var i = 0; i < sgs.length; i++){
-        var s = sgs[i];
-        if (s && s.t === "show_hn" && typeof s.d === "number"){
-          if (s.d === 0) o.hnNewToday++;
-          if (s.d > -7) o.hnWeek++;
-          break;
-        }
-      }
-    });
-  }
-  if (raw.hnPull && raw.hnPull.date) o.hnPull = raw.hnPull;
-  var bh = (raw.brief && typeof raw.brief.html === "string") ? raw.brief.html : "";
-  if (bh){
-    o.briefDate = raw.brief.date || null;
-    var mq = bh.match(/<b>(\d+)<\/b>\s*in queue/);
-    var ml = bh.match(/<b>(\d+)<\/b>\s*likely/);
-    if (mq) o.queue = +mq[1];
-    if (ml) o.likely = +ml[1];
-    var re = /Queue outreach for <b>([^<]+)<\/b>\s*\((\d+)\)/g, m;
-    while ((m = re.exec(bh)) && o.top.length < 3) o.top.push({ name: unesc(m[1]), score: +m[2] });
-  }
-  if (o.queue == null && Array.isArray(raw.feed)){
+  });
+  /* real people (live pulls) still sitting in the inbox */
+  var real = [];
+  if (Array.isArray(raw.hn)) real = real.concat(raw.hn);
+  if (Array.isArray(raw.xf)) real = real.concat(raw.xf);
+  o.liveTotal = real.length;
+  real.forEach(function(c){
+    if (!c || !c.name) return;
+    if (statusOf(c.id) !== "inbox") return;
+    o.inboxReal.push(String(c.name));
+    if (c.pull && c.pull.date === t) o.joinedToday++;
+  });
+  if (raw.hnPull && raw.hnPull.date === t && raw.hnPull.time) o.hnStamp = "HN " + raw.hnPull.time;
+  if (Array.isArray(raw.feed)){
     for (var j = raw.feed.length - 1; j >= 0; j--){
       var f = raw.feed[j];
       var ms = (f && typeof f.msg === "string") ? f.msg.match(/Scored <b>(\d+) profiles<\/b>; (\d+) are likely/) : null;
-      if (ms){ o.queue = +ms[1]; o.likely = +ms[2]; o.fromScan = true; break; }
+      if (ms){ o.queue = +ms[1]; o.likely = +ms[2]; break; }
     }
   }
   return o;
 }
 
-/* growthScout.*: stars, per-day pull caches, press scan, wire, signal stamps. */
+/* growthScout.*: the daily snapshot (top movers, discoveries, stars) plus
+   signal recency for the week summary. */
 function readScout(){
+  var snap = lsGet("growthScout.dailySnapshot.v1");
   var stars = lsGet("growthScout.starred.v1");
   var sig = lsGet("growthScout.signals.v1");
-  var daily = lsGet("growthScout.dailyPull.v1");
-  var xdaily = lsGet("growthScout.xDaily.v1");
-  var scan = lsGet("growthScout.scan.v1");
-  var wire = lsGet("growthScout.wire.v1");
-  if (stars == null && !sig && !daily && !xdaily && !scan && !wire) return null;
-  var t = todayKey();
+  if (!snap && stars == null && !sig) return null;
   var o = { stars: Array.isArray(stars) ? stars.length : 0,
-            pulls: [], xToday: 0, scan: null, wire: null, sigAt: null, sigWeek: 0 };
-  var srcNames = { jobs: "job boards", hn: "Hacker News", gh: "GitHub" };
-  if (daily && typeof daily === "object"){
-    ["jobs","hn","gh"].forEach(function(k){ if (daily[k] === t) o.pulls.push(srcNames[k]); });
-  }
-  if (xdaily && typeof xdaily === "object"){
-    for (var h in xdaily) if (xdaily[h] === t) o.xToday++;
-  }
-  if (scan && scan.date === t && scan.disc && Array.isArray(scan.disc.items)){
-    var added = 0;
-    scan.disc.items.forEach(function(it){ if (it && it.added) added++; });
-    o.scan = { found: scan.disc.items.length, added: added };
-  }
-  if (wire && wire.date === t && Array.isArray(wire.items)){
-    var feedNames = { tc: "TechCrunch", sifted: "Sifted" };
-    o.wire = { name: feedNames[wire.which] || "Press", n: wire.items.length,
-               time: (typeof wire.at === "number") ? hhmm(wire.at) : "" };
+            snapDate: null, topMover: null, leader: null, discovered: 0, sigWeek: 0 };
+  if (snap && typeof snap === "object"){
+    o.snapDate = (typeof snap.date === "string") ? snap.date : null;
+    if (typeof snap.starredCount === "number") o.stars = snap.starredCount;
+    if (Array.isArray(snap.newDiscoveries)) o.discovered = snap.newDiscoveries.length;
+    if (Array.isArray(snap.topMovers) && snap.topMovers.length){
+      var moved = snap.topMovers.filter(function(m){ return m && m.name && (+m.delta || 0) !== 0; });
+      if (moved.length) o.topMover = { name: String(moved[0].name), delta: +moved[0].delta, score: +moved[0].score || 0 };
+      var first = snap.topMovers[0];
+      if (first && first.name) o.leader = { name: String(first.name), score: +first.score || 0 };
+    }
   }
   if (sig && typeof sig === "object"){
     var ws = weekStart(), seen = {};
@@ -281,9 +307,7 @@ function readScout(){
       if (!bk || typeof bk !== "object") return;
       for (var id in bk){
         var v = bk[id];
-        if (!v || typeof v.at !== "number") continue;
-        if (o.sigAt == null || v.at > o.sigAt) o.sigAt = v.at;
-        if (v.at >= ws) seen[id] = true;
+        if (v && typeof v.at === "number" && v.at >= ws) seen[id] = true;
       }
     });
     o.sigWeek = Object.keys(seen).length;
@@ -291,57 +315,71 @@ function readScout(){
   return o;
 }
 
-/* breakout.dailySnapshot.v1 (written by Breakout Radar for this page)
-   plus br_watch, the starred watchlist names. */
+/* breakout.dailySnapshot.v1 (risers, new breakouts, flags) plus br_watch. */
 function readBreakout(){
   var snap = lsGet("breakout.dailySnapshot.v1");
   var watch = lsGet("br_watch");
   if (!snap && !Array.isArray(watch)) return null;
-  return { snap: (snap && typeof snap === "object") ? snap : null,
-           watch: Array.isArray(watch) ? watch.length : null };
+  var o = { watch: Array.isArray(watch) ? watch.length : null,
+            snapDate: null, riser: null, newBreakouts: [], flagged: [] };
+  if (snap && typeof snap === "object"){
+    o.snapDate = (typeof snap.date === "string") ? snap.date : null;
+    if (Array.isArray(snap.topRisers) && snap.topRisers.length && snap.topRisers[0] && snap.topRisers[0].name){
+      o.riser = { name: String(snap.topRisers[0].name),
+                  delta: +snap.topRisers[0].delta || 0,
+                  index: +snap.topRisers[0].index || 0 };
+    }
+    if (Array.isArray(snap.newBreakouts)) o.newBreakouts = snap.newBreakouts.filter(Boolean).map(String);
+    if (Array.isArray(snap.flaggedToday)) o.flagged = snap.flaggedToday.filter(Boolean).map(String);
+  }
+  return o;
 }
 
-/* aos_v1 raw state first (commitments and meetings carry real dates),
-   aos.dailySnapshot.v1 as the fallback plus the cold-relationship names. */
+/* aos_v1 raw state (commitments and meetings carry real ISO dates),
+   aos.dailySnapshot.v1 as the coarse fallback. */
 function readAos(){
   var raw = lsGet("aos_v1");
   var snap = lsGet("aos.dailySnapshot.v1");
   if (!raw && !snap) return null;
-  var t = todayKey(), wk = weekStartKey();
-  var o = { open:null, overdue:null, heldWeek:null, doneWeek:null, upcoming:null, cold:[] };
-  if (raw && Array.isArray(raw.commitments)){
-    var open = 0, over = 0, done7 = 0;
-    raw.commitments.forEach(function(c){
-      if (!c) return;
-      if (c.status === "done"){
-        if (typeof c.doneOn === "string" && c.doneOn >= wk && c.doneOn <= t) done7++;
-        return;
-      }
-      if (typeof c.snoozeUntil === "string" && c.snoozeUntil > t) return;
-      open++;
-      if (typeof c.due === "string" && c.due && c.due < t) over++;
-    });
-    o.open = open; o.overdue = over; o.doneWeek = done7;
-  }
-  if (raw && Array.isArray(raw.meetings)){
-    var held = 0, up = 0;
-    raw.meetings.forEach(function(m){
-      if (!m || typeof m.date !== "string") return;
-      if (m.date >= wk && m.date <= t) held++;
-      else if (m.date > t) up++;
-    });
-    o.heldWeek = held; o.upcoming = up;
-  }
-  if (snap && typeof snap === "object"){
-    if (o.open == null && typeof snap.openCommitments === "number"){
-      o.open = snap.openCommitments;
-      o.overdue = (typeof snap.overdueCommitments === "number") ? snap.overdueCommitments : 0;
-    }
-    if (o.heldWeek == null && typeof snap.meetingsThisWeek === "number") o.heldWeek = snap.meetingsThisWeek;
-    if (Array.isArray(snap.coldRelationships)) o.cold = snap.coldRelationships.slice(0, 3);
-  }
-  return o;
+  return { raw: (raw && typeof raw === "object") ? raw : null,
+           snap: (snap && typeof snap === "object") ? snap : null };
 }
+function aosCommitments(ao){
+  return (ao && ao.raw && Array.isArray(ao.raw.commitments)) ? ao.raw.commitments : null;
+}
+function aosMeetings(ao){
+  return (ao && ao.raw && Array.isArray(ao.raw.meetings)) ? ao.raw.meetings : null;
+}
+function commitmentOpen(c, t){
+  if (!c || c.status === "done") return false;
+  if (typeof c.snoozeUntil === "string" && c.snoozeUntil > t) return false;
+  return true;
+}
+function aosOverdue(ao){
+  var cs = aosCommitments(ao), t = todayKey();
+  if (!cs) return null;
+  return cs.filter(function(c){
+    return commitmentOpen(c, t) && typeof c.due === "string" && c.due && c.due < t;
+  }).sort(function(a, b){ return a.due < b.due ? -1 : a.due > b.due ? 1 : 0; });
+}
+/* pending drafted emails: draft or nudge activity tied to a still-open commitment */
+function aosDraftsPending(ao){
+  if (!ao || !ao.raw || !Array.isArray(ao.raw.activity)) return null;
+  var cs = aosCommitments(ao) || [];
+  var t = todayKey(), byId = {};
+  cs.forEach(function(c){ if (c && c.id) byId[c.id] = c; });
+  var seen = {}, n = 0;
+  ao.raw.activity.forEach(function(a){
+    if (!a || (a.kind !== "draft" && a.kind !== "nudge")) return;
+    var cId = a.ref && a.ref.cId;
+    if (!cId || seen[cId]) return;
+    seen[cId] = 1;
+    if (byId[cId] && commitmentOpen(byId[cId], t)) n++;
+  });
+  return n;
+}
+function sampleCommitment(c){ return !!(c && typeof c.id === "string" && /^c\d+$/.test(c.id)); }
+function sampleMeeting(m){ return !!(m && typeof m.id === "string" && /^m\d+$/.test(m.id) && !m.granola); }
 
 /* sos.pipeline.v1: the shared workflow store all four views write. */
 function readPipe(){
@@ -349,241 +387,298 @@ function readPipe(){
   if (!Array.isArray(v)) return null;
   return v.filter(function(e){ return e && typeof e === "object" && e.name; });
 }
-function pipeAdds(pipe, from){
-  if (!pipe) return [];
-  var ws = weekStart();
-  return pipe.filter(function(e){ return e.from === from && typeof e.at === "number" && e.at >= ws; });
-}
 
-/* ---------- TODAY lines ---------- */
+/* ---------- ACT ON FIRST ---------- */
 
-function frToday(fr){
-  if (!fr) return [q("No data yet from Founder Radar.")];
-  var L = [];
-  if (fr.queue != null){
-    var tail = "";
-    if (fr.fromScan) tail = " at the last scan";
-    else if (fr.briefDate && fr.briefDate !== todayKey()) tail = " as of " + keyLabel(fr.briefDate);
-    L.push(fr.queue + " in the queue" + (fr.likely != null ? ", " + fr.likely + " likely" : "") + tail + ".");
-  }
-  if (fr.top.length){
-    L.push("Top of the queue: " + fr.top.map(function(p){ return esc(p.name) + " " + p.score; }).join(", ") + ".");
-  }
-  if (fr.hnTotal){
-    var s = pl(fr.hnTotal, "live person", "live people") + " in from Show HN";
-    if (fr.hnNewToday) s += ", " + fr.hnNewToday + " posted today";
-    if (fr.hnPull && fr.hnPull.date === todayKey() && fr.hnPull.time) s += ", pulled " + esc(fr.hnPull.time);
-    L.push(s + ".");
-  } else if (fr.hnPull && fr.hnPull.date === todayKey()){
-    L.push("Show HN pulled" + (fr.hnPull.time ? " " + esc(fr.hnPull.time) : "") + ", nothing new.");
-  }
-  var tr = [];
-  if (fr.outreach) tr.push(pl(fr.outreach, "person", "people") + " queued for outreach");
-  if (fr.watchlist) tr.push(fr.watchlist + " on the watchlist");
-  if (fr.meetings) tr.push(pl(fr.meetings, "meeting", "meetings") + " set");
-  if (fr.ignored) tr.push(fr.ignored + " ignored");
-  if (tr.length) L.push(tr.join(", ") + ".");
-  if (!L.length) L.push(q("Founder Radar has no stored activity yet."));
-  return L;
-}
+function actItems(fr, gs, br, ao, pipe){
+  var items = [], t = todayKey();
 
-function gsToday(gs){
-  if (!gs) return [q("No data yet from Growth Scout.")];
-  var L = [];
-  L.push(gs.stars === 0 ? "No companies starred yet." : pl(gs.stars, "company", "companies") + " starred.");
-  if (gs.pulls.length) L.push("Pulled today: " + gs.pulls.join(", ") + ".");
-  else L.push(q("No live pulls yet today."));
-  if (gs.xToday) L.push(pl(gs.xToday, "X profile", "X profiles") + " pulled today.");
-  if (gs.scan) L.push("Press scan found " + pl(gs.scan.found, "funding headline", "funding headlines") +
-                      (gs.scan.added ? ", " + gs.scan.added + " added" : "") + ".");
-  if (gs.wire) L.push(esc(gs.wire.name) + " wire read" + (gs.wire.time ? " " + gs.wire.time : "") + ", " +
-                      pl(gs.wire.n, "headline", "headlines") + ".");
-  if (gs.sigAt != null) L.push("Signals last updated " + stampWord(gs.sigAt) + ".");
-  return L;
-}
-
-function brToday(br){
-  if (!br) return [q("No data yet from Breakout Radar.")];
-  var L = [];
-  if (br.watch != null) L.push(br.watch === 0 ? "Watchlist is empty." : pl(br.watch, "company", "companies") + " on the watchlist.");
-  var s = br.snap;
-  if (s && s.date === todayKey()){
-    if (Array.isArray(s.topRisers) && s.topRisers.length){
-      L.push("Top risers: " + s.topRisers.map(function(r){
-        return esc(r.name) + " +" + (+r.delta || 0) + " to " + (+r.index || 0);
-      }).join(", ") + ".");
+  /* 1. overdue commitments, most overdue first */
+  var over = aosOverdue(ao);
+  if (over && over.length){
+    over.slice(0, 3).forEach(function(c){
+      var late = daysBetween(c.due, t);
+      var text = esc(c.text || "commitment");
+      var s = (c.who === "mine")
+        ? "Clear your overdue commitment: " + text + ", " + pl(late, "day", "days") + " late."
+        : "Chase " + esc(c.owner || "them") + " for " + text + ", " + pl(late, "day", "days") + " late.";
+      items.push({ txt: s, view: "ao", sample: sampleCommitment(c) });
+    });
+    if (over.length > 3){
+      items.push({ txt: pl(over.length - 3, "more commitment is", "more commitments are") + " overdue in Associate OS.", view: "ao" });
     }
-    if (Array.isArray(s.newBreakouts)){
-      L.push(s.newBreakouts.length
-        ? "New breakouts: " + s.newBreakouts.map(esc).join(", ") + "."
-        : "No new breakouts.");
+  } else if (!over && ao && ao.snap && typeof ao.snap.overdueCommitments === "number" && ao.snap.overdueCommitments > 0){
+    items.push({ txt: pl(ao.snap.overdueCommitments, "commitment is", "commitments are") + " overdue in Associate OS.", view: "ao" });
+  }
+
+  /* 2. drafts ready to send */
+  if (fr && fr.draftsReady > 0){
+    items.push({ txt: pl(fr.draftsReady, "outreach draft is", "outreach drafts are") + " written and ready to send in Founder Radar.", view: "fr" });
+  }
+  var aoDrafts = aosDraftsPending(ao);
+  if (aoDrafts != null && aoDrafts > 0){
+    items.push({ txt: pl(aoDrafts, "drafted email is", "drafted emails are") + " waiting on your send in Associate OS.", view: "ao" });
+  }
+
+  /* 3. new real people in the queue */
+  if (fr && fr.inboxReal.length){
+    var s = pl(fr.inboxReal.length, "real person is", "real people are") + " waiting in the Founder Radar queue";
+    if (fr.joinedToday) s += ", " + fr.joinedToday + " joined today";
+    s += ": " + listNames(fr.inboxReal, 2) + ".";
+    items.push({ txt: s, view: "fr", stamp: fr.hnStamp });
+  }
+
+  /* 4. pipeline entries parked at Outreach or Meeting */
+  if (pipe && pipe.length){
+    var outreach = pipe.filter(function(e){ return e.stage === "Outreach"; });
+    var meeting = pipe.filter(function(e){ return e.stage === "Meeting"; });
+    if (outreach.length){
+      items.push({ txt: listNames(outreach.map(function(e){ return e.name; }), 3) +
+        (outreach.length === 1 ? " is" : " are") + " sitting at Outreach in the pipeline, follow up or move on.", view: "ao" });
     }
-    if (Array.isArray(s.flaggedToday) && s.flaggedToday.length){
-      L.push("Flagged for partner review: " + s.flaggedToday.map(esc).join(", ") + ".");
+    if (meeting.length){
+      items.push({ txt: listNames(meeting.map(function(e){ return e.name; }), 3) +
+        (meeting.length === 1 ? " is" : " are") + " at Meeting stage in the pipeline, prep or log the outcome.", view: "ao" });
     }
-  } else if (s && s.date){
-    L.push(q("No snapshot today, last was " + keyLabel(s.date) + "."));
   }
-  if (!L.length) L.push(q("Breakout Radar has no stored activity yet."));
-  return L;
+
+  /* 5. top movers */
+  if (gs && (gs.topMover || gs.leader)){
+    var asOf = (gs.snapDate && gs.snapDate !== t) ? ", as of " + keyLabel(gs.snapDate) : "";
+    if (gs.topMover){
+      var d = gs.topMover.delta;
+      items.push({ txt: esc(gs.topMover.name) + " moved " + (d > 0 ? "+" : "") + d + " to " + gs.topMover.score + " on the Growth Scout board" + asOf + ".", view: "gs" });
+    } else {
+      items.push({ txt: esc(gs.leader.name) + " leads the Growth Scout board at " + gs.leader.score + asOf + ".", view: "gs" });
+    }
+  }
+  if (br && (br.newBreakouts.length || br.riser)){
+    var asOf2 = (br.snapDate && br.snapDate !== t) ? ", as of " + keyLabel(br.snapDate) : "";
+    if (br.newBreakouts.length){
+      items.push({ txt: listNames(br.newBreakouts, 2) + " crossed the breakout line in Breakout Radar" + asOf2 + ".", view: "br" });
+    } else {
+      items.push({ txt: esc(br.riser.name) + " rose +" + br.riser.delta + " to index " + br.riser.index + " in Breakout Radar" + asOf2 + ".", view: "br" });
+    }
+  }
+
+  return items.slice(0, 7);
 }
 
-function aoToday(ao){
-  if (!ao) return [q("No data yet from Associate OS.")];
-  var L = [];
-  if (ao.open != null) L.push(pl(ao.open, "commitment", "commitments") + " open, " + ao.overdue + " overdue.");
-  if (ao.heldWeek != null){
-    var s = pl(ao.heldWeek, "meeting", "meetings") + " held this week";
-    if (ao.upcoming) s += ", " + ao.upcoming + " upcoming";
-    L.push(s + ".");
-  }
-  if (ao.cold.length) L.push("Gone cold: " + ao.cold.map(esc).join(", ") + ".");
-  if (!L.length) L.push(q("Associate OS has no stored activity yet."));
-  return L;
+function renderActRow(it, i){
+  var v = VIEW[it.view];
+  return '<div class="act-row">' +
+    '<span class="act-num">' + pad2(i + 1) + '</span>' +
+    '<span class="act-txt">' + it.txt + '</span>' +
+    '<span class="act-side">' +
+      (it.stamp ? '<span class="src-stamp">' + esc(it.stamp) + '</span>' : '') +
+      (it.sample ? '<span class="tag-sample">SAMPLE</span>' : '') +
+      '<a class="act-link" href="' + v.href + '">' + v.name.toUpperCase() + '</a>' +
+    '</span></div>';
 }
 
-function pipeToday(pipe){
-  if (!pipe) return [q("No data yet from the shared pipeline.")];
-  if (!pipe.length) return [q("The shared pipeline is empty.")];
-  var t0 = startOfToday();
-  var fresh = pipe.filter(function(e){ return typeof e.at === "number" && e.at >= t0; });
-  var L = [];
-  if (fresh.length){
-    L.push(pl(fresh.length, "entry", "entries") + " added today: " + fresh.slice(0, 4).map(function(e){
-      return esc(e.name) + " from " + fromName(e.from) + " (" + esc(e.stage || "Sourced") + ")";
-    }).join(", ") + (fresh.length > 4 ? " and " + (fresh.length - 4) + " more" : "") + ".");
-  } else {
-    L.push("Nothing added today.");
-  }
-  L.push(pl(pipe.length, "entry", "entries") + " tracked in total.");
-  return L;
+function quietLine(text){ return '<p class="quiet">' + text + '</p>'; }
+
+function buildAct(fr, gs, br, ao, pipe){
+  var items = actItems(fr, gs, br, ao, pipe);
+  var html = items.map(renderActRow).join("");
+  if (!items.length) html += quietLine("Nothing to act on yet. Open the views and the queue will build itself.");
+  /* empty stores degrade to plain nothing-yet lines */
+  if (!fr) html += quietLine("Nothing yet from Founder Radar.");
+  if (!gs) html += quietLine("Nothing yet from Growth Scout.");
+  if (!br) html += quietLine("Nothing yet from Breakout Radar.");
+  if (!ao) html += quietLine("Nothing yet from Associate OS.");
+  if (!pipe || !pipe.length) html += quietLine("Nothing yet from the shared pipeline.");
+  return html;
 }
 
-/* ---------- THIS WEEK lines (trailing 7 days, timestamps where present) ---------- */
+/* ---------- MEETINGS AHEAD ---------- */
 
-function frWeek(fr, pipe){
-  var adds = pipeAdds(pipe, "founder-radar");
-  var L = [];
-  if (adds.length){
-    L.push(pl(adds.length, "person", "people") + " moved to outreach: " +
-      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
-      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
-  }
-  if (fr && fr.hnWeek) L.push(pl(fr.hnWeek, "live person", "live people") + " surfaced from Show HN.");
-  if (!L.length) L.push(fr ? q("No movement in the last 7 days.") : q("No data yet from Founder Radar."));
-  return L;
+var TYPE_LABEL = { intro: "founder intro", portfolio: "portfolio check-in", diligence: "diligence call",
+                   lp: "LP sync", partner: "partner sync", imported: "granola import" };
+
+function openCountOf(ao, mId){
+  var cs = aosCommitments(ao) || [], t = todayKey(), n = 0;
+  cs.forEach(function(c){ if (c && c.meetingId === mId && commitmentOpen(c, t)) n++; });
+  return n;
 }
 
-function gsWeek(gs, pipe){
-  var adds = pipeAdds(pipe, "growth-scout");
-  var L = [];
-  if (adds.length){
-    L.push(pl(adds.length, "company", "companies") + " starred into the pipeline: " +
-      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
-      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
-  }
-  if (gs && gs.sigWeek) L.push("Signal snapshots refreshed for " + pl(gs.sigWeek, "company", "companies") + ".");
-  if (!L.length) L.push(gs ? q("No movement in the last 7 days.") : q("No data yet from Growth Scout."));
-  return L;
+function meetRow(when, whenCls, m, openN, sample){
+  var kind = TYPE_LABEL[m.type] || "";
+  var title = String(m.title || m.company || "Meeting");
+  if (kind && title.toLowerCase().indexOf(kind.toLowerCase()) >= 0) kind = "";
+  return '<a class="mt-row" href="../associate-os/">' +
+    '<span class="mt-when' + (whenCls ? " " + whenCls : "") + '">' + esc(when) + '</span>' +
+    '<span class="mt-title">' + esc(title) +
+      (kind ? ' <span class="mt-kind">' + esc(kind) + '</span>' : '') + '</span>' +
+    (sample ? '<span class="tag-sample">SAMPLE</span>' : '') +
+    '<span class="mt-open' + (openN ? '' : ' clear') + '">' + (openN ? openN + " OPEN" : "ALL CLEAR") + '</span>' +
+  '</a>';
 }
 
-function brWeek(br, pipe){
-  var adds = pipeAdds(pipe, "breakout-radar");
-  var L = [];
-  if (adds.length){
-    L.push(pl(adds.length, "company", "companies") + " flagged into diligence: " +
-      adds.slice(0, 3).map(function(e){ return esc(e.name); }).join(", ") +
-      (adds.length > 3 ? " and " + (adds.length - 3) + " more" : "") + ".");
+function buildMeet(ao){
+  if (!ao) return quietLine("Nothing yet from Associate OS.");
+  var ms = aosMeetings(ao);
+  if (!ms){
+    var held = ao.snap && typeof ao.snap.meetingsThisWeek === "number" ? ao.snap.meetingsThisWeek : null;
+    return quietLine(held != null
+      ? "No meeting detail stored, the last snapshot counted " + pl(held, "meeting", "meetings") + " this week."
+      : "Nothing yet from Associate OS.");
   }
-  if (br && br.watch) L.push(br.watch + " on the watchlist now.");
-  if (!L.length) L.push(br ? q("No movement in the last 7 days.") : q("No data yet from Breakout Radar."));
-  return L;
-}
-
-function aoWeek(ao){
-  if (!ao) return [q("No data yet from Associate OS.")];
-  var L = [];
-  if (ao.heldWeek != null) L.push(pl(ao.heldWeek, "meeting", "meetings") + " held.");
-  if (ao.doneWeek != null) L.push(pl(ao.doneWeek, "commitment", "commitments") + " completed.");
-  if (ao.overdue) L.push(pl(ao.overdue, "commitment", "commitments") + " overdue now.");
-  if (!L.length) L.push(q("No movement in the last 7 days."));
-  return L;
-}
-
-function pipeWeekBlock(pipe){
-  if (!pipe) return [q("No data yet from the shared pipeline.")];
-  if (!pipe.length) return [q("The shared pipeline is empty.")];
-  var ws = weekStart();
-  var weekly = pipe.filter(function(e){ return typeof e.at === "number" && e.at >= ws; });
-  var L = [];
-  if (weekly.length){
-    var byFrom = {};
-    weekly.forEach(function(e){ var n = fromName(e.from); byFrom[n] = (byFrom[n] || 0) + 1; });
-    var parts = Object.keys(byFrom).map(function(k){ return byFrom[k] + " from " + k; });
-    L.push(pl(weekly.length, "entry", "entries") + " added in the last 7 days: " + parts.join(", ") + ".");
-    var newest = weekly.slice().sort(function(a, b){ return b.at - a.at; }).slice(0, 4);
-    L.push("Newest: " + newest.map(function(e){
-      return esc(e.name) + " (" + esc(e.stage || "Sourced") + ")";
-    }).join(", ") + ".");
-  } else {
-    L.push("Nothing added in the last 7 days.");
-  }
-  var order = ["Sourced","Outreach","Meeting","Diligence","Passed"];
-  var counts = {};
-  pipe.forEach(function(e){
-    var s = (typeof e.stage === "string" && e.stage) ? e.stage : "Sourced";
-    counts[s] = (counts[s] || 0) + 1;
+  var t = todayKey(), horizon = addDaysKey(t, 6), ws = weekStartKey();
+  var ahead = [], held = [];
+  ms.forEach(function(m){
+    if (!m || typeof m.date !== "string") return;
+    if (m.date >= t && m.date <= horizon) ahead.push(m);
+    else if (m.date < t && m.date >= ws && openCountOf(ao, m.id) > 0) held.push(m);
   });
-  var keys = Object.keys(counts).sort(function(a, b){
-    var ia = order.indexOf(a), ib = order.indexOf(b);
-    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  ahead.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  held.sort(function(a, b){ return a.date > b.date ? -1 : 1; });
+  var html = "";
+  ahead.forEach(function(m){
+    var when = m.date === t ? "TODAY" : (m.date === addDaysKey(t, 1) ? "TOMORROW" : keyLabel(m.date));
+    html += meetRow(when, m.date === t ? "today" : "", m, openCountOf(ao, m.id), sampleMeeting(m));
   });
-  L.push(pl(pipe.length, "entry", "entries") + " tracked in total: " +
-    keys.map(function(k){ return counts[k] + " " + esc(k.toLowerCase()); }).join(", ") + ".");
-  return L;
+  if (!ahead.length) html += quietLine("No meetings on the calendar for the week ahead.");
+  if (held.length){
+    held.slice(0, 5).forEach(function(m){
+      html += meetRow("HELD " + keyLabel(m.date), "held", m, openCountOf(ao, m.id), sampleMeeting(m));
+    });
+  }
+  return html;
+}
+
+/* ---------- THE WEEK SO FAR ---------- */
+
+function wkLine(label, text){ return '<p><span class="wk-lab">' + label + '</span>' + text + '</p>'; }
+function wkQuiet(label, name){ return '<p class="quiet"><span class="wk-lab">' + label + '</span>Nothing yet from ' + name + '.</p>'; }
+
+function buildWeek(fr, gs, br, ao, pipe){
+  var html = "", t = todayKey();
+
+  if (fr){
+    var parts = [];
+    if (fr.queue != null) parts.push(fr.queue + " in the queue" + (fr.likely != null ? ", " + fr.likely + " likely" : ""));
+    if (fr.liveTotal) parts.push(pl(fr.liveTotal, "live person", "live people") + " in from Show HN and watched follows");
+    var moves = [];
+    if (fr.outreach) moves.push(fr.outreach + " queued for outreach");
+    if (fr.watchlist) moves.push(fr.watchlist + " on the watchlist");
+    if (fr.meetings) moves.push(pl(fr.meetings, "meeting", "meetings") + " set");
+    if (fr.ignored) moves.push(fr.ignored + " ignored");
+    if (moves.length) parts.push(moves.join(", "));
+    html += parts.length ? wkLine("FOUNDER RADAR", parts.join(". ") + ".")
+                         : wkLine("FOUNDER RADAR", "Open, no stored activity yet.");
+  } else html += wkQuiet("FOUNDER RADAR", "Founder Radar");
+
+  if (gs){
+    var gp = [];
+    gp.push(gs.stars === 0 ? "no companies starred yet" : pl(gs.stars, "company", "companies") + " starred");
+    if (gs.discovered) gp.push(pl(gs.discovered, "company", "companies") + " discovered");
+    if (gs.sigWeek) gp.push("signals refreshed for " + gs.sigWeek + " this week");
+    var s0 = gp.join(", ") + ".";
+    html += wkLine("GROWTH SCOUT", s0.charAt(0).toUpperCase() + s0.slice(1));
+  } else html += wkQuiet("GROWTH SCOUT", "Growth Scout");
+
+  if (br){
+    var bp = [];
+    if (br.watch != null) bp.push(br.watch === 0 ? "watchlist is empty" : pl(br.watch, "company", "companies") + " on the watchlist");
+    if (br.snapDate === t && br.newBreakouts.length) bp.push("new breakouts: " + listNames(br.newBreakouts, 3));
+    if (br.snapDate === t && br.flagged.length) bp.push("flagged for partner review: " + listNames(br.flagged, 3));
+    if (!bp.length) bp.push(br.snapDate ? "last snapshot " + keyLabel(br.snapDate) : "no snapshot yet");
+    var s1 = bp.map(function(x){ return x.charAt(0).toUpperCase() + x.slice(1); }).join(". ") + ".";
+    html += wkLine("BREAKOUT RADAR", s1);
+  } else html += wkQuiet("BREAKOUT RADAR", "Breakout Radar");
+
+  if (ao){
+    var cs = aosCommitments(ao), ms = aosMeetings(ao);
+    var ap = [], ws = weekStartKey();
+    if (ms){
+      var heldN = 0;
+      ms.forEach(function(m){ if (m && typeof m.date === "string" && m.date >= ws && m.date <= t) heldN++; });
+      ap.push(pl(heldN, "meeting", "meetings") + " held");
+    }
+    if (cs){
+      var done7 = 0, open = 0, overN = 0;
+      cs.forEach(function(c){
+        if (!c) return;
+        if (c.status === "done"){ if (typeof c.doneOn === "string" && c.doneOn >= ws && c.doneOn <= t) done7++; return; }
+        if (!commitmentOpen(c, t)) return;
+        open++;
+        if (typeof c.due === "string" && c.due && c.due < t) overN++;
+      });
+      ap.push(pl(done7, "commitment", "commitments") + " closed");
+      ap.push(open + " open of which " + overN + " overdue");
+    } else if (ao.snap){
+      if (typeof ao.snap.meetingsThisWeek === "number") ap.push(pl(ao.snap.meetingsThisWeek, "meeting", "meetings") + " held");
+      if (typeof ao.snap.openCommitments === "number") ap.push(ao.snap.openCommitments + " open of which " + (ao.snap.overdueCommitments || 0) + " overdue");
+    }
+    html += ap.length ? wkLine("ASSOCIATE OS", ap.join(", ") + ".")
+                      : wkLine("ASSOCIATE OS", "Open, no stored activity yet.");
+  } else html += wkQuiet("ASSOCIATE OS", "Associate OS");
+
+  if (pipe && pipe.length){
+    var wsMs = weekStart();
+    var weekly = pipe.filter(function(e){ return typeof e.at === "number" && e.at >= wsMs; });
+    var pp = [];
+    if (weekly.length){
+      var byFrom = {};
+      weekly.forEach(function(e){
+        var n = { "founder-radar": "Founder Radar", "growth-scout": "Growth Scout",
+                  "breakout-radar": "Breakout Radar", "associate-os": "Associate OS" }[e.from] || "elsewhere";
+        byFrom[n] = (byFrom[n] || 0) + 1;
+      });
+      pp.push(pl(weekly.length, "entry", "entries") + " added this week (" +
+        Object.keys(byFrom).map(function(k){ return byFrom[k] + " from " + k; }).join(", ") + ")");
+    } else {
+      pp.push("nothing added this week");
+    }
+    var order = ["Sourced","Outreach","Meeting","Diligence","Passed"], counts = {};
+    pipe.forEach(function(e){
+      var s = (typeof e.stage === "string" && e.stage) ? e.stage : "Sourced";
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    var keys = Object.keys(counts).sort(function(a, b){
+      var ia = order.indexOf(a), ib = order.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    pp.push(pl(pipe.length, "entry", "entries") + " tracked in total: " +
+      keys.map(function(k){ return counts[k] + " " + esc(k.toLowerCase()); }).join(", "));
+    var s2 = pp.join(". ") + ".";
+    html += wkLine("PIPELINE", s2.charAt(0).toUpperCase() + s2.slice(1));
+  } else html += wkQuiet("PIPELINE", "the shared pipeline");
+
+  return html;
 }
 
 /* ---------- compose, cache per day, render ---------- */
-
-function q(text){ return { quiet: text }; }
-function block(label, lines){
-  return '<div class="vb"><div class="vb-label">' + label + '</div>' +
-    lines.map(function(l){
-      if (l && typeof l === "object") return '<p class="quiet">' + l.quiet + '</p>';
-      return '<p>' + l + '</p>';
-    }).join("") + '</div>';
-}
 
 function compose(){
   var fr = readFounder(), gs = readScout(), br = readBreakout(), ao = readAos(), pipe = readPipe();
   return {
     date: todayKey(),
     at: Date.now(),
-    today: block("FOUNDER RADAR", frToday(fr)) +
-           block("GROWTH SCOUT", gsToday(gs)) +
-           block("BREAKOUT RADAR", brToday(br)) +
-           block("ASSOCIATE OS", aoToday(ao)) +
-           block("SHARED PIPELINE", pipeToday(pipe)),
-    week:  block("FOUNDER RADAR", frWeek(fr, pipe)) +
-           block("GROWTH SCOUT", gsWeek(gs, pipe)) +
-           block("BREAKOUT RADAR", brWeek(br, pipe)) +
-           block("ASSOCIATE OS", aoWeek(ao)) +
-           block("SHARED PIPELINE", pipeWeekBlock(pipe))
+    act: buildAct(fr, gs, br, ao, pipe),
+    meet: buildMeet(ao),
+    week: buildWeek(fr, gs, br, ao, pipe)
   };
 }
 
-var CACHE_KEY = "sos.brief.v1";
+var CACHE_KEY = "sos.planmyday.v1";
 function render(b){
-  document.getElementById("todayBody").innerHTML = b.today;
+  document.getElementById("actBody").innerHTML = b.act;
+  document.getElementById("meetBody").innerHTML = b.meet;
   document.getElementById("weekBody").innerHTML = b.week;
-  document.getElementById("todayDate").textContent = keyLabel(b.date);
+  document.getElementById("actDate").textContent = keyLabel(b.date);
+  document.getElementById("meetDate").textContent = keyLabel(b.date) + " to " + keyLabel(addDaysKey(b.date, 6));
   document.getElementById("weekDate").textContent = keyLabel(weekStartKey()) + " to " + keyLabel(b.date);
-  document.getElementById("genStamp").textContent = "BRIEF " + stampWord(b.at || Date.now());
+  var atK = keyOf(new Date(b.at || Date.now()));
+  document.getElementById("genStamp").textContent =
+    "PLANNED " + (atK === todayKey() ? hhmm(b.at || Date.now()) : keyLabel(atK).toUpperCase());
 }
-function ensureBrief(force){
+function ensurePlan(force){
   if (!force){
     var c = lsGet(CACHE_KEY);
-    if (c && c.date === todayKey() && typeof c.today === "string" && typeof c.week === "string"){
+    if (c && c.date === todayKey() && typeof c.act === "string" &&
+        typeof c.meet === "string" && typeof c.week === "string"){
       render(c);
       return;
     }
@@ -592,8 +687,8 @@ function ensureBrief(force){
   lsSet(CACHE_KEY, b);
   render(b);
 }
-document.getElementById("regenBtn").addEventListener("click", function(){ ensureBrief(true); });
-ensureBrief(false);
+document.getElementById("regenBtn").addEventListener("click", function(){ ensurePlan(true); });
+ensurePlan(false);
 </script>
 </body>
 </html>

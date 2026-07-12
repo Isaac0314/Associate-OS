@@ -297,9 +297,7 @@ table.rt{width:100%;border-collapse:collapse}
 <nav class="sos-nav">
   <a class="sos-brand" href="../">SIGNAL OS</a>
   <div class="sos-links">
-    <a href="../founder-radar/">FOUNDER RADAR</a>
-    <a href="../growth-scout/">GROWTH SCOUT</a>
-    <a href="../breakout-radar/">BREAKOUT RADAR</a>
+    <a href="../radar/">RADAR</a>
     <span aria-current="page">ASSOCIATE OS</span>
     <a href="../brief/">BRIEF</a>
   </div>
@@ -754,6 +752,9 @@ function sosPipeAdd(entry){
 }
 const SOS_STAGES = ['Sourced','Outreach','Meeting','Diligence','Passed'];
 const SOS_VIEW_LABEL = {'founder-radar':'FOUNDER RADAR', 'growth-scout':'GROWTH SCOUT', 'breakout-radar':'BREAKOUT RADAR', 'associate-os':'ASSOCIATE OS'};
+/* The three sourcing views now live in one Radar page; origin tags keep their
+   old labels (provenance) but link to the merged view. */
+const SOS_VIEW_HREF = {'founder-radar':'../radar/', 'growth-scout':'../radar/', 'breakout-radar':'../radar/', 'associate-os':'../associate-os/'};
 
 // ---------- derived facts ----------
 function meetingById(id){ return S.meetings.find(m => m.id === id); }
@@ -1160,7 +1161,7 @@ function renderFromSourcing(){
       return '<div class="fsrow">' +
         '<span class="nm">' + esc(e.name) + '</span>' +
         '<span class="tag">' + (e.kind === 'person' ? 'person' : 'company') + '</span>' +
-        (from ? '<a class="tag" href="../' + from + '/">' + SOS_VIEW_LABEL[from] + '</a>' : '') +
+        (from ? '<a class="tag" href="' + SOS_VIEW_HREF[from] + '">' + SOS_VIEW_LABEL[from] + '</a>' : '') +
         '<select class="fsstage" data-sosstage="' + esc(key) + '">' +
           SOS_STAGES.map(s => '<option value="' + s + '"' + (s === stage ? ' selected' : '') + '>' + s + '</option>').join('') +
         '</select>' +

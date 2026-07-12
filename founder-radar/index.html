@@ -132,10 +132,9 @@
   .tabs button{
     flex:1;border:0;border-bottom:2px solid transparent;background:transparent;height:28px;padding:0 2px;margin-bottom:-1px;
     border-radius:0;color:var(--muted);justify-content:center;gap:5px;
-    font:400 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    font:400 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;
   }
   .tabs button:hover{color:var(--ink)}
-  .tabs button .n{font:400 9px/1 var(--mono);color:var(--faint);letter-spacing:0}
   .tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
   .askwrap{padding:11px 14px 8px;position:relative}
   .askwrap input{height:30px;font-size:12.5px;padding-left:28px;border-color:var(--line)}
@@ -500,6 +499,7 @@
     <div class="list" id="list"></div>
     <div class="railfoot">
       <span class="ig" id="howLink">how scoring works</span>
+      <span id="splitTxt"></span>
       <span id="clearedTxt">0 of 0 cleared</span>
       <span id="xFoot"></span>
       <span class="ig right" id="igLink" style="display:none"></span>
@@ -552,7 +552,7 @@
     <table class="wtable" id="pTable"></table>
     <h4>X check (optional adjustment) <span style="font:700 8px/1 var(--mono);letter-spacing:.08em;color:var(--positive)">WIRED</span></h4>
     <p style="font-size:12.5px;color:var(--ink3);margin:4px 0 0;line-height:1.6">
-      Runs from the posts check in the X numbers panel of a real candidate, against the live X API: cadence min(4, posts/week) + audience min(4, log10(followers)) + engagement (2 if median likes &ge; 10, 1 if &ge; 3), cap <b>+10</b>.
+      Runs automatically for the top 10 real candidates each day (and from the posts check in the X numbers panel), against the live X API: cadence min(4, posts/week) + audience min(4, log10(followers)) + engagement (2 if median likes &ge; 10, 1 if &ge; 3), cap <b>+10</b>.
       Only real profiles get X numbers; sample candidates have none.
     </p>
     <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">Scores cap at 99. "Likely" means 60 or above. Live Hacker News and watched-follow candidates run through the identical engine.</p>
@@ -988,6 +988,7 @@ function load(){
         (c.signals || []).forEach(function(s){ if (s.abs) s.d = -daysSinceKey(s.abs); });
       });
       raw.demo = 0; /* the clock-simulation UI is gone; always render today */
+      raw.tab = "live"; /* real people first: every load opens on the LIVE tab */
       return raw;
     }
   }catch(e){}
@@ -995,7 +996,7 @@ function load(){
 }
 function fresh(){
   var st = { demo:0, statuses:{}, drafts:{}, aiDrafts:{}, feed:[], hn:[], xf:[], xval:{},
-             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"all", sel:null, hnPull:null };
+             watch: WF_DEFAULTS.slice(), wfPulls:{}, tab:"live", sel:null, hnPull:null };
   var likely = CANDS.filter(function(c){ return isVisible(c,0) && scoreAt(c,0) >= LIKELY_MIN; }).length;
   var visible = CANDS.filter(function(c){ return isVisible(c,0); }).length;
   st.feed.push({ tag:"SCAN", day:0, msg:"Watch sources registered. Live: Show HN and watched X follows. Sample connectors: GitHub, arXiv, domains, job changes, demo day lists." });
@@ -1324,12 +1325,12 @@ function deepLinkBoot(){
       S.xf.push(c);
       feedPush("SCAN", "Deep link: <b>" + esc(c.name) + "</b> (@" + esc(handle) + ")" + (from ? " via " + esc(from) : "") + " added to the queue.");
     }
-    S.tab = "all"; S.sel = c.id;
+    S.tab = "live"; S.sel = c.id;
     save();
     enrichFromX(c);
   } else if (person){
     var t = allCands().filter(function(x){ return String(x.name).toLowerCase() === person.toLowerCase(); })[0];
-    if (t){ S.tab = "all"; S.sel = t.id; save(); }
+    if (t){ S.tab = isReal(t) ? "live" : "all"; S.sel = t.id; save(); }
   }
 }
 /* settings popover: the editable watch list */
@@ -1364,6 +1365,7 @@ function addWatchAccount(){
     if (n > 0) toast(n + " real profiles in from @" + v);
     else if (n === 0) toast("Watching @" + v + "; nothing new from them today");
     else toast(xfState ? "Watching @" + v + " (X connector offline)" : "Watching @" + v);
+    if (n > 0) autoPostsCheck();   /* new reals may enter the top 10 */
   });
 }
 
@@ -1452,6 +1454,44 @@ function validateOnX(c){
       renderDetail(); renderHeader();
     });
 }
+/* auto posts check: the top 10 real candidates get cadence and engagement
+   without any clicks. Runs after the daily pulls, sequentially, and skips
+   anyone already checked today (same daily cache the manual button uses). */
+function autoPostsCheck(){
+  var reals = allCands().filter(function(c){ return isReal(c) && c.xhandle; });
+  reals.sort(function(a,b){ return scoreAt(b, S.demo) - scoreAt(a, S.demo); });
+  var due = reals.slice(0, 10).filter(function(c){
+    var xv = S.xval[c.id];
+    return !(xv && xv.date === todayKey());
+  });
+  if (!due.length) return Promise.resolve(0);
+  var done = 0;
+  var chain = Promise.resolve();
+  due.forEach(function(c){
+    chain = chain.then(function(){
+      var xv = S.xval[c.id];
+      if (xv && xv.date === todayKey()) return;            /* checked meanwhile */
+      return fetch(API + "/api/x/user?handle=" + encodeURIComponent(c.xhandle))
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (j && j.configured === false){ xfState = "offline"; throw new Error("offline"); }
+          if (!j || j.ok === false || !j.user) return;     /* e.g. not found: skip quietly */
+          return fetch(API + "/api/x/tweets?handle=" + encodeURIComponent(c.xhandle) + "&count=10")
+            .then(function(r2){ return r2.json(); })
+            .then(function(t){
+              if (!t || t.ok === false) return;
+              applyLiveX(c, c.xhandle, j.user, t.tweets || []);
+              done++;
+            });
+        });
+    });
+  });
+  return chain.then(function(){
+    if (done) feedPush("XVAL", "Auto posts check: cadence and engagement pulled for <b>" + done + " real candidate" + (done === 1 ? "" : "s") + "</b> at the top of the live queue.");
+    save(); renderAll();
+    return done;
+  }).catch(function(){ save(); renderAll(); return done; });
+}
 function xcell(k, v, s){
   return '<div class="xcell"><div class="k">' + k + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : "") + "</div>";
 }
@@ -1509,7 +1549,10 @@ function renderXSection(c, b){
 }
 
 /* ---------- list / tabs / ask ---------- */
-var TABS = [ ["all","All"], ["likely","Likely"], ["watchlist","Watchlist"], ["contacted","Contacted"] ];
+/* LIVE (real people only) is the default view; SAMPLE holds the fictional
+   set; ALL mixes both. Likely folded away: the live/sample split was the
+   problem it papered over, and scores are visible on every card. */
+var TABS = [ ["live","Live"], ["sample","Sample"], ["all","All"], ["watchlist","Watchlist"], ["contacted","Contacted"] ];
 function askQuery(){ var el = document.getElementById("askInput"); return (el.value || "").trim().toLowerCase(); }
 var STOPWORDS = ["who","whos","what","which","that","this","the","a","an","is","are","was","were","has","have","had","did","does","do","just","any","anyone","in","on","at","of","for","me","my","show","find","recently","with","and","or","to","from"];
 function askTokens(){
@@ -1524,9 +1567,10 @@ function haystack(c){
     c.signals.map(function(s){ return SIG_LABEL[s.t] + " " + s.detail; }).join(" ")).toLowerCase();
 }
 function tabMatch(c){
-  var s = st(c), sc = scoreAt(c, S.demo);
+  var s = st(c);
+  if (S.tab === "live") return s !== "ignored" && isReal(c);
+  if (S.tab === "sample") return s !== "ignored" && !isReal(c);
   if (S.tab === "all") return s !== "ignored";
-  if (S.tab === "likely") return s === "inbox" && sc >= LIKELY_MIN;
   if (S.tab === "watchlist") return s === "watchlist";
   if (S.tab === "contacted") return s === "contacted" || s === "meeting";
   return true;
@@ -1569,6 +1613,7 @@ function renderHeader(){
   var vis = allCands().filter(function(c){ return isVisible(c, S.demo); });
   var cleared = vis.filter(function(c){ return st(c) !== "inbox"; }).length;
   document.getElementById("clearedTxt").textContent = cleared + " of " + vis.length + " cleared";
+  document.getElementById("splitTxt").textContent = tabCount("live") + " live · " + tabCount("sample") + " sample";
   var stamp = document.getElementById("hnStamp");
   if (hnOffline && S.hnPull){
     stamp.textContent = "HN offline, showing cached"; stamp.className = "stamp off";
@@ -1593,7 +1638,7 @@ function renderHeader(){
 
 function renderTabs(){
   document.getElementById("tabs").innerHTML = TABS.map(function(t){
-    return '<button data-tab="' + t[0] + '" class="' + (S.tab === t[0] ? "on" : "") + '">' + t[1] + ' <span class="n">' + tabCount(t[0]) + "</span></button>";
+    return '<button data-tab="' + t[0] + '" class="' + (S.tab === t[0] ? "on" : "") + '" title="' + t[1] + ": " + tabCount(t[0]) + '">' + t[1] + "</button>";
   }).join("");
 }
 
@@ -1615,7 +1660,13 @@ function renderList(){
   } else ans.style.display = "none";
   var el = document.getElementById("list");
   if (!arr.length){
-    el.innerHTML = '<div class="empty">Nothing here.' + (S.tab !== "all" ? " Try the All tab." : "") + "</div>";
+    var em = "Nothing here." + (S.tab !== "all" ? " Try the All tab." : "");
+    if (S.tab === "live" && !q){
+      em = xfState === "offline"
+        ? "No live candidates yet. The X connector is offline; start the local server to pull watched follows."
+        : "No live candidates yet. Watched follows and Show HN pulls land here.";
+    }
+    el.innerHTML = '<div class="empty">' + em + "</div>";
   } else {
     el.innerHTML = arr.map(function(c){
       var sc = scoreAt(c, S.demo), s = st(c);
@@ -1669,10 +1720,11 @@ function renderDetail(){
   h += '<div class="stagebar"><div class="pipe">' + PIPE.map(function(p, i){
     return '<span class="st' + (i === stage ? " cur" : i < stage ? " done" : "") + '" data-stg="' + i + '" title="Set pipeline stage">' + p.toUpperCase() + "</span>";
   }).join("") + "</div>";
+  /* status toggles: coral fill marks the candidate's CURRENT status only */
   h += '<div class="dact">' +
-       (s === "ignored" ? "" : '<button id="actIgnore">Ignore</button>') +
-       '<button id="actWatch">Watchlist</button>' +
-       '<button id="actReach" class="primary">Outreach</button>' +
+       '<button id="actIgnore"' + (s === "ignored" ? ' class="primary"' : "") + '>Ignore</button>' +
+       '<button id="actWatch"' + (s === "watchlist" ? ' class="primary"' : "") + '>Watchlist</button>' +
+       '<button id="actReach"' + (s === "contacted" ? ' class="primary"' : "") + '>Outreach</button>' +
        (s === "contacted" ? '<button id="actMeet">Advance to meeting</button>' : "") +
        (s !== "inbox" ? '<button id="actBack" class="ghost">Back to inbox</button>' : "") +
        "</div></div>";
@@ -1903,7 +1955,10 @@ function actOnSel(status){
   var c = S.sel ? byId(S.sel) : null;
   if (!c) return;
   if (status === "meeting" && st(c) !== "contacted"){ toast("Queue outreach first, then advance to meeting"); return; }
-  setStatus(c, status);
+  if (status !== "inbox" && st(c) === status) status = "inbox";  /* toggles: clicking the active status clears it */
+  /* labeling keeps the candidate selected so the toggle state is visible;
+     ignore still clears the card and advances to the next untriaged one */
+  setStatus(c, status, { keepSel: status !== "ignored" });
 }
 /* click feedback: button flashes accent, the card slides out toward the tabs */
 function actWithFx(status, btn){
@@ -1914,7 +1969,7 @@ function actWithFx(status, btn){
     setTimeout(function(){ btn.classList.remove("flash"); }, 380);
   }
   var card = document.querySelector(".cand.sel");
-  var animate = card && status !== "inbox" && st(c) !== status;
+  var animate = card && status === "ignored" && st(c) !== status;
   if (animate) card.classList.add("leaving");
   setTimeout(function(){ actOnSel(status); }, animate ? 180 : 0);
 }
@@ -2010,8 +2065,9 @@ renderAll();
 if (!localStorage.getItem("fr_intro_seen")) openHow();
 /* live by default: auto-pull Hacker News once per calendar day */
 if (!S.hnPull || S.hnPull.date !== todayKey()) pullHN(true);
-/* watched follows: one pull per watch account per calendar day */
-pullAllFollowings();
+/* watched follows: one pull per watch account per calendar day,
+   then the posts check runs itself for the top 10 real candidates */
+pullAllFollowings().then(function(){ autoPostsCheck(); });
 </script>
 </body>
 </html>

@@ -456,7 +456,7 @@
    Growth Scout - deterministic scoring over live + curated signals.
    ===================================================================== */
 
-/* ---------- curated watchlist (facts verified 11 Jul 2026; see tools.md) ---------- */
+/* ---------- curated watchlist (facts verified 12 Jul 2026; see tools.md) ---------- */
 /* ev(date, kind, text, source). date 'YYYY-MM-DD' or 'YYYY-MM' or null (undated
    items are displayed but excluded from recency scoring). */
 function ev(d,k,t,s,l){return {d:d,k:k,t:t,s:s,l:l||null};}
@@ -479,14 +479,14 @@ const COMPANIES=[
   events:[
     ev('2026-02-05','funding','$60M Series B led by Mitch Rales with TQ Ventures, GV, Balderton, Jigsaw; total raised past $100M. Targeting the ~$200B US consumer legal market.','Fortune, 5 Feb 2026','https://fortune.com/2026/02/05/lawhive-ai-law-firm-startup-series-b-venture-funding/'),
   ]},
- {id:'parloa',name:'Parloa',hq:'Berlin',sector:'ai',tags:['Agentic AI','Customer ops'],stage:'Series C',
+ {id:'parloa',name:'Parloa',hq:'Berlin',sector:'ai',tags:['Agentic AI','Customer ops'],stage:'Series D',
   line:'Agentic AI for enterprise customer service and contact-center automation.',
-  round:{label:'$120M Series C at $1B',lead:'Durable, Altimeter, General Catalyst',date:'2025-05',src:'Parloa announcement, May 2025',amt:120},
-  sourceUrl:'https://www.parloa.com/parloa-in-the-press/parloa-raises-120m-series-c-to-reinvent-customer-service-with-agentic-ai/',
+  round:{label:'$350M Series D at $3B',lead:'General Catalyst',date:'2026-01-15',src:'TechCrunch, 15 Jan 2026',amt:350},
+  sourceUrl:'https://techcrunch.com/2026/01/15/parloa-triples-its-valuation-in-8-months-to-3b-with-350m-raise/',
   ats:{k:'greenhouse',slug:'parloa'},gh:null,hn:'"Parloa"',
   events:[
     ev('2025-05','funding','$120M Series C at a $1B valuation (Durable, Altimeter, General Catalyst).','Parloa announcement, May 2025','https://www.parloa.com/parloa-in-the-press/parloa-raises-120m-series-c-to-reinvent-customer-service-with-agentic-ai/'),
-    ev(null,'reported','Reported $350M raise tripling valuation to about $3B; date and lead not confirmed.','Vestbee (reported)','https://www.vestbee.com/insights/articles/parloa-raises-350-m'),
+    ev('2026-01-15','funding','$350M Series D at a $3B valuation led by General Catalyst, with EQT Ventures, Altimeter, Durable and Mosaic; valuation tripled in eight months, ARR past $50M.','TechCrunch, 15 Jan 2026','https://techcrunch.com/2026/01/15/parloa-triples-its-valuation-in-8-months-to-3b-with-350m-raise/'),
   ]},
  {id:'peec',name:'Peec AI',hq:'Berlin',sector:'ai',tags:['AI search analytics','GEO'],stage:'Series A',network:true,
   line:'Shows brands how they appear inside ChatGPT and other AI answers.',
@@ -495,8 +495,8 @@ const COMPANIES=[
   ats:{k:'ashby',slug:'peec'},gh:null,hn:'"Peec"',
   events:[
     ev('2025-07','funding','€7M seed led by 20VC, reportedly closed in 24 hours, the fastest seed in 20VC history. Founders met in the Antler Berlin Winter 2024 cohort.','Tech Funding News, Jul 2025','https://techfundingnews.com/peec-ai-200m-valuation-10m-arr-geo-marketing/'),
-    ev('2025-11-17','funding','$21M Series A led by Singular, with Antler, Combination VC, identity.vc; valuation tripled to over $100M.','TechCrunch, 17 Nov 2025','https://techcrunch.com/2025/11/17/as-consumers-ditch-google-for-chatgpt-peec-ai-raises-21m-to-help-brands-adapt/'),
-    ev('2026-05-23','traction','ARR passed $10M sixteen months after launch, more than doubling in about six months. Customers include Axel Springer, Chanel, ElevenLabs, n8n, TUI.','TechCrunch, 23 May 2026','https://techcrunch.com/2026/05/23/peec-one-of-berlins-rising-startups-more-than-doubled-annualized-revenue-in-months-to-10m-sources-say/'),
+    ev('2025-11-17','funding','$21M Series A led by Singular, with Antler, Combination VC, identity.vc; valuation tripled to over $100M. Customers include Axel Springer, Chanel, ElevenLabs, n8n, TUI.','TechCrunch, 17 Nov 2025','https://techcrunch.com/2025/11/17/as-consumers-ditch-google-for-chatgpt-peec-ai-raises-21m-to-help-brands-adapt/'),
+    ev('2026-05-23','traction','ARR passed $10M sixteen months after launch, more than doubling in about six months.','TechCrunch, 23 May 2026','https://techcrunch.com/2026/05/23/peec-one-of-berlins-rising-startups-more-than-doubled-annualized-revenue-in-months-to-10m-sources-say/'),
     ev('2026-06-26','reported','Reportedly negotiating a new round at about $200M pre-money, roughly double the Series A valuation in seven months.','Sifted, 26 Jun 2026','https://sifted.eu/articles/peec-ai-fundraise-new-valuation'),
   ]},
  {id:'elevenlabs',name:'ElevenLabs',hq:'London / New York',sector:'ai',tags:['Voice AI'],stage:'Series D',
@@ -507,10 +507,14 @@ const COMPANIES=[
   events:[
     ev('2026-02-04','funding','$500M Series D at an $11B valuation led by Sequoia; a16z quadrupled and ICONIQ tripled their positions. Company signalling an IPO path.','CNBC, 4 Feb 2026','https://www.cnbc.com/2026/02/04/nvidia-backed-ai-startup-elevenlabs-11-billion-valuation.html'),
   ]},
- {id:'synthesia',name:'Synthesia',hq:'London',sector:'ai',tags:['AI video','Enterprise'],stage:'Series D',
+ {id:'synthesia',name:'Synthesia',hq:'London',sector:'ai',tags:['AI video','Enterprise'],stage:'Series E',
   line:'AI video generation for enterprise communications and training.',
-  round:null,
-  ats:{k:'ashby',slug:'synthesia'},gh:null,hn:'"Synthesia"',events:[]},
+  round:{label:'$200M Series E at $4B',lead:'GV',date:'2026-01-26',src:'TechCrunch, 26 Jan 2026',amt:200},
+  sourceUrl:'https://techcrunch.com/2026/01/26/synthesia-hits-4b-valuation-lets-employees-cash-in/',
+  ats:{k:'ashby',slug:'synthesia'},gh:null,hn:'"Synthesia"',
+  events:[
+    ev('2026-01-26','funding','$200M Series E at a $4B valuation led by GV, with Evantic and Hedosophia; included an employee secondary via Nasdaq. ARR crossed $100M in Apr 2025.','TechCrunch, 26 Jan 2026','https://techcrunch.com/2026/01/26/synthesia-hits-4b-valuation-lets-employees-cash-in/'),
+  ]},
  {id:'lovable',name:'Lovable',hq:'Stockholm',sector:'ai',tags:['AI app building','DevTools'],stage:'Series B',
   line:'Prompt-to-app software building; one of Europe\'s fastest-growing products.',
   round:{label:'$330M Series B at $6.6B',lead:'CapitalG, Menlo Ventures',date:'2025-12-18',src:'TechCrunch, 18 Dec 2025',amt:330},
@@ -534,12 +538,22 @@ const COMPANIES=[
  {id:'poolside',name:'Poolside',hq:'Paris',sector:'ai',tags:['AI for software'],stage:'Growth',
   line:'Foundation models for software engineering.',
   round:null,ats:{k:'ashby',slug:'poolside'},gh:null,hn:'"poolside"',events:[]},
- {id:'dust',name:'Dust',hq:'Paris',sector:'ai',tags:['AI agents','Enterprise'],stage:'Series A',
+ {id:'dust',name:'Dust',hq:'Paris',sector:'ai',tags:['AI agents','Enterprise'],stage:'Series B',
   line:'Enterprise AI agent workspace connecting company knowledge to custom agents.',
-  round:null,ats:{k:'ashby',slug:'dust'},gh:null,hn:'"dust.tt"',events:[]},
- {id:'granola',name:'Granola',hq:'London',sector:'ai',tags:['AI productivity'],stage:'Series B',
+  round:{label:'$40M Series B',lead:'Sequoia, Abstract',date:'2026-05-18',src:'Tech.eu, 18 May 2026',amt:40},
+  sourceUrl:'https://tech.eu/2026/05/18/dust-raises-40m-series-b-to-build-the-multiplayer-operating-system-for-enterprise-ai/',
+  ats:{k:'ashby',slug:'dust'},gh:null,hn:'"dust.tt"',
+  events:[
+    ev('2026-05-18','funding','$40M Series B led by Sequoia and Abstract, with Snowflake and Datadog participating; total raised past $60M, 3,000+ organizations on the platform.','Tech.eu, 18 May 2026','https://tech.eu/2026/05/18/dust-raises-40m-series-b-to-build-the-multiplayer-operating-system-for-enterprise-ai/'),
+  ]},
+ {id:'granola',name:'Granola',hq:'London',sector:'ai',tags:['AI productivity'],stage:'Series C',
   line:'AI notepad for meetings, widely adopted by founders and investors.',
-  round:null,ats:{k:'ashby',slug:'granola'},gh:null,hn:'"Granola"',events:[]},
+  round:{label:'$125M Series C at $1.5B',lead:'Index Ventures',date:'2026-03-25',src:'TechCrunch, 25 Mar 2026',amt:125},
+  sourceUrl:'https://techcrunch.com/2026/03/25/granola-raises-125m-hits-1-5b-valuation-as-it-expands-from-meeting-notetaker-to-enterprise-ai-app/',
+  ats:{k:'ashby',slug:'granola'},gh:null,hn:'"Granola"',
+  events:[
+    ev('2026-03-25','funding','$125M Series C at a $1.5B valuation led by Index Ventures, with Kleiner Perkins, Lightspeed, Spark and NFDG; expanding from meeting notetaker to enterprise AI app.','TechCrunch, 25 Mar 2026','https://techcrunch.com/2026/03/25/granola-raises-125m-hits-1-5b-valuation-as-it-expands-from-meeting-notetaker-to-enterprise-ai-app/'),
+  ]},
  {id:'deepl',name:'DeepL',hq:'Cologne',sector:'ai',tags:['Language AI'],stage:'Growth',
   line:'Language AI and translation for enterprises.',
   round:null,ats:{k:'ashby',slug:'deepl'},gh:null,hn:'"DeepL"',events:[]},
@@ -549,10 +563,15 @@ const COMPANIES=[
  {id:'weaviate',name:'Weaviate',hq:'Amsterdam',sector:'ai',tags:['Vector database','Open source'],stage:'Series B',
   line:'Open-source vector database for AI applications.',
   round:null,ats:{k:'ashby',slug:'weaviate'},gh:'weaviate/weaviate',hn:'"Weaviate"',events:[]},
- {id:'qdrant',name:'Qdrant',hq:'Berlin',sector:'ai',tags:['Vector search','Open source'],stage:'Series A',
+ {id:'qdrant',name:'Qdrant',hq:'Berlin',sector:'ai',tags:['Vector search','Open source'],stage:'Series B',
   line:'Open-source vector search engine written in Rust.',
-  round:null,ats:null,gh:'qdrant/qdrant',hn:'"Qdrant"',events:[]},
- {id:'tacto',name:'Tacto',hq:'Munich',sector:'saas',tags:['AI procurement','Industrial'],stage:'Series B',
+  round:{label:'$50M Series B',lead:'AVP',date:'2026-03-12',src:'Qdrant announcement, 12 Mar 2026',amt:50},
+  sourceUrl:'https://qdrant.tech/blog/series-b-announcement/',
+  ats:null,gh:'qdrant/qdrant',hn:'"Qdrant"',
+  events:[
+    ev('2026-03-12','funding','$50M Series B led by AVP, with Bosch Ventures, Unusual Ventures, Spark Capital and 42CAP; total raised $87.8M.','Qdrant announcement, 12 Mar 2026','https://qdrant.tech/blog/series-b-announcement/'),
+  ]},
+ {id:'tacto',name:'Tacto',hq:'Munich',sector:'saas',tags:['AI procurement','Industrial'],stage:'Series A',
   line:'AI procurement and supply-chain intelligence for the industrial Mittelstand.',
   round:null,ats:{k:'ashby',slug:'tacto'},gh:null,hn:'"Tacto"',events:[]},
  {id:'pigment',name:'Pigment',hq:'Paris',sector:'saas',tags:['FP&A','Planning'],stage:'Series D',
@@ -568,7 +587,12 @@ const COMPANIES=[
   ]},
  {id:'klearly',name:'Klearly',hq:'Amsterdam',sector:'fintech',tags:['Payments'],stage:'Series A',network:true,
   line:'Amsterdam payments company serving hospitality merchants.',
-  round:null,ats:null,gh:null,hn:'"Klearly"',events:[]},
+  round:{label:'€12M Series A',lead:'PayPal Ventures',date:'2026-01-13',src:'Tech.eu, 13 Jan 2026',amt:12},
+  sourceUrl:'https://tech.eu/2026/01/13/klearly-secures-eur12m-for-restaurant-payments-system/',
+  ats:null,gh:null,hn:'"Klearly"',
+  events:[
+    ev('2026-01-13','funding','€12M Series A led by PayPal Ventures, with Italian Founders Fund, Global PayTech Ventures, Antler Elevate and Shapers; approaching €1B annualised TPV across 4,000+ merchants.','Tech.eu, 13 Jan 2026','https://tech.eu/2026/01/13/klearly-secures-eur12m-for-restaurant-payments-system/'),
+  ]},
  {id:'qonto',name:'Qonto',hq:'Paris',sector:'fintech',tags:['SMB banking'],stage:'Growth',
   line:'Business banking and finance workspace for European SMBs.',
   round:null,ats:{k:'lever',slug:'qonto'},gh:null,hn:'"Qonto"',events:[]},
@@ -583,16 +607,17 @@ const COMPANIES=[
   round:null,ats:{k:'ashby',slug:'moss'},gh:null,hn:null,events:[]},
  {id:'pennylane',name:'Pennylane',hq:'Paris',sector:'fintech',tags:['Accounting','SMB'],stage:'Growth',
   line:'Accounting and financial OS for European SMEs, nearing profitability.',
-  round:{label:'€175M at about €3.6B',lead:'TCV, Blackstone Growth',date:'2026-01',src:'Sifted / EU-Startups, Jan 2026',amt:175},
+  round:{label:'€175M Series E at €3.6B',lead:'TCV',date:'2026-01-20',src:'Sifted, 20 Jan 2026',amt:175},
+  sourceUrl:'https://sifted.eu/articles/pennylane-raises-175m-series-e',
   ats:{k:'ashby',slug:'pennylane'},gh:null,hn:'"Pennylane"',
   events:[
-    ev('2025-04-06','funding','€75M co-led by Sequoia, CapitalG and Meritech at a €2B valuation.','CNBC, 6 Apr 2025'),
-    ev('2026-01','funding','€175M led by TCV and Blackstone Growth at about €3.6B; company nearing profitability, positioning for e-invoicing mandates.','Sifted / EU-Startups, Jan 2026'),
+    ev('2025-04-06','funding','€75M co-led by Sequoia, CapitalG and Meritech at a €2B valuation.','CNBC, 6 Apr 2025','https://www.cnbc.com/2025/04/06/pennylane-doubles-valuation-as-alphabet-vc-fund-takes-stake.html'),
+    ev('2026-01-20','funding','€175M Series E led by TCV, with Blackstone Growth, Sequoia, DST Global, CapitalG and Meritech, at a €3.6B ($4.25B) valuation; company nearing profitability, positioning for e-invoicing mandates.','Sifted, 20 Jan 2026','https://sifted.eu/articles/pennylane-raises-175m-series-e'),
   ]},
  {id:'payrails',name:'Payrails',hq:'Berlin',sector:'fintech',tags:['Payment orchestration'],stage:'Series A',
   line:'Payment operating system for enterprises and platforms.',
   round:null,ats:{k:'ashby',slug:'payrails'},gh:null,hn:'"Payrails"',events:[]},
- {id:'agicap',name:'Agicap',hq:'Lyon',sector:'fintech',tags:['Cash flow','Treasury'],stage:'Series B',
+ {id:'agicap',name:'Agicap',hq:'Lyon',sector:'fintech',tags:['Cash flow','Treasury'],stage:'Series C',
   line:'Cash-flow forecasting and treasury management for SMEs.',
   round:null,ats:{k:'lever',slug:'agicap'},gh:null,hn:'"Agicap"',events:[]},
  {id:'swile',name:'Swile',hq:'Paris / Montpellier',sector:'fintech',tags:['Benefits','Worktech'],stage:'Growth',
@@ -617,12 +642,12 @@ const COMPANIES=[
   round:null,ats:{k:'greenhouse',slug:'adahealth'},gh:null,hn:'"Ada Health"',events:[]},
  {id:'isomorphic',name:'Isomorphic Labs',hq:'London',sector:'health',tags:['AI drug design'],stage:'Growth',
   line:'AI-first drug design; Alphabet spin-out built on the AlphaFold lineage.',
-  round:{label:'$600M first external round',lead:'Thrive Capital',date:'2025-03-31',src:'PR Newswire, 31 Mar 2025',amt:600},
-  sourceUrl:'https://www.prnewswire.com/news-releases/isomorphic-labs-announces-600-million-funding-to-further-develop-its-next-generation-ai-drug-design-engine-and-advance-therapeutic-programs-into-the-clinic-302415534.html',
+  round:{label:'$2.1B Series B',lead:'Thrive Capital',date:'2026-05-12',src:'Isomorphic Labs announcement, 12 May 2026',amt:2100},
+  sourceUrl:'https://www.isomorphiclabs.com/articles/isomorphic-labs-announces-series-b-investment-round',
   ats:{k:'greenhouse',slug:'isomorphiclabs'},gh:null,hn:'"Isomorphic Labs"',
   events:[
     ev('2025-03-31','funding','$600M first external round led by Thrive Capital, with GV and follow-on from Alphabet.','PR Newswire, 31 Mar 2025','https://www.prnewswire.com/news-releases/isomorphic-labs-announces-600-million-funding-to-further-develop-its-next-generation-ai-drug-design-engine-and-advance-therapeutic-programs-into-the-clinic-302415534.html'),
-    ev(null,'reported','Reported $2.1B Series B led by Thrive with Alphabet, GV, MGX, Temasek, CapitalG; closing terms not fully confirmed.','Tech Funding News, Jun 2026 (reported)'),
+    ev('2026-05-12','funding','$2.1B Series B led by Thrive Capital, with Alphabet, GV, MGX, Temasek, CapitalG and the UK Sovereign AI Fund.','Isomorphic Labs announcement, 12 May 2026','https://www.isomorphiclabs.com/articles/isomorphic-labs-announces-series-b-investment-round'),
   ]},
  {id:'proxima',name:'Proxima Fusion',hq:'Munich',sector:'climate',tags:['Fusion','Stellarator'],stage:'Growth',
   line:'QI stellarator fusion; Max Planck IPP spin-out, Europe\'s best-funded fusion company.',
@@ -670,14 +695,14 @@ const COMPANIES=[
 
 /* ---------- founders (X layer) ----------
    Names from public coverage. An X handle is stored ONLY where it was
-   verified against the founder's live public X profile (checked 11 Jul 2026);
+   verified against the founder's live public X profile (checked 12 Jul 2026);
    otherwise the name is kept without a handle. No follower counts or other
    numbers about real people are ever invented client-side. */
 const FOUNDERS={
   legora:[{name:'Max Junestrand',x:'MaxJunestrand'}],
   lawhive:[{name:'Pierre Proner'}],
   parloa:[{name:'Malte Kosub'},{name:'Stefan Ostwald'}],
-  elevenlabs:[{name:'Mati Staniszewski',x:'matistanis'},{name:'Piotr Dąbkowski'}],
+  elevenlabs:[{name:'Mati Staniszewski',x:'mati'},{name:'Piotr Dąbkowski'}],
   synthesia:[{name:'Victor Riparbelli',x:'vriparbelli'},{name:'Steffen Tjerrild'}],
   lovable:[{name:'Anton Osika',x:'antonosika'},{name:'Fabian Hedin'}],
   n8n:[{name:'Jan Oberhauser',x:'JanOberhauser'}],
